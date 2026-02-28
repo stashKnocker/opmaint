@@ -1,0 +1,114 @@
+---
+export interface Props {
+    title: string;
+    description: string;
+    slug: string;
+    category?: string;
+}
+
+const { title, description, slug, category } = Astro.props;
+---
+
+<a href={`/checklist/${slug}`} class="checklist-card">
+    {category && <span class="category-badge">{category}</span>}
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <div class="card-footer">
+        <span class="view-details"
+            >View Details
+            <svg
+                class="arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </span>
+    </div>
+</a>
+
+<style>
+    .checklist-card {
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border: 1px solid #eaeaea;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .checklist-card:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .category-badge {
+        align-self: flex-start;
+        background-color: #f3f4f6;
+        color: #4b5563;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+        margin-bottom: 1rem;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .checklist-card h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        color: #111827;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .checklist-card p {
+        margin: 1.5rem 0;
+        color: #111827;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        flex-grow: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: auto;
+    }
+
+    .view-details {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .view-details .arrow {
+        color: #345ebd;
+        font-size: 1.1rem;
+        transition: transform 0.2s ease;
+    }
+
+    .checklist-card:hover .view-details .arrow {
+        transform: translateX(4px);
+    }
+</style>

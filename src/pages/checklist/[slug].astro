@@ -1,0 +1,567 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import CtaSidebar from "../../components/CtaSidebar.astro";
+import rawData from "../../../data.json";
+
+export function getStaticPaths() {
+    const toSlug = (text: string) =>
+        text
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)+/g, "");
+
+    const stripEmojis = (text: string) =>
+        text
+            .replace(
+                /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+                ""
+            )
+            .trim();
+
+    const paths: any[] = [];
+    rawData.forEach((category: any) => {
+        category.checklists.forEach((checklist: any) => {
+            paths.push({
+                params: { slug: toSlug(checklist.title) },
+                props: {
+                    checklist,
+                    categoryName: stripEmojis(category.category_name),
+                },
+            });
+        });
+    });
+
+    return paths;
+}
+
+const { checklist, categoryName } = Astro.props;
+---
+
+<Layout>
+    <Navbar />
+    <main class="page-container">
+        <a href="/" class="back-link">
+            <svg
+                class="arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all checklists
+        </a>
+
+        <div class="content-layout">
+            <div class="main-column">
+                <div class="checklist-header">
+                    <span class="category-badge">{categoryName}</span>
+                    <h1>{checklist.title}</h1>
+                    <p>{checklist.description}</p>
+                </div>
+
+                <div class="checklist-items">
+                    {
+                        checklist.items.map((item: any, index: number) => (
+                            <div class="item-card">
+                                <div class="item-header">
+                                    <span class="item-number">{index + 1}</span>
+                                    <h3>{item.question}</h3>
+                                </div>
+
+                                <div class="item-input">
+                                    {item.type === "radio" && (
+                                        <div class="options-group radio">
+                                            {item.options?.map((opt: any) => (
+                                                <label class="radio-label">
+                                                    <input
+                                                        type="radio"
+                                                        name={`question-${index}`}
+                                                        value={opt}
+                                                    />
+                                                    <span class="radio-text">
+                                                        {opt}
+                                                    </span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {item.type === "slider" && (
+                                        <div class="options-group slider">
+                                            <input
+                                                type="range"
+                                                min={
+                                                    item.min !== undefined
+                                                        ? item.min
+                                                        : 0
+                                                }
+                                                max={
+                                                    item.max !== undefined
+                                                        ? item.max
+                                                        : item.options
+                                                        ? item.options.length -
+                                                          1
+                                                        : 100
+                                                }
+                                                step="1"
+                                                list={
+                                                    item.options
+                                                        ? `ticks-${index}`
+                                                        : undefined
+                                                }
+                                            />
+                                            {item.options && (
+                                                <div class="slider-labels">
+                                                    {item.options.map(
+                                                        (opt: any) => (
+                                                            <span>{opt}</span>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
+                                            {!item.options && (
+                                                <div class="slider-labels">
+                                                    <span>
+                                                        {item.min !== undefined
+                                                            ? item.min
+                                                            : 0}
+                                                        {item.unit
+                                                            ? ` ${item.unit}`
+                                                            : ""}
+                                                    </span>
+                                                    <span>
+                                                        {item.max !== undefined
+                                                            ? item.max
+                                                            : 100}
+                                                        {item.unit
+                                                            ? ` ${item.unit}`
+                                                            : ""}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {item.type === "rating" && (
+                                        <div class="options-group rating">
+                                            <div class="stars">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <svg
+                                                        width="28"
+                                                        height="28"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="#d1d5db"
+                                                        stroke-width="2"
+                                                        class="star-icon"
+                                                    >
+                                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                                    </svg>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {item.type === "checkbox" && (
+                                        <div class="options-group checkbox">
+                                            {item.options?.map((opt: any) => (
+                                                <label class="checkbox-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        name={`question-${index}`}
+                                                        value={opt}
+                                                    />
+                                                    <span class="checkbox-text">
+                                                        {opt}
+                                                    </span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {item.type === "text" && (
+                                        <textarea
+                                            class="text-input"
+                                            placeholder={
+                                                item.placeholder ||
+                                                "Enter details..."
+                                            }
+                                            rows="3"
+                                        />
+                                    )}
+                                </div>
+
+                                <div class="item-meta">
+                                    {item.allow_notes && (
+                                        <button class="meta-btn" type="button">
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                            </svg>{" "}
+                                            Add Notes
+                                        </button>
+                                    )}
+                                    {item.allow_media && (
+                                        <button class="meta-btn" type="button">
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <rect
+                                                    x="3"
+                                                    y="3"
+                                                    width="18"
+                                                    height="18"
+                                                    rx="2"
+                                                    ry="2"
+                                                />
+                                                <circle
+                                                    cx="8.5"
+                                                    cy="8.5"
+                                                    r="1.5"
+                                                />
+                                                <polyline points="21 15 16 10 5 21" />
+                                            </svg>{" "}
+                                            Attach Media
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+
+            <CtaSidebar />
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .page-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .content-layout {
+        display: flex;
+        gap: 3rem;
+        align-items: flex-start;
+    }
+
+    .main-column {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+
+    .back-link .arrow {
+        transition: transform 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #111827;
+    }
+
+    .back-link:hover .arrow {
+        transform: translateX(-4px);
+    }
+
+    .checklist-header {
+        margin-bottom: 4rem;
+        border-bottom: 2px solid #eaeaea;
+        padding-bottom: 2rem;
+    }
+
+    .category-badge {
+        display: inline-block;
+        background-color: #f3f4f6;
+        color: #4b5563;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.35rem 0.8rem;
+        border-radius: 9999px;
+        margin-bottom: 1.5rem;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .checklist-header h1 {
+        font-size: 2.5rem;
+        margin: 0 0 1rem 0;
+        color: #111827;
+    }
+
+    .checklist-header p {
+        font-size: 1.15rem;
+        color: #4b5563;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .checklist-items {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .item-card {
+        background: #ffffff;
+        border: 1px solid #eaeaea;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .item-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .item-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background-color: #ebedfa;
+        color: #345ebd;
+        font-weight: 700;
+        border-radius: 50%;
+        flex-shrink: 0;
+        font-size: 0.85rem;
+        margin-top: 0.2rem;
+    }
+
+    .item-header h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        color: #1f2937;
+        line-height: 1.4;
+    }
+
+    .item-input {
+        margin-bottom: 2rem;
+        padding-left: 3rem;
+    }
+
+    .options-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .stars {
+        display: flex;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .star-icon {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .star-icon:hover {
+        fill: #fbbf24;
+        stroke: #fbbf24;
+    }
+
+    .radio-label,
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border: 1px solid #eaeaea;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .radio-label:hover,
+    .checkbox-label:hover {
+        border-color: #d1d5db;
+        background-color: #fafafa;
+    }
+
+    .radio-text,
+    .checkbox-text {
+        margin-left: 0.75rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .text-input {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #eaeaea;
+        border-radius: 0.5rem;
+        font-family: inherit;
+        resize: vertical;
+        font-size: 1rem;
+    }
+
+    .text-input:focus {
+        outline: none;
+        border-color: #345ebd;
+        box-shadow: 0 0 0 2px rgba(52, 94, 189, 0.1);
+    }
+
+    .slider {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .slider input {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        -webkit-appearance: none;
+        background: #eaeaea;
+        outline: none;
+    }
+
+    .slider input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #345ebd;
+        cursor: pointer;
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .item-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px dashed #eaeaea;
+        padding-left: 3rem;
+    }
+
+    .meta-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0;
+        transition: color 0.2s;
+    }
+
+    .meta-btn:hover {
+        color: #111827;
+    }
+
+    @media screen and (max-width: 900px) {
+        .content-layout {
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .item-card {
+            padding: 1.5rem;
+        }
+
+        .item-input {
+            padding-left: 0;
+        }
+
+        .item-meta {
+            padding-left: 0;
+        }
+    }
+
+    @media print {
+        :global(nav),
+        :global(.footer),
+        :global(.cta-sidebar-component),
+        .back-link,
+        .item-meta {
+            display: none !important;
+        }
+
+        .page-container {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        .content-layout {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        .main-column {
+            width: 100% !important;
+        }
+
+        .item-card {
+            break-inside: avoid;
+            box-shadow: none !important;
+            border: 1px solid #eaeaea !important;
+            margin-bottom: 1rem !important;
+        }
+
+        .checklist-header {
+            margin-bottom: 2rem !important;
+        }
+    }
+</style>

@@ -1,0 +1,2020 @@
+[
+    {
+        "category_name": "\ud83c\udfed Manufacturing & Production",
+        "checklists": [
+            {
+                "title": "Textile/Garment Factory (Needle Policy & Cutting Room) Audit",
+                "description": "Comprehensive audit checklist for assessing compliance with broken needle policy and operational efficiency/safety in the cutting room of a textile/garment manufacturing unit in India.",
+                "items": [
+                    {
+                        "question": "Is the factory's Broken Needle Policy clearly documented, communicated to all relevant personnel, and effectively implemented (e.g., 'Two-for-one' exchange system, designated collection points for broken needles)?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the last calibration date and next scheduled calibration date for the primary needle/metal detector in the garment finishing or dispatch area.",
+                        "type": "text",
+                        "placeholder": "DD-MM-YYYY (Last) / DD-MM-YYYY (Next)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall adherence to safety protocols and housekeeping standards in the cutting room, including blade storage, fabric waste disposal, and clear pathways. (Refer to BIS/OSHA guidelines for safety).",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any observed deficiencies in the maintenance and operational condition of cutting room machinery (e.g., cutting machines, spreading tables, DG Set for backup power, electrical systems).",
+                        "type": "checkbox",
+                        "options": [
+                            "Uncalibrated Blades",
+                            "Worn Belts/Parts",
+                            "Inadequate Lubrication",
+                            "Poor Electrical Cabling",
+                            "DG Set Maintenance Lags",
+                            "Damaged Spreading Tables"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the effectiveness of employee training programs on broken needle policy, safe handling of sharps, and reporting procedures for all relevant staff, including 'Maid/Housekeeping' and 'Security Guard' personnel.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the presence and accuracy of the 'Broken Needle Register' and 'Needle Issue/Return Chalan', ensuring proper entries for needle exchanges and secure final disposal records, adhering to IST Standard documentation practices.",
+                        "type": "radio",
+                        "options": [
+                            "Satisfactory",
+                            "Deficient"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Pharma Manufacturing (GMP & Clean Room Audit)",
+                "description": "Comprehensive audit checklist for assessing Good Manufacturing Practices and Clean Room operational compliance in pharmaceutical manufacturing facilities in India.",
+                "items": [
+                    {
+                        "question": "Record current differential pressure across specified cleanroom zones (e.g., between Grade C and Grade D production areas).",
+                        "type": "text",
+                        "placeholder": "Enter pressure in Pascals (Pa)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Is personnel entry and exit from cleanroom areas consistently adhering to established gowning and degowning procedures (e.g., air showers, hand sanitization, proper attire)?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant",
+                            "Observation Noted"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the percentage compliance of HVAC system maintenance records and calibration certificates against the annual preventive maintenance schedule, including DG Set operational readiness.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall cleanliness, sanitation, and pest control effectiveness within non-production areas, including staff canteen and Maid/Housekeeping staff practices.",
+                        "type": "rating",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any non-conformities related to storage conditions (temperature, humidity), segregation, or labeling of raw materials and finished products (e.g., missing/incorrect Chalan documentation for incoming goods).",
+                        "type": "checkbox",
+                        "options": [
+                            "Temperature Excursion Recorded",
+                            "Humidity Deviation Observed",
+                            "Improper Material Segregation",
+                            "Inadequate/Incorrect Labeling",
+                            "Missing/Incorrect Chalan Document",
+                            "Evidence of Pest Activity"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Confirm prominent display of all mandatory regulatory licenses (e.g., Drug License, FSSAI License for canteen) and verify adherence to Indian Standard Time (IST) in operational logs and synchronized clocks across the facility.",
+                        "type": "radio",
+                        "options": [
+                            "Fully Compliant",
+                            "Minor Discrepancies",
+                            "Significant Non-Compliance"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Automotive Assembly Line (5S & Safety)",
+                "description": "Comprehensive audit checklist for 5S implementation and safety compliance within an automotive assembly line, adhering to Indian industrial standards.",
+                "items": [
+                    {
+                        "question": "Is the sorting (Seiri) process effectively implemented, ensuring all unnecessary items, obsolete tools, and excess inventory are removed from the assembly line workstations and storage areas?",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the 'Set in Order' (Seiton) implementation, including clear demarcation of walkways, tool shadow boards, and accessibility of safety equipment as per defined Indian industrial safety standards.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the operational status, accessibility, and validity of maintenance 'Chalan' (record/tag) for all fire extinguishers, hydrants, and emergency exits on the assembly line.",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any deficiencies in machine guarding, interlock systems, emergency stop functionality, and associated safety signage for critical equipment like robotic cells, presses, and conveyors.",
+                        "type": "checkbox",
+                        "options": [
+                            "Guard Missing/Damaged",
+                            "Interlock Bypassed",
+                            "Emergency Stop Non-functional",
+                            "Warning Signage Absent/Unclear",
+                            "PPE Violation Observed"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record critical parameters and check safety compliance for essential utilities: DG Set operational status, last service date, and LPG Bank pressure readings, along with valid statutory permits.",
+                        "type": "text",
+                        "placeholder": "Enter status, dates, readings, and permit details",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall effectiveness of 'Shine' (Seiso) and 'Sustain' (Shitsuke) through housekeeping standards, waste segregation, and ensure PPE availability for all personnel, including contractual 'Maid/Housekeeping' staff. Confirm the display of the FSSAI License in the canteen area (if applicable).",
+                        "type": "slider",
+                        "min": 1,
+                        "max": 10,
+                        "unit": "Scale",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Chemical Plant (Hazmat Storage & Spill Kits)",
+                "description": "Comprehensive audit checklist for evaluating hazardous material storage protocols and the readiness of spill response kits in an Indian chemical manufacturing facility, ensuring compliance with local regulations and best practices.",
+                "items": [
+                    {
+                        "question": "Are all hazardous materials stored in designated, properly labelled areas with secondary containment as per Indian regulatory standards (e.g., Factories Act, Chemical Accidents Rules)?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the latest calibration date for any critical temperature/pressure gauges in hazmat storage areas to ensure IST Standard compliance.",
+                        "type": "text",
+                        "placeholder": "DD-MM-YYYY or N/A",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall readiness and accessibility of spill kits (e.g., contents, placement, ease of deployment) at critical hazmat storage and handling points.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify and mark all observed deficiencies related to hazmat storage infrastructure or spill kit maintenance.",
+                        "type": "checkbox",
+                        "options": [
+                            "Inadequate/missing labelling",
+                            "Expired contents in spill kit",
+                            "Damaged containment bunds/pallets",
+                            "Unauthorized access to storage area (e.g., by contract Maid/Housekeeping staff)",
+                            "Insufficient quantity of absorbents/PPE",
+                            "Lack of clear access path for spill kits"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the effectiveness of emergency response training provided to plant personnel, including Security Guards, on hazmat spill handling procedures.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the presence and validity of the latest 'Chalan' (manifest/receipt) for hazardous waste disposal generated from hazmat operations.",
+                        "type": "radio",
+                        "options": [
+                            "Verified and Valid",
+                            "Invalid/Missing"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Food Processing Plant (FSSAI Schedule 4)",
+                "description": "Comprehensive audit checklist for ensuring compliance with FSSAI Schedule 4 (General Requirements on Hygienic and Sanitary Practices) for food processing establishments in India.",
+                "items": [
+                    {
+                        "question": "Are the premises, including production areas, storage, and utilities, maintained in a hygienic condition, free from pests, and is the FSSAI License prominently displayed?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the current operational temperature of the main cold storage unit for perishable raw materials/finished goods (adhering to IST Standard).",
+                        "type": "text",
+                        "placeholder": "e.g., 4.2 \u00b0C",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall awareness and adherence of all personnel (including Maid/Housekeeping, Security Guard) to FSSAI Schedule 4 hygiene practices and Good Manufacturing Practices (GMPs).",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the operational readiness and maintenance percentage of critical utilities (e.g., DG Set, Water Treatment Plant, LPG Bank) based on documented schedules and actual performance.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any deficiencies in mandatory documentation and record-keeping (e.g., Challans for raw material, pest control logs, cleaning schedules, employee medical fitness certificates).",
+                        "type": "checkbox",
+                        "options": [
+                            "Missing Challans/Invoices",
+                            "Incomplete Pest Control Records",
+                            "Inadequate Cleaning & Sanitation Logs",
+                            "Expired Employee Medical Fitness Certificates",
+                            "No Traceability Records",
+                            "Other (specify in notes)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Provide details of the last potable water quality test (physical, chemical, microbiological) including the date of testing and overall compliance status.",
+                        "type": "text",
+                        "placeholder": "e.g., Date: 15-03-2024, Status: Compliant (as per IS 10500)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Steel/Heavy Engineering (Crane & Hoist Safety)",
+                "description": "Comprehensive audit checklist for ensuring safety protocols and operational integrity of cranes and hoists in steel and heavy engineering facilities as per Indian statutory and best practice standards.",
+                "items": [
+                    {
+                        "question": "Is the crane's last statutory load test certificate current and valid as per Factories Act, 1948 and State Rules?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the visual condition of all wire ropes for wear, corrosion, broken strands, and deformation as per BIS IS 2266 guidelines.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "% Acceptable Condition",
+                        "placeholder": "e.g. 85",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the responsiveness and holding capacity of the hoist primary and secondary braking systems during operational checks.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "unit": "Stars",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the presence and validity of current 'Competent Person' certification/operator licenses for all crane/hoist operators.",
+                        "type": "text",
+                        "placeholder": "e.g., License No. A12345, Issued: DD-MM-YYYY",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Inspect the functionality and accessibility of all emergency stop buttons/switches on the crane and hoist systems. Note any defects.",
+                        "type": "checkbox",
+                        "options": [
+                            "Functional",
+                            "Accessible",
+                            "Clearly Marked",
+                            "Damaged Button",
+                            "Obstructed Access",
+                            "Non-Functional",
+                            "Requires immediate attention"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the percentage compliance rate with the mandated daily pre-operational check sheet completion and associated defect rectification process.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "% Compliance",
+                        "placeholder": "e.g. 95",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category_name": "\ud83d\ude9a Logistics & Supply Chain",
+        "checklists": [
+            {
+                "title": "E-commerce Warehouse (Picking Accuracy & Racking) - Audit Checklist",
+                "description": "Comprehensive audit checklist for evaluating picking accuracy, racking integrity, and associated operational processes within an Indian E-commerce warehouse environment.",
+                "items": [
+                    {
+                        "question": "Assess the overall picking accuracy rate (items picked correctly vs. total items picked) based on sample verification during the audit period.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the structural integrity and stability of the racking system, including visible damage, missing components, and compliance with load bearing displays as per IS (Indian Standard) codes.",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the operational status and last power-backup system (e.g., DG Set, UPS) check date for critical Warehouse Management System (WMS) servers and picking scanner charging stations.",
+                        "type": "text",
+                        "placeholder": "e.g., DG Set last checked 25/10/2023, Scanner chargers operational",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the adherence of picking staff to defined Standard Operating Procedures (SOPs), including sequence, scanning protocols, and product identification, observed during the audit.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify the primary root causes contributing to picking discrepancies or 'chalan' mismatches observed in outbound shipments.",
+                        "type": "checkbox",
+                        "options": [
+                            "Incorrect Slotting",
+                            "Insufficient Training",
+                            "System Error (WMS)",
+                            "SKU Mismatch (Visual)",
+                            "Poor Labeling",
+                            "Damaged Item at Picking",
+                            "Maid/Housekeeping (Accidental Repositioning)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the adequacy of aisle widths and clear pathways for Material Handling Equipment (MHE) to ensure efficient and safe picking operations, considering Indian safety guidelines and IST Standard operational flow.",
+                        "type": "slider",
+                        "min": 1,
+                        "max": 10,
+                        "unit": "Scale",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Cold Chain/Cold Storage (Temperature & Compressors)",
+                "description": "Comprehensive audit checklist for evaluating the operational efficiency, compliance, and maintenance of cold chain and cold storage infrastructure, focusing on temperature management and compressor health.",
+                "items": [
+                    {
+                        "question": "Is the primary temperature monitoring system (e.g., SCADA, Data Logger) for all critical cold storage units functional and calibrated as per IST standards?",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record current internal temperature (in \u00b0C) for each critical cold storage zone. Specify zone name.",
+                        "type": "text",
+                        "placeholder": "e.g., Zone A: 4.5\u00b0C; Zone B: -18.2\u00b0C",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall operational health and maintenance status of all primary compressors within the facility.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the readiness of the DG Set (Diesel Generator) to provide immediate and sustained backup power for critical cold chain equipment in case of a main grid failure.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any observed defects or operational issues with the compressor units (e.g., unusual noise, oil leaks, pressure drops, condenser blockage).",
+                        "type": "checkbox",
+                        "options": [
+                            "Unusual Noise/Vibration",
+                            "Oil Leaks Detected",
+                            "Refrigerant Leaks Detected",
+                            "Significant Pressure Drop",
+                            "Condenser/Evaporator Blockage",
+                            "Electrical Faults/Wiring Issues",
+                            "Excessive Run Time"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Is the FSSAI License prominently displayed, and are all relevant temperature logs, compressor maintenance records, and calibration certificates (Chalan) readily available for audit?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Fleet Management (Truck Tyre & Driver Chalan Check)",
+                "description": "Comprehensive audit checklist for ensuring compliance and operational efficiency related to truck tyre management and driver chalan verification within the Indian logistics context.",
+                "items": [
+                    {
+                        "question": "Record average tread depth (in mm) for all main axle tyres, indicating any below statutory minimums (e.g., 1.6mm for commercial vehicles).",
+                        "type": "text",
+                        "placeholder": "Enter depth in mm (e.g., 5.5, 4.2)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify and report any critical tyre damages such as deep cuts, sidewall bulges, ply separation, or uneven wear patterns across the fleet.",
+                        "type": "checkbox",
+                        "options": [
+                            "Sidewall Cuts/Cracks Evident",
+                            "Tread Separation/Bulges",
+                            "Puncture/Low Pressure Evident",
+                            "Uneven/Abnormal Wear Pattern",
+                            "Valve Stem Damage"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the accuracy and completeness of the driver's current trip Chalan (consignment note, trip sheet, etc.) including load details, origin/destination, and authorized signatures.",
+                        "type": "radio",
+                        "options": [
+                            "Compliant & Complete",
+                            "Minor Discrepancy",
+                            "Major Non-Compliance"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Confirm the validity and presence of the driver's Driving License (DL) with relevant commercial vehicle endorsements and a current medical fitness certificate.",
+                        "type": "checkbox",
+                        "options": [
+                            "DL Valid & Present",
+                            "Commercial Endorsement Present (Heavy Vehicle)",
+                            "Medical Fitness Certificate Valid",
+                            "PUC Certificate Valid & Present"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall operational integrity and maintenance status of the fleet's tyres, considering inflation pressure, rotation records, and general upkeep.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the adherence percentage to the scheduled tyre rotation, alignment, and balancing protocols as per fleet maintenance policy.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Last Mile Delivery Hub (Bike Condition & Bag Hygiene)",
+                "description": "Comprehensive audit checklist to assess the operational readiness, safety compliance, and hygiene standards of two-wheeler fleets and associated delivery equipment at last-mile hubs.",
+                "items": [
+                    {
+                        "question": "Visual inspection of all active delivery bikes for general wear and tear, including tire pressure, brake functionality, and light operation.",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verification of valid statutory documents for all allocated bikes (Pollution Under Control (PUC) certificate, Registration Certificate (RC), Insurance, and Rider's Driving License (DL)).",
+                        "type": "checkbox",
+                        "options": [
+                            "PUC Invalid/Missing",
+                            "RC Invalid/Missing",
+                            "Insurance Invalid/Missing",
+                            "DL Invalid/Missing",
+                            "All Documents Valid"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assessment of adherence to the prescribed daily cleaning protocol for delivery bags, covering both internal and external surfaces.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Detailed inspection of delivery bags for the presence of residual food particles, persistent stains, or discernible malodour, particularly in insulated compartments.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "placeholder": "Rate cleanliness (1=Poor, 5=Excellent)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Recording of any observed critical defects on delivery bikes that could lead to a 'Chalan' or compromise safety (e.g., non-functional horn, damaged mirrors, faulty speedometer, excessive smoke).",
+                        "type": "text",
+                        "placeholder": "List specific defects observed",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Functional verification of essential hub equipment supporting bike maintenance and bag hygiene (e.g., air compressor pressure reading, water flow rate at washing station, DG Set operational status if present).",
+                        "type": "text",
+                        "placeholder": "Enter readings or status (e.g., Air: 80 PSI, Water: Good, DG: OK)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Godown/Depot Pre-Monsoon Leakage Check",
+                "description": "Comprehensive audit checklist for assessing and mitigating potential water ingress and leakage risks in godown/depot facilities across India prior to the monsoon season.",
+                "items": [
+                    {
+                        "question": "General condition of the godown roof and ceiling, including any existing repair patches, for cracks, gaps, or structural weaknesses that may compromise weatherproofing.",
+                        "type": "radio",
+                        "options": [
+                            "Acceptable (No visible defects)",
+                            "Requires Immediate Action (Visible defects/vulnerabilities)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Are all internal and external drainage systems (gutters, downspouts, storm drains, and sumps) clear of debris, free-flowing, and fully functional? (Check for blockages, damages, or inadequate capacity).",
+                        "type": "checkbox",
+                        "options": [
+                            "Clear and Functional",
+                            "Minor Blockage in Gutters/Downspouts",
+                            "Significant Blockage in Storm Drains/Sumps",
+                            "Damage to Drainage Pipes/Channels",
+                            "Requires Immediate Desilting/Cleaning"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assessment of external and internal wall integrity, particularly for dampness, efflorescence, visible cracks, or peeling paint indicative of potential seepage points from the ground or vertical surfaces.",
+                        "type": "slider",
+                        "min": 1,
+                        "max": 5,
+                        "unit": "Severity (1=No Issue, 5=High Risk of Seepage)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Are all electrical wiring conduits, switchboards, outdoor junction boxes, and the DG Set canopy adequately sealed and protected against water ingress to prevent short circuits or equipment damage?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant (Adequately Sealed)",
+                            "Non-Compliant (Vulnerable to Water Ingress)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Condition of external periphery, including boundary walls, compound wall plaster, plinth protection, and surrounding ground levels, to prevent water accumulation or ingress from ground level.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "unit": "Stars (1=Poor, 5=Excellent)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Number of identified leakage points or water entry vulnerable areas in loading/unloading bays, dock leveler seals, and main entry/exit doors.",
+                        "type": "text",
+                        "placeholder": "Enter count of vulnerable points",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category_name": "\ud83c\udfd7\ufe0f Construction & Real Estate",
+        "checklists": [
+            {
+                "title": "High-Rise Construction Site (Fall Protection & Netting)",
+                "description": "Comprehensive audit checklist for assessing fall protection measures and safety netting compliance at high-rise construction projects as per Indian safety standards and best practices.",
+                "items": [
+                    {
+                        "question": "Are all fall protection systems (guardrails, lifelines, safety nets) installed, maintained, and inspected as per IS 10535 (Safety Belts and Lanyards) and relevant OHS regulations?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "What is the estimated percentage of safety netting coverage for open edges, shafts, and potential fall zones across active work levels?",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the latest inspection date and certified load capacity (in kN) for primary lifeline anchor points and safety net support structures.",
+                        "type": "text",
+                        "placeholder": "e.g. 15/05/2023, 22 kN",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the effectiveness of worker training programs on fall prevention protocols and the consistent usage of Personal Protective Equipment (PPE) like full-body harnesses.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify observed defects or non-compliances in fall protection equipment or systems (select all that apply).",
+                        "type": "checkbox",
+                        "options": [
+                            "Damaged/Torn safety netting",
+                            "Frayed/Cut lifelines or lanyards",
+                            "Missing/Inadequate guardrails (top-rail, mid-rail, toe-board)",
+                            "Corroded or improperly installed anchor points",
+                            "Improper harness fit or damaged harness components",
+                            "Missing/Expired PPE inspection records or Chalan"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the adequacy of the documented frequency for safety net tensioning, re-tensioning, and debris removal checks (1 = Highly Inadequate, 5 = Highly Adequate).",
+                        "type": "slider",
+                        "min": 1,
+                        "max": 5,
+                        "unit": "",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Excavation & Piling Work (Soil Stability)",
+                "description": "Comprehensive audit checklist for evaluating soil stability measures during excavation and piling operations, ensuring adherence to design specifications and safety protocols.",
+                "items": [
+                    {
+                        "question": "Availability and adherence to Geotechnical Investigation Report (SIR) recommendations and drawings?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Effectiveness of the dewatering system in maintaining the desired groundwater table below excavation level?",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "placeholder": "Enter percentage effectiveness",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any observed defects or non-conformities in excavation slope stability or shoring/strutting systems.",
+                        "type": "checkbox",
+                        "options": [
+                            "Evidence of localized collapse/sloughing",
+                            "Excessive deformation of shoring members",
+                            "Inadequate bracing/support",
+                            "Water ingress at critical points",
+                            "Lack of regular inspection records (e.g., daily checklists)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the maximum daily excavation depth achieved and observed ground movement (if any) as per site supervisor's Chalan and logs.",
+                        "type": "text",
+                        "placeholder": "e.g., 5.2m depth; 2mm settlement",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the competency of site supervision and engineering personnel in managing soil stability risks and implementing control measures.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verification of Pile Load Test Reports against design parameters and Indian Standard (IS) codes (e.g., IS 2911 series) compliance?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Residential Society/RWA (Security Gate & Lift Audit)",
+                "description": "A comprehensive audit checklist designed for Residential Societies/RWAs to assess the operational efficiency, safety compliance, and maintenance standards of security gates, lift systems, and associated critical infrastructure.",
+                "items": [
+                    {
+                        "question": "Verify the operational status of the visitor management system (e.g., e-gate pass, manual register) and boom barrier synchronisation at all entry/exit points.",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the validity period of the Lift Annual Maintenance Contract (AMC) and date of last statutory inspection report (e.g., Form-C as per Indian Lift Rules).",
+                        "type": "text",
+                        "placeholder": "e.g. DD-MM-YYYY to DD-MM-YYYY, Last Inspection: DD-MM-YYYY",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the current diesel fuel level in the DG Set storage tank as a percentage of total operational capacity.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any discrepancies related to security personnel: PSARA license verification, uniform adherence, attendance verification (e.g., biometric/manual register), or inadequate deployment as per roster.",
+                        "type": "checkbox",
+                        "options": [
+                            "PSARA License/Documentation Missing",
+                            "Improper Uniform/Grooming",
+                            "Attendance Discrepancy",
+                            "Inadequate Staffing as per Roster",
+                            "Lack of Communication Devices"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall preparedness and functional status of fire safety equipment (e.g., extinguishers with valid chalan, hose reels, fire alarms) and clarity of emergency evacuation plans.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Provide details of any non-functional CCTV cameras, including location and estimated date of last operation, and verify the continuous recording backup duration in days.",
+                        "type": "text",
+                        "placeholder": "e.g. Gate 1 (PTZ) - 2023-10-15, Backup: 30 days",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Labour Camp Hygiene (Water & Sanitation)",
+                "description": "Comprehensive audit checklist to assess the hygiene standards related to water supply, sanitation facilities, and waste management practices within labour camps in India, ensuring compliance with health and safety norms.",
+                "items": [
+                    {
+                        "question": "Is the primary water source (e.g., municipal supply, borewell with valid Chalan) approved and regularly tested for potability as per IST standards, with records available for inspection?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the date of the last water quality test report (e.g., pH, TDS, residual chlorine) and the observed residual chlorine level (in ppm) at key distribution points within the camp.",
+                        "type": "text",
+                        "placeholder": "e.g., 2023-10-26, 0.5 ppm",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall cleanliness and hygiene standard of common sanitation blocks (toilets, bathing areas), considering the presence and effectiveness of Maid/Housekeeping staff and adherence to cleaning schedules.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify prevalent deficiencies in solid and liquid waste management practices within the labour camp premises:",
+                        "type": "checkbox",
+                        "options": [
+                            "Open dumping/overflowing bins",
+                            "Lack of waste segregation (wet/dry)",
+                            "Stagnant wastewater near drainage points",
+                            "Inadequate frequency of waste collection",
+                            "Uncovered drains/septic tanks",
+                            "Pest infestation due to waste accumulation"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the perceived effectiveness of existing pest and vector control measures (e.g., mosquitoes, rodents, flies) in ensuring a hygienic and disease-free living environment for the residents.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the functionality and maintenance status of backup water supply systems (e.g., elevated tanks, standby pumps) and emergency power for essential services (e.g., DG Set for water distribution).",
+                        "type": "radio",
+                        "options": [
+                            "Functional & Well-Maintained",
+                            "Partially Functional/Poorly Maintained",
+                            "Non-Functional/Absent"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Electrical Safety (Temporary DB & Cabling)",
+                "description": "Comprehensive audit checklist for ensuring electrical safety compliance of temporary Distribution Boards (DBs) and associated cabling in accordance with Indian electrical standards and best practices.",
+                "items": [
+                    {
+                        "question": "Condition of temporary Distribution Board (DB) enclosures, including ingress protection (IP) rating and physical integrity?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verification of proper earthing for temporary DBs and connected equipment as per BIS/IS standards. Record Earth Resistance value.",
+                        "type": "text",
+                        "placeholder": "Enter Earth Resistance value in Ohms",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assessment of temporary cabling routes for mechanical protection, segregation, and avoidance of trip hazards, particularly near high-traffic areas or areas involving 'Maid/Housekeeping' or 'Security Guard' movement.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "% Compliance",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Functionality check of Residual Current Devices (RCDs) / Earth Leakage Circuit Breakers (ELCBs) in temporary DBs.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify common defects observed in temporary cabling and connections.",
+                        "type": "checkbox",
+                        "options": [
+                            "Damaged insulation",
+                            "Loose connections",
+                            "Inadequate strain relief",
+                            "Overloaded circuits",
+                            "Improper jointing",
+                            "Lack of cable markers",
+                            "Exposed conductors"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Overall adherence to site-specific electrical safety procedures and work permits for temporary electrical installations, including periodic checks and maintenance logs.",
+                        "type": "radio",
+                        "options": [
+                            "Fully Adhered",
+                            "Partially Adhered",
+                            "Not Adhered"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category_name": "\ud83e\udd57 Hospitality & Cloud Kitchens",
+        "checklists": [
+            {
+                "title": "Cloud Kitchen/Dark Kitchen (Zomato/Swiggy Compliance)",
+                "description": "Comprehensive audit checklist for evaluating operational, hygiene, and regulatory compliance of cloud kitchens operating within the Indian food delivery ecosystem (Zomato/Swiggy).",
+                "items": [
+                    {
+                        "question": "Verification of mandatory regulatory licenses (FSSAI License, GST Registration, Local Municipal Trade License) validity and prominent display as per Indian regulations.",
+                        "type": "radio",
+                        "options": [
+                            "Compliant (All valid & displayed)",
+                            "Partially Compliant (Minor gaps)",
+                            "Non-Compliant (Major gaps/missing)",
+                            "Not Applicable"
+                        ],
+                        "placeholder": "Specify missing licenses or display issues.",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assessment of overall kitchen hygiene, sanitation, pest control measures, and waste management protocols. (Including floor cleanliness, equipment sanitation, refuse segregation)",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "placeholder": "Rate overall hygiene compliance percentage (0-100%).",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Review of staff compliance with health check-ups, uniform protocols, and availability of designated Maid/Housekeeping/Security Guard as per operational requirements.",
+                        "type": "checkbox",
+                        "options": [
+                            "Staff Health Cards Valid & Updated",
+                            "Uniforms Clean & Complete (IST Standard)",
+                            "Designated Maid/Housekeeping Present (if applicable)",
+                            "Security Guard Present (if applicable)",
+                            "Hand Hygiene Stations Operational"
+                        ],
+                        "placeholder": "Select all applicable compliance points.",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verification of critical operational logs: Refrigerated unit temperatures, DG Set operational hours, and evidence of regular equipment maintenance.",
+                        "type": "text",
+                        "placeholder": "Enter latest observed temperature for cold storage (e.g., 4\u00b0C, -18\u00b0C) and DG Set run-hours.",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Inspection of fire safety equipment (extinguishers, smoke detectors) readiness, emergency exits, and adherence to LPG Bank storage and usage regulations (e.g., cylinder segregation, ventilation).",
+                        "type": "radio",
+                        "options": [
+                            "Fully Compliant",
+                            "Minor Non-Compliance",
+                            "Major Non-Compliance"
+                        ],
+                        "placeholder": "Note specific fire safety or LPG storage deviations, and date of last fire audit/chalan.",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluation of adherence to Zomato/Swiggy platform-specific guidelines, menu accuracy on apps, packaging standards, and overall food quality/delivery experience (referencing IST Standard for food safety).",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "placeholder": "Rate compliance with platform specific and quality standards (1=Poor, 5=Excellent).",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Fine Dining Restaurant (Front of House & Washrooms)",
+                "description": "Comprehensive audit checklist for assessing operational efficiency, hygiene, and compliance within the Front of House and guest washroom areas of a fine dining establishment in India, from a Senior Auditor's perspective.",
+                "items": [
+                    {
+                        "question": "Evaluate the overall cleanliness, aesthetic appeal, and ambiance of the Front of House (reception, waiting areas, dining space) against established fine dining benchmarks.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the hygiene and maintenance status of all guest washrooms, identifying specific deficiencies and instances of neglect by Maid/Housekeeping staff.",
+                        "type": "checkbox",
+                        "options": [
+                            "Unclean Commode/Urinal",
+                            "Broken/Non-functional Tap",
+                            "Water Leakage/Stagnation Present",
+                            "Foul Odour Detected",
+                            "Damaged/Malfunctioning Dispenser (Soap/Hand Dryer)",
+                            "Insufficient Lighting/Ventilation",
+                            "Waste Bins Overfilled/Uncovered"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the prominent display of mandatory regulatory licenses and certificates (e.g., FSSAI License, Trade License, Fire NOC) as per Indian legal requirements in the Front of House.",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Confirm the consistent availability of essential washroom amenities (e.g., toilet paper, liquid hand soap, hand towels) and adherence to the posted cleaning schedule by Maid/Housekeeping staff.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "placeholder": "e.g. Percentage of amenities available and schedule adherence",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Inspect the operational readiness of the DG Set and associated power backup systems critical for uninterrupted FOH operations, noting current fuel levels and last scheduled maintenance date.",
+                        "type": "text",
+                        "placeholder": "e.g. Fuel Level (L): [Value], Last Service Date: [DD-MM-YYYY]",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the vigilance, presentation, and adherence to entry/exit protocols by the deployed Security Guard(s) at the main entrance during operational hours.",
+                        "type": "radio",
+                        "options": [
+                            "Satisfactory",
+                            "Needs Improvement",
+                            "Unsatisfactory"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Corporate Cafeteria (Bulk Food Handling)",
+                "description": "Comprehensive audit checklist for evaluating operational, hygiene, and compliance standards within a corporate cafeteria specializing in bulk food handling, with specific focus on Indian regulatory and practical aspects.",
+                "items": [
+                    {
+                        "question": "Is the current FSSAI license prominently displayed and valid as per statutory requirements?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant",
+                            "Not Applicable"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the internal temperature (\u00b0C) of the main walk-in chiller for bulk perishable items.",
+                        "type": "text",
+                        "placeholder": "Enter temperature in \u00b0C",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the observed personal hygiene practices of the kitchen and serving staff during audit (e.g., uniform cleanliness, hairnets, handwashing).",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Percentage of waste segregated at source and disposed of as per established schedules (e.g., wet, dry, hazardous, with appropriate challan records).",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify critical equipment showing signs of disrepair, malfunction, or overdue calibration (e.g., DG Set, blast chiller, deep fryers, dishwashers, water purifiers).",
+                        "type": "checkbox",
+                        "options": [
+                            "DG Set",
+                            "Blast Chiller",
+                            "Deep Fryers",
+                            "Dishwashers",
+                            "Ovens",
+                            "Water Purifiers",
+                            "Exhaust Systems",
+                            "Other (specify in notes)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the safety and operational compliance of the LPG bank storage area and associated piping as per IST standards (e.g., ventilation, leak detection, fire safety equipment).",
+                        "type": "radio",
+                        "options": [
+                            "Fully Compliant",
+                            "Minor Non-Compliance",
+                            "Major Non-Compliance"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Hotel Housekeeping (Room Turnaround & Mini-bar)",
+                "description": "Comprehensive audit checklist for evaluating the efficiency, compliance, and quality standards of housekeeping operations related to room turnaround and mini-bar management in an Indian hotel setting.",
+                "items": [
+                    {
+                        "question": "Percentage of guest rooms observed to be prepared and 'turned around' within the stipulated Standard Operating Procedure (SOP) timeframes (e.g., for light clean vs. full clean).",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Is the mini-bar stocking process compliant with established inventory controls, including verification against vendor 'Chalan' and adherence to 'FSSAI License Display' standards for perishables?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Overall assessment of cleanliness and hygiene standards observed in sampled guest rooms, including bathroom sanitation, linen quality, and dust-free surfaces, adhering to perceived 'IST Standard' of hospitality.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any deficiencies in the training records or daily task sheet completion for 'Maid/Housekeeping' staff, especially regarding chemical handling, waste disposal, and emergency protocols (e.g., 'DG Set' operation areas).",
+                        "type": "checkbox",
+                        "options": [
+                            "Incomplete Training Records",
+                            "Missing Daily Task Sheets",
+                            "Lack of SOP Sign-offs",
+                            "Inadequate Chemical Handling Training",
+                            "No Emergency Protocol Drills"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the ambient temperature (\u00b0C) of mini-bar refrigerators in a randomly sampled set of rooms to ensure optimal chilling and food safety.",
+                        "type": "text",
+                        "placeholder": "Enter temperature in \u00b0C",
+                        "unit": "\u00b0C",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Are communication protocols between 'Maid/Housekeeping' staff and the 'Security Guard' / maintenance team efficient for promptly addressing guest room defects, maintenance issues, or security concerns?",
+                        "type": "radio",
+                        "options": [
+                            "Efficient and Prompt",
+                            "Inefficient and Delayed"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Bar & Pub Safety (Fire Exits & Stock Audit)",
+                "description": "Comprehensive audit checklist for ensuring robust fire safety protocols and accurate inventory management in bar and pub establishments, adhering to Indian regulatory standards.",
+                "items": [
+                    {
+                        "question": "Are all designated fire exits and escape routes clearly marked, unobstructed, and operational as per local municipal fire safety norms and BIS/IST standards?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any defects or non-conformities observed in fire extinguishers (valid service tag), smoke detectors, emergency lighting, or the DG Set for emergency power backup functionality.",
+                        "type": "checkbox",
+                        "options": [
+                            "Fire Extinguishers out of date/non-functional",
+                            "Smoke Detectors non-operational",
+                            "Emergency Lighting failure",
+                            "DG Set not test-run/maintained",
+                            "Blocked access to equipment",
+                            "No defects observed"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall safety compliance level of the LPG Bank, gas manifold system, and kitchen fire suppression systems, including visible FSSAI License display and maintenance records.",
+                        "type": "slider",
+                        "min": 1,
+                        "max": 10,
+                        "unit": "Compliance Score",
+                        "placeholder": "Rate safety compliance (1-10)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Calculate and report the variance percentage between physical stock count and book inventory (based on Chalan/Invoice data) for high-value liquor and spirits.",
+                        "type": "text",
+                        "placeholder": "Enter calculated variance %",
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the adherence to FSSAI guidelines for storage, handling, and temperature control of perishable food items, including FIFO/LIFO implementation and expiry date monitoring.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "options": [],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Percentage of Security Guard and Maid/Housekeeping staff who have received and can demonstrate understanding of mandated emergency evacuation and safety protocols.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "placeholder": "Enter % of compliant staff",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category_name": "\ud83d\udecd\ufe0f Retail & Malls",
+        "checklists": [
+            {
+                "title": "Supermarket/Hypermarket (Expiry Check & FIFO)",
+                "description": "Comprehensive audit checklist for evaluating adherence to expiry date management and First-In, First-Out (FIFO) principles within supermarket/hypermarket operations in India, ensuring compliance with regulatory standards and operational best practices.",
+                "items": [
+                    {
+                        "question": "Is the system for periodic verification of expiry dates on general merchandise (e.g., packaged foods, groceries) robust and compliant with FSSAI regulations?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant",
+                            "Partially Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the percentage adherence to First-In, First-Out (FIFO) principle for highly perishable items such as dairy products, fresh produce, and bakery goods.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the current temperature readings (\u00b0C) for a sample of refrigerated and frozen display units, ensuring compliance with IST Standard for cold chain integrity.",
+                        "type": "text",
+                        "placeholder": "e.g., Dairy: 4\u00b0C, Frozen Veg: -18\u00b0C",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any deficiencies in the dedicated segregation area and procedures for expired, damaged, or recalled stock awaiting formal 'Chalan' or disposal.",
+                        "type": "checkbox",
+                        "options": [
+                            "No dedicated segregation zone",
+                            "Inadequate labelling/identification",
+                            "Mixed with saleable inventory",
+                            "Disposal 'Chalan' process not clearly defined",
+                            "Area unhygienic/disorganised"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall effectiveness of staff training and awareness programs related to expiry date checking, FIFO principles, and product rotation best practices.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify the prominent and valid display of mandatory regulatory licenses (e.g., FSSAI License, Shop & Establishment Certificate) and operational permits (e.g., DG Set permit if applicable).",
+                        "type": "radio",
+                        "options": [
+                            "All Documents Compliant & Displayed",
+                            "Some Documents Missing/Expired/Not Displayed",
+                            "Significant Non-Compliance"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Fashion Retail Store (Trial Room & Loss Prevention) Audit",
+                "description": "Comprehensive audit checklist for assessing security, privacy, and operational efficiency within trial rooms and overall loss prevention measures in a fashion retail environment in India.",
+                "items": [
+                    {
+                        "question": "Is the trial room privacy and integrity maintained as per internal policy and IST Standards (e.g., no hidden cameras, secure fittings, appropriate visibility to staff for safety but not privacy invasion)?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "What is the accuracy percentage of physical stock count reconciliation against the ERP/POS system for high-value items/categories identified as high-risk for shrinkage?",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall vigilance and adherence to security protocols by the deployed Security Guard (e.g., visitor log maintenance, Chalan verification for goods movement, bag checks at exit).",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify issues observed related to trial room housekeeping, maintenance, and operational readiness:",
+                        "type": "checkbox",
+                        "options": [
+                            "Poor lighting/damaged bulbs",
+                            "Dirty mirrors/surfaces",
+                            "Damaged hooks/fittings/benches",
+                            "Unemptied bins/clutter",
+                            "Insufficient Maid/Housekeeping schedule adherence",
+                            "No floor staff presence for assistance/monitoring",
+                            "Damaged/missing CCTV camera in proximity"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the NVR/DVR System Serial Number, confirm available days of backup footage, and verify DG Set operational status for power backup of surveillance systems.",
+                        "type": "text",
+                        "placeholder": "Enter NVR/DVR S.No., Backup Days (e.g., 30 days), and DG Set Status (e.g., Operational/Non-Operational)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the effectiveness percentage of the Electronic Article Surveillance (EAS) system in detecting un-deactivated tags at the exit points during discreet test runs with tagged merchandise.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Jewelry Store (Opening/Closing Security Protocol)",
+                "description": "Comprehensive audit checklist for ensuring robust security protocols during opening and closing operations of a jewelry retail establishment in India.",
+                "items": [
+                    {
+                        "question": "Are all primary vault doors and display showcase locking mechanisms fully functional and securely engaged as per protocol?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the DG Set operational hours since last service and current diesel fuel tank percentage during daily opening check.",
+                        "type": "text",
+                        "placeholder": "e.g. 150 hours, 75% fuel",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Percentage of active CCTV cameras operational and verification of successful off-site data backup completion.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the overall alertness, visible presence, and adherence to assigned post duties by on-duty Security Guards during closing procedures.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any instances of non-compliance regarding the arming of multi-zone alarm systems and adherence to perimeter breach detection protocols.",
+                        "type": "checkbox",
+                        "options": [
+                            "Alarm system not armed",
+                            "Specific zones disarmed",
+                            "Perimeter sensors bypassed",
+                            "Delayed arming",
+                            "No breach test conducted"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify reconciliation of high-value inventory based on 'Chalan' documents against physical stock movement records (vault to display / display to vault).",
+                        "type": "text",
+                        "placeholder": "e.g. Matched, Discrepancy found (Qty 2, Item XYZ)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Mall Common Area (Escalators & Fire Hydrants)",
+                "description": "Comprehensive audit checklist for operational efficiency and safety compliance of common area escalators and the integrated fire hydrant system within mall premises as per Indian safety standards.",
+                "items": [
+                    {
+                        "question": "Assess the operational status, smooth movement, and functionality of emergency stop buttons for all common area escalators/travelators.",
+                        "type": "radio",
+                        "options": [
+                            "Operational & All Safety Features OK",
+                            "Operational with Minor Snags/Defects",
+                            "Non-Operational or Major Safety Flaws"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the static and dynamic pressure readings (in Bar) at the furthest fire hydrant landing valve from the fire pump house.",
+                        "type": "text",
+                        "placeholder": "Static: __ Bar, Dynamic: __ Bar",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall cleanliness, maintenance, and aesthetic upkeep of the escalator/travelator components (steps, handrails, skirts) reflecting 'Maid/Housekeeping' standards.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any defects or non-compliances for fire extinguishers, hose reels, and associated fire fighting equipment in common areas.",
+                        "type": "checkbox",
+                        "options": [
+                            "Extinguisher Expiry Date Passed",
+                            "Pressure Gauge in Red Zone (Low)",
+                            "Security Seal Missing/Broken",
+                            "Hose Reel Damaged/Kinked",
+                            "Nozzle/Branch Pipe Missing",
+                            "Hydrostatic Test Due (Chalan missing)",
+                            "Improper Mounting Height"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate the visibility, functionality, and proper placement of emergency exit signage and lighting, especially near escalators and fire assembly points, ensuring compliance with 'IST Standard' luminance.",
+                        "type": "rating",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Review the Fire Pump Room and DG Set logbooks for routine checks, fuel levels, and recent maintenance entries. Record observations on their readiness for emergency power backup and water supply.",
+                        "type": "text",
+                        "placeholder": "Enter observations on logbook compliance, fuel levels, battery status, and general readiness of DG Set/Fire Pumps.",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Electronics Showroom (Demo Unit Functionality)",
+                "description": "Comprehensive audit checklist to assess the operational readiness, performance, and environmental integrity of demo units within an electronics showroom, ensuring optimal customer experience and adherence to display standards, as per Indian operational realities.",
+                "items": [
+                    {
+                        "question": "Verify stable power supply and network connectivity (Wi-Fi/Ethernet) for all active demo units, ensuring no intermittent disconnections or reliance on unstable grid power.",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess visual clarity (pixel integrity, brightness uniformity) and audio output (speaker function, distortion absence) for key display units, including TVs, laptops, and smartphones.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "unit": "Stars",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Evaluate responsiveness and calibration accuracy of interactive features (e.g., touchscreens, remote controls, smart assistant integration) across diverse demo units.",
+                        "type": "slider",
+                        "min": 1,
+                        "max": 10,
+                        "unit": "Scale (1=Poor, 10=Excellent)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record current Operating System/firmware version and confirm last update date for selected smart devices (e.g., Smart TVs, Laptops, Phones) to ensure security and feature currency as per OEM guidelines.",
+                        "type": "text",
+                        "placeholder": "e.g. Android 13, v2.0.1, 2023-11-15",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Inspect physical condition of demo units for defects (scratches, dents, missing parts) and verify presence of essential demo accessories (remotes, power cables, styluses), ensuring 'Housekeeping' standards are met.",
+                        "type": "checkbox",
+                        "options": [
+                            "Scratches/Scuffs",
+                            "Dents/Cracks",
+                            "Missing Accessories",
+                            "Damaged Cables",
+                            "Non-Functional Buttons",
+                            "Excessive Dust/Grime"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Confirm operational status and last service check of critical showroom support infrastructure, such as DG Set (Diesel Generator) for power backup, and general showroom environment (lighting, AC temperature as per IST Standard) impacting demo performance.",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category_name": "\ud83c\udfe2 Facility Management (FM)",
+        "checklists": [
+            {
+                "title": "IT Park Server Room (AC Cooling & Fire Gas) Audit",
+                "description": "Comprehensive audit checklist for critical infrastructure components, ensuring optimal operational environment, safety compliance, and robust redundancy for IT Park server rooms as per Indian standards.",
+                "items": [
+                    {
+                        "question": "Record current ambient temperature (\u00b0C) and relative humidity (RH %) inside the server room as per IST Standard guidelines.",
+                        "type": "text",
+                        "placeholder": "e.g., 22.5\u00b0C, 45% RH",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify N+1 redundancy for AC cooling units and their current operational status (e.g., primary/secondary cycling, active/standby mode).",
+                        "type": "radio",
+                        "options": [
+                            "Compliant & Fully Operational",
+                            "Partial Compliance/Operational Issues Detected",
+                            "Non-Compliant/Major Issues"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Confirm the Fire Suppression System (FSS) control panel displays 'Normal' status and all associated alarms are clear. Note the last service/re-certification date.",
+                        "type": "text",
+                        "placeholder": "e.g., Normal; Last Service: DD-MM-YYYY",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the average pressure levels of all fire suppression gas cylinders as a percentage of their optimal charge. (Refer to pressure gauge readings).",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any critical environmental or safety deficiencies within the server room infrastructure (e.g., cable management, earthing, DG Set connectivity, emergency exits).",
+                        "type": "checkbox",
+                        "options": [
+                            "Sub-optimal Cable Management (Pathways/Trays)",
+                            "Inadequate/Faulty Earthing for Racks/Equipment",
+                            "Blocked/Unmarked Emergency Exits",
+                            "Non-functional/Missing Smoke/Heat Detectors",
+                            "Fire Suppression Warning Signage Missing/Obscured",
+                            "No Seamless Connectivity to DG Set for Critical Cooling/Power",
+                            "Unauthorised Access/Lack of Security Guard Patrol Records"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall security, operational compliance, and maintenance posture of the IT Park Server Room, considering aspects like access control, cleanliness (Maid/Housekeeping), and documentation.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Corporate Washroom Cleaning Log (Hourly)",
+                "description": "This checklist is designed for hourly verification of corporate washroom cleaning standards to ensure optimal hygiene and facility maintenance, adhering to prescribed internal protocols.",
+                "items": [
+                    {
+                        "question": "Overall Washroom Cleanliness and Hygiene Rating post-cleaning (IST Standard).",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "unit": "stars",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Are all toilet bowls and urinals visibly clean, free from stains, and flushed properly?",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any non-functional or depleted amenities in the washroom.",
+                        "type": "checkbox",
+                        "options": [
+                            "Soap Dispenser Empty",
+                            "Hand Dryer Not Working",
+                            "Paper Towel Dispenser Empty/Missing",
+                            "Water Tap Leakage",
+                            "Dustbin Overfilled/Missing Lid"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Percentage of washroom floor area observed to be clean, dry, and slip-hazard free.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Name/ID of Maid/Housekeeping personnel who performed cleaning and actual time of completion (HH:MM IST).",
+                        "type": "text",
+                        "placeholder": "e.g. Renu D., 14:30 IST",
+                        "allow_notes": false,
+                        "allow_media": false
+                    },
+                    {
+                        "question": "Are all lights and exhaust fans operational, ensuring proper illumination and ventilation?",
+                        "type": "radio",
+                        "options": [
+                            "Pass",
+                            "Fail"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "DG Set (Diesel Generator) Maintenance Check",
+                "description": "Comprehensive audit checklist for routine and preventive maintenance inspection of DG Sets, ensuring operational efficiency and compliance with safety standards in an Indian operational context.",
+                "items": [
+                    {
+                        "question": "Verify DG Set engine oil level, quality, and clarity as per OEM specifications.",
+                        "type": "radio",
+                        "options": [
+                            "Within Specified Limits & Clear",
+                            "Low Level/Discoloured",
+                            "High Level/Contaminated",
+                            "Requires Immediate Change"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record Diesel fuel consumption (in Litres per operational hour) observed during the last documented load test or operational cycle.",
+                        "type": "text",
+                        "placeholder": "Enter consumption in L/Hr (e.g., 25.5)",
+                        "unit": "L/Hr",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the percentage of rated load maintained by the DG Set during the most recent test run or actual power cut event.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Inspect and confirm the functionality of critical alarms, safety interlocks, and emergency shutdown mechanisms.",
+                        "type": "checkbox",
+                        "options": [
+                            "No Active Alarms Present",
+                            "Low Oil Pressure Alarm Active",
+                            "High Engine Temperature Alarm Active",
+                            "Overspeed Shutdown Functional",
+                            "Emergency Stop Button Functional",
+                            "Fuel Leakage Detected"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the visual appearance of exhaust emissions during a brief test run (e.g., absence of excessive black/white smoke).",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Confirm the date of the last preventive maintenance service and verify the availability of the corresponding service Chalan/report.",
+                        "type": "text",
+                        "placeholder": "Enter DD-MM-YYYY (e.g., 15-08-2023)",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "STP/WTP (Sewage Treatment Plant) Daily Log",
+                "description": "Daily operational log for Sewage/Effluent Treatment Plants to monitor performance, compliance, and maintenance requirements as per Indian regulatory standards.",
+                "items": [
+                    {
+                        "question": "Is the STP/WTP operating within specified parameters as per IST Standard guidelines?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record current readings for Inlet Flow (KLD), Treated Water pH, and Residual Chlorine (ppm).",
+                        "type": "text",
+                        "placeholder": "Enter KLD, pH, ppm values",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the operational efficiency of the sludge dewatering unit (e.g., Filter Press/Centrifuge).",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify any observed malfunctions or critical defects in key plant equipment.",
+                        "type": "checkbox",
+                        "options": [
+                            "Blower Malfunction",
+                            "Pump Leakage/Failure",
+                            "DG Set Operational Issue",
+                            "Control Panel Fault",
+                            "Valve Leakage",
+                            "Instrumentation Error",
+                            "Other (Specify)"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the overall housekeeping, cleanliness, and safety compliance of the STP/WTP premises.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Verify chemical inventory levels and ensure disposal chalans for sludge/hazardous waste are properly maintained.",
+                        "type": "radio",
+                        "options": [
+                            "Verified & Compliant",
+                            "Discrepancy Noted"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            },
+            {
+                "title": "Pest Control Service Report (Cockroach/Rodent)",
+                "description": "Comprehensive audit checklist for evaluating the effectiveness and compliance of pest control services for cockroach and rodent management.",
+                "items": [
+                    {
+                        "question": "Was the pest control service conducted strictly as per the agreed Scope of Work (SoW) and IST Standard schedule, covering all designated areas including DG Set room and LPG Bank?",
+                        "type": "radio",
+                        "options": [
+                            "Compliant",
+                            "Non-Compliant"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Rate the observed current infestation level for cockroaches/rodents in critical areas such as kitchen, FSSAI License Display areas, and utility shafts.",
+                        "type": "rating",
+                        "min": 1,
+                        "max": 5,
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Identify issues with bait stations, glue traps, or rodenticides deployed, particularly in Maid/Housekeeping stores and Security Guard cabins.",
+                        "type": "checkbox",
+                        "options": [
+                            "Missing/Damaged Bait Station",
+                            "Inactive/Dusty Glue Trap",
+                            "Bait Consumed/Expired",
+                            "Improper Placement",
+                            "Evidence of Tampering"
+                        ],
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Record the specific chemical formulations used, their batch numbers, manufacturer, and estimated quantity applied (as per Chalan/service report).",
+                        "type": "text",
+                        "placeholder": "e.g., Cypermethrin 10% EC, Batch#PC202305, 500ml",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Assess the current adherence to recommended sanitation protocols and the effectiveness of structural exclusion measures implemented since the last service.",
+                        "type": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "unit": "%",
+                        "allow_notes": true,
+                        "allow_media": true
+                    },
+                    {
+                        "question": "Detail any specific observations of pest activity (e.g., droppings, gnaw marks, live pests) or harborage points requiring immediate attention, along with proposed actions.",
+                        "type": "text",
+                        "placeholder": "e.g., Rodent droppings found near electrical panel in server room; Seal cable entry points.",
+                        "allow_notes": true,
+                        "allow_media": true
+                    }
+                ]
+            }
+        ]
+    }
+]
