@@ -22,9 +22,11 @@ export function getStaticPaths() {
     const paths: any[] = [];
     rawData.forEach((category: any) => {
         category.checklists.forEach((checklist: any) => {
+            const slug = toSlug(checklist.title);
             paths.push({
-                params: { slug: toSlug(checklist.title) },
+                params: { slug },
                 props: {
+                    slug,
                     checklist,
                     categoryName: stripEmojis(category.category_name),
                 },
@@ -35,7 +37,7 @@ export function getStaticPaths() {
     return paths;
 }
 
-const { checklist, categoryName } = Astro.props;
+const { slug, checklist, categoryName } = Astro.props;
 ---
 
 <Layout
@@ -73,7 +75,7 @@ const { checklist, categoryName } = Astro.props;
                 <div class="checklist-items">
                     {
                         checklist.items.map((item: any, index: number) => (
-                            <div class="item-card">
+                            <div class="item-card" data-slug={slug} data-item-index={index}>
                                 <div class="item-header">
                                     <span class="item-number">{index + 1}</span>
                                     <h3>{item.question}</h3>
@@ -202,9 +204,9 @@ const { checklist, categoryName } = Astro.props;
                                     )}
                                 </div>
 
-                                <div class="item-meta">
+                                <div class="item-meta" data-meta-container>
                                     {item.allow_notes && (
-                                        <button class="meta-btn" type="button">
+                                        <button class="meta-btn meta-btn-notes" type="button" title="Add or edit notes">
                                             <svg
                                                 width="16"
                                                 height="16"
@@ -216,12 +218,13 @@ const { checklist, categoryName } = Astro.props;
                                                 stroke-linejoin="round"
                                             >
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                            </svg>{" "}
-                                            Add Notes
+                                            </svg>
+                                            <span class="meta-btn-text">Add Notes</span>
                                         </button>
                                     )}
                                     {item.allow_media && (
-                                        <button class="meta-btn" type="button">
+                                        <label class="meta-btn meta-btn-media" title="Attach image or video">
+                                            <input type="file" accept="image/*,video/*" class="media-input-hidden" data-media-input aria-label="Attach media" />
                                             <svg
                                                 width="16"
                                                 height="16"
@@ -246,11 +249,13 @@ const { checklist, categoryName } = Astro.props;
                                                     r="1.5"
                                                 />
                                                 <polyline points="21 15 16 10 5 21" />
-                                            </svg>{" "}
-                                            Attach Media
-                                        </button>
+                                            </svg>
+                                            <span class="meta-btn-text">Attach Media</span>
+                                        </label>
                                     )}
                                 </div>
+                                <div class="item-notes" data-notes-container style="display: none;"></div>
+                                <div class="item-media-preview" data-media-container></div>
                             </div>
                         ))
                     }
@@ -308,35 +313,133 @@ const { checklist, categoryName } = Astro.props;
             }
         });
 
-        // Add notes functionality
-        document.querySelectorAll('.meta-btn').forEach((btn) => {
-            if (btn.textContent?.includes('Add Notes')) {
-                btn.addEventListener('click', () => {
-                    const notes = prompt('Enter your notes:');
-                    if (notes) {
-                        // Store notes (you can use localStorage or send to server)
-                        localStorage.setItem(`notes-${Date.now()}`, notes);
-                        alert('Notes saved!');
-                    }
-                });
+        // Notes and media storage keys
+        const storageKey = (slug: string, idx: number, type: 'notes' | 'media') =>
+            `checklist-${slug}-item-${idx}-${type}`;
+
+        // Load and render saved notes/media for all items
+        document.querySelectorAll('.item-card[data-slug][data-item-index]').forEach((card) => {
+            const slug = (card as HTMLElement).dataset.slug!;
+            const idx = parseInt((card as HTMLElement).dataset.itemIndex ?? '0', 10);
+            const notesEl = card.querySelector('[data-notes-container]') as HTMLElement;
+            const mediaEl = card.querySelector('[data-media-container]') as HTMLElement;
+
+            const savedNotes = localStorage.getItem(storageKey(slug, idx, 'notes'));
+            if (savedNotes && notesEl) {
+                notesEl.style.display = 'block';
+                notesEl.innerHTML = `<div class="notes-content"><textarea class="notes-textarea" rows="3" placeholder="Add notes...">${escapeHtml(savedNotes)}</textarea><button type="button" class="notes-remove" title="Remove notes">×</button></div>`;
+                bindNotesEvents(card, slug, idx, notesEl);
             }
 
-            if (btn.textContent?.includes('Attach Media')) {
-                btn.addEventListener('click', () => {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*,video/*';
-                    input.onchange = (e) => {
-                        const file = (e.target as HTMLInputElement).files?.[0];
-                        if (file) {
-                            // Handle file upload (you can use FormData to send to server)
-                            console.log('File selected:', file.name);
-                            alert(`File "${file.name}" selected. Upload functionality can be connected to your backend.`);
-                        }
-                    };
-                    input.click();
-                });
+            const savedMedia = localStorage.getItem(storageKey(slug, idx, 'media'));
+            if (savedMedia && mediaEl) {
+                try {
+                    const { name, type, data } = JSON.parse(savedMedia);
+                    renderMediaPreview(mediaEl, name, type, data, () => {
+                        localStorage.removeItem(storageKey(slug, idx, 'media'));
+                        mediaEl.innerHTML = '';
+                    });
+                } catch {}
             }
+        });
+
+        function escapeHtml(text: string) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function bindNotesEvents(card: Element, slug: string, idx: number, notesEl: HTMLElement) {
+            const textarea = notesEl.querySelector('.notes-textarea') as HTMLTextAreaElement;
+            const removeBtn = notesEl.querySelector('.notes-remove') as HTMLButtonElement;
+            const updateRemoveVisibility = () => {
+                if (removeBtn) removeBtn.style.visibility = textarea?.value.trim() ? 'visible' : 'hidden';
+            };
+            const save = () => {
+                const val = textarea?.value.trim();
+                if (val) localStorage.setItem(storageKey(slug, idx, 'notes'), val);
+                else localStorage.removeItem(storageKey(slug, idx, 'notes'));
+            };
+            updateRemoveVisibility();
+            textarea?.addEventListener('blur', save);
+            textarea?.addEventListener('input', updateRemoveVisibility);
+            removeBtn?.addEventListener('click', () => {
+                localStorage.removeItem(storageKey(slug, idx, 'notes'));
+                notesEl.style.display = 'none';
+                notesEl.innerHTML = '';
+            });
+        }
+
+        function renderMediaPreview(container: HTMLElement, name: string, mimeType: string, dataUrl: string, onRemove: () => void) {
+            const isVideo = mimeType.startsWith('video/');
+            container.innerHTML = `
+                <div class="media-preview">
+                    ${isVideo ? `<video src="${dataUrl}" controls class="media-thumb"></video>` : `<img src="${dataUrl}" alt="${escapeHtml(name)}" class="media-thumb" />`}
+                    <span class="media-name">${escapeHtml(name)}</span>
+                    <button type="button" class="media-remove" title="Remove media">×</button>
+                </div>
+            `;
+            container.querySelector('.media-remove')?.addEventListener('click', onRemove);
+        }
+
+        // Add Notes button: show/expand notes area
+        document.querySelectorAll('.meta-btn-notes').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.item-card');
+                if (!card) return;
+                const slug = (card as HTMLElement).dataset.slug!;
+                const idx = parseInt((card as HTMLElement).dataset.itemIndex ?? '0', 10);
+                const notesEl = card.querySelector('[data-notes-container]') as HTMLElement;
+                if (!notesEl) return;
+
+                if (notesEl.style.display === 'block') {
+                    (notesEl.querySelector('.notes-textarea') as HTMLTextAreaElement)?.focus();
+                    return;
+                }
+                notesEl.style.display = 'block';
+                const current = localStorage.getItem(storageKey(slug, idx, 'notes')) ?? '';
+                notesEl.innerHTML = `<div class="notes-content"><textarea class="notes-textarea" rows="3" placeholder="Add notes...">${escapeHtml(current)}</textarea><button type="button" class="notes-remove" title="Remove notes">×</button></div>`;
+                (notesEl.querySelector('.notes-textarea') as HTMLTextAreaElement)?.focus();
+                bindNotesEvents(card, slug, idx, notesEl);
+            });
+        });
+
+        // Attach Media: handle file input
+        document.querySelectorAll('.media-input-hidden').forEach((input) => {
+            input.addEventListener('change', (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (!file) return;
+                const card = (e.target as HTMLElement).closest('.item-card');
+                if (!card) return;
+                const slug = (card as HTMLElement).dataset.slug!;
+                const idx = parseInt((card as HTMLElement).dataset.itemIndex ?? '0', 10);
+                const mediaEl = card.querySelector('[data-media-container]') as HTMLElement;
+                if (!mediaEl) return;
+
+                const MAX_SIZE = 500 * 1024; // 500KB for localStorage safety
+                if (file.size > MAX_SIZE) {
+                    alert(`File too large (max ${Math.round(MAX_SIZE / 1024)}KB). Use a smaller image.`);
+                    (e.target as HTMLInputElement).value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const dataUrl = reader.result as string;
+                    const payload = JSON.stringify({ name: file.name, type: file.type, data: dataUrl });
+                    try {
+                        localStorage.setItem(storageKey(slug, idx, 'media'), payload);
+                        renderMediaPreview(mediaEl, file.name, file.type, dataUrl, () => {
+                            localStorage.removeItem(storageKey(slug, idx, 'media'));
+                            mediaEl.innerHTML = '';
+                        });
+                    } catch (err) {
+                        alert('Storage limit exceeded. Use a smaller file.');
+                    }
+                };
+                reader.readAsDataURL(file);
+                (e.target as HTMLInputElement).value = '';
+            });
         });
     });
 </script>
@@ -587,6 +690,114 @@ const { checklist, categoryName } = Astro.props;
         color: #111827;
     }
 
+    .meta-btn-media {
+        cursor: pointer;
+    }
+
+    .media-input-hidden {
+        position: absolute;
+        width: 0;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+    }
+
+    .item-notes,
+    .item-media-preview {
+        margin-top: 1rem;
+        padding-left: 3rem;
+    }
+
+    .notes-content {
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .notes-textarea {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 1px solid #eaeaea;
+        border-radius: 0.5rem;
+        font-family: inherit;
+        font-size: 0.9rem;
+        resize: vertical;
+        min-height: 4rem;
+    }
+
+    .notes-textarea:focus {
+        outline: none;
+        border-color: #345ebd;
+    }
+
+    .notes-remove {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border: 1px solid #eaeaea;
+        background: #fff;
+        color: #6b7280;
+        font-size: 1.25rem;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+        padding: 0;
+    }
+
+    .notes-remove:hover {
+        background: #fef2f2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+
+    .media-preview {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 0.5rem;
+        border: 1px solid #eaeaea;
+        max-width: 280px;
+    }
+
+    .media-thumb {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 0.375rem;
+    }
+
+    .media-name {
+        flex: 1;
+        font-size: 0.85rem;
+        color: #4b5563;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .media-remove {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border: none;
+        background: #e5e7eb;
+        color: #6b7280;
+        font-size: 1.1rem;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        padding: 0;
+        transition: all 0.2s;
+    }
+
+    .media-remove:hover {
+        background: #fecaca;
+        color: #dc2626;
+    }
+
     @media screen and (max-width: 900px) {
         .content-layout {
             flex-direction: column;
@@ -602,7 +813,9 @@ const { checklist, categoryName } = Astro.props;
             padding: 1.5rem;
         }
 
-        .item-input {
+        .item-input,
+        .item-notes,
+        .item-media-preview {
             padding-left: 0;
         }
 
