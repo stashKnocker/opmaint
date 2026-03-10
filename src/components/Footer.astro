@@ -1,5 +1,6 @@
 ---
-// Footer Component
+// Footer Component – links aligned with www.opmaint.com
+const baseUrl = "https://www.opmaint.com";
 ---
 
 <footer class="footer">
@@ -9,20 +10,20 @@
             <div class="footer-column">
                 <h3>Product</h3>
                 <ul>
-                    <li><a href="#">Asset Management</a></li>
-                    <li><a href="#">Parts Inventory Management</a></li>
-                    <li><a href="#">Checklists and Inspections</a></li>
-                    <li><a href="#">Preventive Maintenance</a></li>
-                    <li><a href="#">Reporting</a></li>
-                    <li><a href="#">Work Order Management</a></li>
+                    <li><a href={`${baseUrl}/use-cases/asset-management`}>Asset Management</a></li>
+                    <li><a href={`${baseUrl}/use-cases/parts-inventory`}>Parts Inventory Management</a></li>
+                    <li><a href={`${baseUrl}/use-cases/checklists-inspection`}>Checklists and Inspections</a></li>
+                    <li><a href={`${baseUrl}/use-cases/preventive-maintenance`}>Preventive Maintenance</a></li>
+                    <li><a href={`${baseUrl}/use-cases/reporting-analytics`}>Reporting</a></li>
+                    <li><a href={`${baseUrl}/work-order`}>Work Order Management</a></li>
                 </ul>
 
                 <h3 style="margin-top: 2rem;">Opmaint</h3>
                 <ul>
-                    <li><a href="#">CMMS</a></li>
-                    <li><a href="#">Enterprise Asset Management</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Request Demo</a></li>
+                    <li><a href={`${baseUrl}/cmms-software`}>CMMS</a></li>
+                    <li><a href={`${baseUrl}/asset-management`}>Enterprise Asset Management</a></li>
+                    <li><a href={`${baseUrl}/pricing`}>Pricing</a></li>
+                    <li><a href={`${baseUrl}/book-demo`}>Request Demo</a></li>
                 </ul>
             </div>
 
@@ -30,18 +31,18 @@
             <div class="footer-column">
                 <h3>Industries</h3>
                 <ul>
-                    <li><a href="#">Manufacturing Overview</a></li>
-                    <li><a href="#">Building Materials</a></li>
-                    <li><a href="#">Chemicals</a></li>
-                    <li><a href="#">Plastics</a></li>
-                    <li><a href="#">Automotive</a></li>
-                    <li><a href="#">Retail</a></li>
-                    <li><a href="#">Food and Beverage</a></li>
-                    <li><a href="#">Restaurants</a></li>
-                    <li><a href="#">Education and Schools</a></li>
-                    <li><a href="#">Facility Management</a></li>
-                    <li><a href="#">Property Management</a></li>
-                    <li><a href="#">Hospitality</a></li>
+                    <li><a href={`${baseUrl}/industry/manufacturing`}>Manufacturing Overview</a></li>
+                    <li><a href={`${baseUrl}/industry/building-materials`}>Building Materials</a></li>
+                    <li><a href={`${baseUrl}/industry/chemicals`}>Chemicals</a></li>
+                    <li><a href={`${baseUrl}/industry/plastics`}>Plastics</a></li>
+                    <li><a href={`${baseUrl}/industry/automotives`}>Automotive</a></li>
+                    <li><a href={`${baseUrl}/industry/retail`}>Retail</a></li>
+                    <li><a href={`${baseUrl}/industry/food-and-beverages`}>Food and Beverage</a></li>
+                    <li><a href={`${baseUrl}/restaurant-management`}>Restaurants</a></li>
+                    <li><a href={`${baseUrl}/industry/education-and-schools`}>Education and Schools</a></li>
+                    <li><a href={`${baseUrl}/facilities-management-cmms`}>Facility Management</a></li>
+                    <li><a href={baseUrl}>Property Management</a></li>
+                    <li><a href={`${baseUrl}/hotel-hospitality-cmms-software`}>Hospitality</a></li>
                 </ul>
             </div>
 
@@ -49,10 +50,12 @@
             <div class="footer-column">
                 <h3>Resources</h3>
                 <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">ROI Calculator</a></li>
-                    <li><a href="#">API Documentation</a></li>
+                    <li><a href="/">Procedure Hub</a></li>
+                    <li><a href="/tools">Tools</a></li>
+                    <li><a href="https://help.opmaint.com/en/" target="_blank" rel="noopener">Help Center</a></li>
+                    <li><a href={`${baseUrl}/blog`}>Blog</a></li>
+                    <li><a href={`${baseUrl}/calculator`}>ROI Calculator</a></li>
+                    <li><a href={baseUrl}>API Documentation</a></li>
                 </ul>
             </div>
 
@@ -60,10 +63,10 @@
             <div class="footer-column">
                 <h3>Company</h3>
                 <ul>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href={baseUrl}>About us</a></li>
+                    <li><a href="https://opmaint.zohorecruit.in/jobs/Careers" target="_blank" rel="noopener">Careers</a></li>
+                    <li><a href={`${baseUrl}/terms-of-service`}>Terms of Service</a></li>
+                    <li><a href={`${baseUrl}/privacy-policy`}>Privacy Policy</a></li>
                 </ul>
             </div>
         </div>
@@ -71,59 +74,27 @@
         <div class="footer-divider"></div>
 
         <div class="footer-badges">
-            <a href="#" class="store-badge google-play">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    width="20"
-                    height="20"
-                    ><path
-                        d="M3.609 1.814L13.792 12 3.61 22.186a1.18 1.18 0 0 1-.36-.88V2.694c0-.36.14-.68.36-.88zM4.685 1.542l10.51 6.068-1.787 1.787L4.685 1.542zM16.5 8.358l4.49 2.593c.96.554.96 1.544 0 2.098l-4.49 2.593-1.872-1.87L16.5 8.358zM15.195 16.39l-1.787-1.787-8.723 8.723 10.51-6.936z"
-                        fill="#fff"></path>
-                </svg>
-                <div class="badge-text">
-                    <span class="small">GET IT ON</span>
-                    <span class="large">Google Play</span>
-                </div>
+            <a href="https://play.google.com/store/apps/details?hl=en_IN&id=com.opmaint.opmaint" class="badge-link" target="_blank" rel="noopener" aria-label="Get Opmaint on Google Play">
+                <img
+                    src="/69620929c7bab2a2adb7f7fa_676182ee6251cca10ecdda11_Google Play Badge (1).webp"
+                    alt="Google Play Badge"
+                    class="store-badge-img"
+                />
             </a>
-            <a href="#" class="store-badge app-store">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    width="20"
-                    height="20"
-                    ><path
-                        d="M12.98 9.9c.7-1.12 1.6-1.92 2.82-2.12-.22-1.22-.92-2.22-2.12-2.52-1.2-.3-2.6.2-3.3.9-.8.7-1.3 1.8-1.2 2.9 1.32.1 2.6-.08 3.8-1.16zm-5.18 6.5c-1.3 1.9-2.72 3.82-4.92 3.82-.1 0-.2 0-.2 0-2.2-.2-3.8-1.8-5.1-3.6-2.5-3.6-3.8-8.2-2-11.4 1.25-2.2 3.52-3.6 5.92-3.6 2.3 0 4.1 1.4 5.3 1.4 1.2 0 3.2-1.6 5.8-1.6 2.7 0 4.9 1.4 6.2 3.7-5.3 2.7-4.4 10.2 1 12.3-1.2 3.4-3.6 7-6.8 7-2.3 0-3.3-1.4-5.2-1.4-2 0-3.1 1.4-5.4 1.4-1.2 0-2.5-.5-3.6-1.5z"
-                        fill="#fff"></path>
-                </svg>
-                <div class="badge-text">
-                    <span class="small">Download on the</span>
-                    <span class="large">App Store</span>
-                </div>
+            <a href="https://apps.apple.com/in/app/opmaint/id6502909679" class="badge-link" target="_blank" rel="noopener" aria-label="Download Opmaint on the App Store">
+                <img
+                    src="/6962093e6759aeb999e35d81_67375ba9563351c7bd98d082_App Store Badge MaintainX June 2024.webp"
+                    alt="App Store Badge"
+                    class="store-badge-img"
+                />
             </a>
-            <div
-                class="store-badge nvidia-program"
-                style="background: white; color: black; padding: 0.35rem 0.75rem;"
-            >
-                <svg
-                    viewBox="0 0 46 46"
-                    width="30"
-                    height="30"
-                    fill="#76B900"
-                    style="margin-right: 0.25rem;"
-                    ><path
-                        d="M23 0C10.3 0 0 10.3 0 23s10.3 23 23 23 23-10.3 23-23S35.7 0 23 0zm11.7 34.2H11.3V11.8h23.4v22.4z"
-                    ></path><path d="M29.5 16.3h-13v13.4h5.2V21h7.8z"></path>
-                </svg>
-                <div class="badge-text">
-                    <span style="font-size: 0.6rem; font-weight: 500;"
-                        >NVIDIA</span
-                    >
-                    <span style="font-size: 0.6rem; font-weight: 500;"
-                        >Inception Program</span
-                    >
-                </div>
-            </div>
+            <a href={baseUrl} class="badge-link">
+                <img
+                    src="/694d36d6d2bc3d5ccc6acaa4_WhatsApp Image 2025-12-22 at 8.34.40 PM (2).jpeg"
+                    alt="WhatsApp Badge"
+                    class="store-badge-img"
+                />
+            </a>
         </div>
 
         <div class="footer-divider"></div>
@@ -131,7 +102,7 @@
         <div class="footer-copyright">
             <p>&copy; 2025 Opmaint. All rights reserved.</p>
             <div class="social-icons">
-                <a href="#" class="social-btn" aria-label="X (Twitter)">
+                <a href="https://x.com/opmaintcmms" class="social-btn" aria-label="Follow Opmaint on X" target="_blank" rel="noopener">
                     <svg
                         viewBox="0 0 24 24"
                         width="16"
@@ -142,7 +113,7 @@
                         ></path>
                     </svg>
                 </a>
-                <a href="#" class="social-btn" aria-label="LinkedIn">
+                <a href="https://linkedin.com/company/opmaint" class="social-btn" aria-label="Follow Opmaint on LinkedIn" target="_blank" rel="noopener">
                     <svg
                         viewBox="0 0 24 24"
                         width="16"
@@ -227,45 +198,20 @@
         flex-wrap: wrap;
     }
 
-    .store-badge {
-        display: flex;
-        align-items: center;
-        background-color: #000;
-        border: 1px solid #000;
-        color: white;
-        text-decoration: none;
-        padding: 0.4rem 0.75rem;
-        border-radius: 8px;
-        gap: 0.5rem;
-        min-width: 140px;
+    .badge-link {
+        display: block;
         transition: transform 0.2s;
     }
 
-    .store-badge:hover {
+    .badge-link:hover {
         transform: translateY(-2px);
     }
 
-    .nvidia-program {
-        border-color: transparent;
-        border-radius: 4px;
-        min-width: 120px;
-    }
-
-    .badge-text {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.1;
-    }
-
-    .badge-text .small {
-        font-size: 0.6rem;
-        font-weight: 500;
-    }
-
-    .badge-text .large {
-        font-size: 1rem;
-        font-weight: 600;
-        font-family: "Switzer", sans-serif;
+    .store-badge-img {
+        height: 38px;
+        width: auto;
+        border-radius: 6px;
+        display: block;
     }
 
     .footer-copyright {

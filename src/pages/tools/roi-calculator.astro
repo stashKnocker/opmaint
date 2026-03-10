@@ -1,0 +1,347 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+---
+
+<Layout title="ROI Calculator - Opmaint">
+    <Navbar />
+    <main class="page-container">
+        <a href="/tools" class="back-link">
+            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all tools
+        </a>
+
+        <div class="tool-wrapper">
+            <div class="tool-header">
+                <div class="icon-wrapper">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1>ROI Calculator</h1>
+                    <p class="tool-subtitle">Return on Investment</p>
+                </div>
+            </div>
+
+            <p class="tool-desc">
+                Calculate the return on investment (ROI) for maintenance projects, equipment purchases, or process improvements. Helps justify investments and measure their financial impact.
+            </p>
+
+            <div class="calculator-card">
+                <div class="calculator-form">
+                    <div class="input-group">
+                        <label for="initial-investment">Initial Investment ($)</label>
+                        <input type="number" id="initial-investment" min="0" step="0.01" placeholder="e.g., 50000" />
+                        <small>Total upfront cost of the investment</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="annual-savings">Annual Savings/Returns ($)</label>
+                        <input type="number" id="annual-savings" min="0" step="0.01" placeholder="e.g., 15000" />
+                        <small>Expected annual savings or returns</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="time-period">Time Period (Years)</label>
+                        <input type="number" id="time-period" min="1" step="1" placeholder="e.g., 5" />
+                        <small>Investment evaluation period</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="operating-costs">Annual Operating Costs ($)</label>
+                        <input type="number" id="operating-costs" min="0" step="0.01" placeholder="e.g., 2000" />
+                        <small>Ongoing annual costs (optional)</small>
+                    </div>
+                    <button id="calc-roi" class="calc-btn">Calculate ROI</button>
+
+                    <div class="result-box" id="roi-result-box" style="display: none;">
+                        <div>
+                            <span class="result-label">ROI Percentage</span>
+                            <span class="result-value" id="roi-percentage">0%</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Total Returns</span>
+                            <span class="result-value" id="total-returns">$0</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Net Profit</span>
+                            <span class="result-value" id="net-profit">$0</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Payback Period</span>
+                            <span class="result-value" id="payback-period">0 years</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <h3>How is ROI Calculated?</h3>
+                <div class="formula-box">
+                    <div><span>ROI %</span> = ((<span>Total Returns</span> - <span>Initial Investment</span>) / <span>Initial Investment</span>) × 100</div>
+                    <div style="margin-top: 1rem;"><span>Total Returns</span> = (<span>Annual Savings</span> - <span>Operating Costs</span>) × <span>Time Period</span></div>
+                    <div style="margin-top: 1rem;"><span>Net Profit</span> = <span>Total Returns</span> - <span>Initial Investment</span></div>
+                    <div style="margin-top: 1rem;"><span>Payback Period</span> = <span>Initial Investment</span> / (<span>Annual Savings</span> - <span>Operating Costs</span>)</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    document.getElementById("calc-roi")?.addEventListener("click", () => {
+        const initialInvestment = parseFloat((document.getElementById("initial-investment") as HTMLInputElement).value);
+        const annualSavings = parseFloat((document.getElementById("annual-savings") as HTMLInputElement).value);
+        const timePeriod = parseFloat((document.getElementById("time-period") as HTMLInputElement).value);
+        const operatingCosts = parseFloat((document.getElementById("operating-costs") as HTMLInputElement).value) || 0;
+
+        if (initialInvestment > 0 && annualSavings >= 0 && timePeriod >= 1) {
+            const netAnnualSavings = annualSavings - operatingCosts;
+            const totalReturns = netAnnualSavings * timePeriod;
+            const netProfit = totalReturns - initialInvestment;
+            const roiPercentage = ((netProfit / initialInvestment) * 100).toFixed(2);
+            const paybackPeriod = netAnnualSavings > 0 ? (initialInvestment / netAnnualSavings).toFixed(2) : "N/A";
+
+            const resultBox = document.getElementById("roi-result-box");
+            const roiPercentageEl = document.getElementById("roi-percentage");
+            const totalReturnsEl = document.getElementById("total-returns");
+            const netProfitEl = document.getElementById("net-profit");
+            const paybackPeriodEl = document.getElementById("payback-period");
+
+            if (resultBox && roiPercentageEl && totalReturnsEl && netProfitEl && paybackPeriodEl) {
+                roiPercentageEl.textContent = `${roiPercentage}%`;
+                totalReturnsEl.textContent = `$${totalReturns.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                netProfitEl.textContent = `$${netProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                paybackPeriodEl.textContent = paybackPeriod === "N/A" ? "N/A" : `${paybackPeriod} years`;
+                resultBox.style.display = "flex";
+            }
+        } else {
+            alert("Please enter valid numbers. Initial investment and time period must be greater than 0.");
+        }
+    });
+</script>
+
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: #111827;
+    }
+
+    .tool-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 0;
+    }
+
+    .tool-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: #ebedfa;
+        color: #345ebd;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #111827;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .tool-subtitle {
+        color: #345ebd;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0.25rem 0 0 0;
+    }
+
+    .tool-desc {
+        color: #4b5563;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+    }
+
+    .calculator-card {
+        background: white;
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 3rem;
+    }
+
+    .calculator-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .input-group label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #374151;
+    }
+
+    .input-group input {
+        padding: 0.8rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1.1rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-group input:focus {
+        border-color: #345ebd;
+        box-shadow: 0 0 0 3px rgba(52, 94, 189, 0.1);
+    }
+
+    .input-group small {
+        color: #6b7280;
+        font-size: 0.85rem;
+    }
+
+    .calc-btn {
+        background: #345ebd;
+        color: white;
+        border: none;
+        padding: 1.2rem;
+        border-radius: 8px;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 0.5rem;
+    }
+
+    .calc-btn:hover {
+        background: #2b4a92;
+    }
+
+    .result-box {
+        margin-top: 1rem;
+        background: #ebedfa;
+        border: 1px solid #cdd5f2;
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .result-box > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .result-label {
+        font-weight: 700;
+        color: #345ebd;
+        font-size: 1.2rem;
+    }
+
+    .result-value {
+        font-weight: 800;
+        color: #345ebd;
+        font-size: 1.8rem;
+    }
+
+    .formula-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid #eaeaea;
+    }
+
+    .formula-section h3 {
+        font-size: 1.25rem;
+        color: #111827;
+        margin: 0 0 1.5rem 0;
+        font-weight: 700;
+    }
+
+    .formula-box {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        font-size: 1.15rem;
+        color: #1f2937;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        line-height: 1.8;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .formula-box span {
+        font-weight: 600;
+        color: #345ebd;
+        padding: 0 0.25rem;
+    }
+
+    .formula-box div {
+        margin-bottom: 0.5rem;
+    }
+
+    .formula-box div:last-child {
+        margin-bottom: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .tool-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .calculator-card {
+            padding: 1.5rem;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+        }
+    }
+</style>

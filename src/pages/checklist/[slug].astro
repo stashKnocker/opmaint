@@ -38,10 +38,13 @@ export function getStaticPaths() {
 const { checklist, categoryName } = Astro.props;
 ---
 
-<Layout>
+<Layout
+	title={`${checklist.title} - Opmaint`}
+	description={checklist.description}
+>
     <Navbar />
     <main class="page-container">
-        <a href="/" class="back-link">
+        <a href="/procedures" class="back-link">
             <svg
                 class="arrow"
                 width="16"
@@ -259,6 +262,85 @@ const { checklist, categoryName } = Astro.props;
     </main>
 </Layout>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Star rating functionality
+        document.querySelectorAll('.stars').forEach((starContainer, itemIndex) => {
+            const stars = starContainer.querySelectorAll('.star-icon');
+            let currentRating = 0;
+
+            stars.forEach((star, starIndex) => {
+                star.addEventListener('click', () => {
+                    currentRating = starIndex + 1;
+                    updateStars(stars, currentRating);
+                });
+
+                star.addEventListener('mouseenter', () => {
+                    highlightStars(stars, starIndex + 1);
+                });
+            });
+
+            starContainer.addEventListener('mouseleave', () => {
+                updateStars(stars, currentRating);
+            });
+
+            function updateStars(starElements: NodeListOf<Element>, rating: number) {
+                starElements.forEach((s, idx) => {
+                    const svg = s as SVGElement;
+                    if (idx < rating) {
+                        svg.style.fill = '#fbbf24';
+                        svg.style.stroke = '#fbbf24';
+                    } else {
+                        svg.style.fill = 'none';
+                        svg.style.stroke = '#d1d5db';
+                    }
+                });
+            }
+
+            function highlightStars(starElements: NodeListOf<Element>, rating: number) {
+                starElements.forEach((s, idx) => {
+                    const svg = s as SVGElement;
+                    if (idx < rating) {
+                        svg.style.fill = '#fbbf24';
+                        svg.style.stroke = '#fbbf24';
+                    }
+                });
+            }
+        });
+
+        // Add notes functionality
+        document.querySelectorAll('.meta-btn').forEach((btn) => {
+            if (btn.textContent?.includes('Add Notes')) {
+                btn.addEventListener('click', () => {
+                    const notes = prompt('Enter your notes:');
+                    if (notes) {
+                        // Store notes (you can use localStorage or send to server)
+                        localStorage.setItem(`notes-${Date.now()}`, notes);
+                        alert('Notes saved!');
+                    }
+                });
+            }
+
+            if (btn.textContent?.includes('Attach Media')) {
+                btn.addEventListener('click', () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*,video/*';
+                    input.onchange = (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0];
+                        if (file) {
+                            // Handle file upload (you can use FormData to send to server)
+                            console.log('File selected:', file.name);
+                            alert(`File "${file.name}" selected. Upload functionality can be connected to your backend.`);
+                        }
+                    };
+                    input.click();
+                });
+            }
+        });
+    });
+</script>
+
 <style>
     .page-container {
         max-width: 1100px;
@@ -435,6 +517,7 @@ const { checklist, categoryName } = Astro.props;
         font-family: inherit;
         resize: vertical;
         font-size: 1rem;
+        box-sizing: border-box;
     }
 
     .text-input:focus {

@@ -1,0 +1,506 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+---
+
+<Layout
+	title="Maintenance Unit Converter - Energy, Pressure, Power | Opmaint"
+	description="Convert units for energy, pressure, power, temperature, and more. Free maintenance unit converter for factory floors and facilities."
+>
+    <Navbar />
+    <main class="page-container">
+        <a href="/tools" class="back-link">
+            <svg
+                class="arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all tools
+        </a>
+
+        <div class="tool-wrapper">
+            <div class="tool-header">
+                <div class="icon-wrapper">
+                    <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                        ></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"
+                        ></polyline><line x1="12" y1="22.08" x2="12" y2="12"
+                        ></line>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Maintenance Unit Converter</h1>
+                    <p class="tool-subtitle">Quickly Convert Standard Units</p>
+                </div>
+            </div>
+
+            <p class="tool-desc">
+                Convert common units used in factory floors, facilities, and
+                machine maintenance, including Energy, Pressure, Power,
+                Temperature, Length, and Volume. Popular conversions: 
+                <strong>HP to Watt</strong>, <strong>kW to HP</strong>, 
+                <strong>PSI to Bar</strong>, <strong>Inches to mm</strong>, and more.
+            </p>
+
+            <div class="popular-conversions">
+                <h3>Popular Conversions</h3>
+                <div class="conversion-tags">
+                    <span>HP → Watt</span>
+                    <span>kW → HP</span>
+                    <span>PSI → Bar</span>
+                    <span>Inches → mm</span>
+                    <span>Bar → PSI</span>
+                    <span>mm → Inches</span>
+                </div>
+            </div>
+
+            <div class="calculator-card">
+                <div class="conversion-form">
+                    <div class="input-group">
+                        <label for="conv-category">Measurement Type</label>
+                        <select id="conv-category">
+                            <option value="power">Power</option>
+                            <option value="pressure">Pressure</option>
+                            <option value="energy">Energy</option>
+                            <option value="temperature">Temperature</option>
+                            <option value="length">Length</option>
+                            <option value="volume">Volume</option>
+                        </select>
+                    </div>
+
+                    <div class="conversion-row">
+                        <div class="conversion-side">
+                            <input
+                                type="number"
+                                id="conv-input"
+                                value="1"
+                                step="any"
+                            />
+                            <select id="conv-from"></select>
+                        </div>
+
+                        <button id="swap-units" class="swap-btn" title="Swap units">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+
+                        <div class="conversion-side">
+                            <input type="number" id="conv-output" readonly />
+                            <select id="conv-to"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    const unitDb: Record<string, Record<string, number>> = {
+        pressure: {
+            PSI: 1,
+            Bar: 0.0689476,
+            "Pascal (Pa)": 6894.76,
+            "Atmosphere (atm)": 0.068046,
+        },
+        power: {
+            "Kilowatt (kW)": 1,
+            "Horsepower (HP)": 1.34102,
+            "Watt (W)": 1000,
+        },
+        energy: {
+            "Kilowatt-hour (kWh)": 1,
+            "Joule (J)": 3600000,
+            BTU: 3412.14,
+            "Kilocalorie (kcal)": 859.845,
+        },
+        length: {
+            "Meter (m)": 1,
+            "Centimeter (cm)": 100,
+            "Millimeter (mm)": 1000,
+            "Inch (in)": 39.3701,
+            "Foot (ft)": 3.28084,
+        },
+        volume: {
+            "Liter (L)": 1,
+            "Gallon (US gal)": 0.264172,
+            "Cubic Meter (m³)": 0.001,
+            "Milliliter (ml)": 1000,
+        },
+    };
+
+    const categorySelect = document.getElementById(
+        "conv-category"
+    ) as HTMLSelectElement;
+    const fromSelect = document.getElementById(
+        "conv-from"
+    ) as HTMLSelectElement;
+    const toSelect = document.getElementById("conv-to") as HTMLSelectElement;
+    const inputVal = document.getElementById("conv-input") as HTMLInputElement;
+    const outputVal = document.getElementById(
+        "conv-output"
+    ) as HTMLInputElement;
+    const swapBtn = document.getElementById("swap-units") as HTMLButtonElement;
+
+    function populateUnits() {
+        const category = categorySelect.value;
+        fromSelect.innerHTML = "";
+        toSelect.innerHTML = "";
+
+        if (category === "temperature") {
+            ["Celsius (°C)", "Fahrenheit (°F)", "Kelvin (K)"].forEach(
+                (unit) => {
+                    fromSelect.options.add(new Option(unit, unit));
+                    toSelect.options.add(new Option(unit, unit));
+                }
+            );
+            toSelect.selectedIndex = 1; // Default to F
+        } else {
+            const units = Object.keys(unitDb[category]);
+            units.forEach((unit) => {
+                fromSelect.options.add(new Option(unit, unit));
+                toSelect.options.add(new Option(unit, unit));
+            });
+            if (units.length > 1) {
+                toSelect.selectedIndex = 1;
+            }
+        }
+        calculateConversion();
+    }
+
+    function calculateConversion() {
+        const category = categorySelect.value;
+        const val = parseFloat(inputVal.value);
+
+        if (isNaN(val)) {
+            outputVal.value = "";
+            return;
+        }
+
+        const from = fromSelect.value;
+        const to = toSelect.value;
+
+        if (category === "temperature") {
+            let celsius = val;
+            // Convert everything to Celsius first
+            if (from === "Fahrenheit (°F)") {
+                celsius = ((val - 32) * 5) / 9;
+            } else if (from === "Kelvin (K)") {
+                celsius = val - 273.15;
+            }
+
+            // Convert Celsius to target
+            let result = celsius;
+            if (to === "Fahrenheit (°F)") {
+                result = (celsius * 9) / 5 + 32;
+            } else if (to === "Kelvin (K)") {
+                result = celsius + 273.15;
+            }
+            outputVal.value = result.toFixed(2);
+        } else {
+            // Using standard ratio conversion
+            const fromRate = unitDb[category][from];
+            const toRate = unitDb[category][to];
+            const baseValue = val / fromRate;
+            const result = baseValue * toRate;
+
+            outputVal.value = parseFloat(result.toPrecision(7)).toString();
+        }
+    }
+
+    // Add swap functionality
+    if (swapBtn) {
+        swapBtn.addEventListener('click', () => {
+            const tempFrom = fromSelect.value;
+            const tempTo = toSelect.value;
+            const tempVal = inputVal.value;
+            const tempOutput = outputVal.value;
+
+            fromSelect.value = tempTo;
+            toSelect.value = tempFrom;
+            inputVal.value = tempOutput;
+            
+            calculateConversion();
+        });
+    }
+
+    if (categorySelect) {
+        categorySelect.addEventListener("change", populateUnits);
+        fromSelect.addEventListener("change", calculateConversion);
+        toSelect.addEventListener("change", calculateConversion);
+        inputVal.addEventListener("input", calculateConversion);
+        // Initialize
+        populateUnits();
+    }
+</script>
+
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: #111827;
+    }
+
+    .back-link .arrow {
+        transition: transform 0.2s;
+    }
+
+    .back-link:hover .arrow {
+        transform: translateX(-4px);
+    }
+
+    .tool-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 0;
+    }
+
+    .tool-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: #ebedfa;
+        color: #345ebd;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #111827;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .tool-subtitle {
+        color: #345ebd;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0.25rem 0 0 0;
+    }
+
+    .tool-desc {
+        color: #4b5563;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+    }
+
+    .calculator-card {
+        background: white;
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        padding: 3rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 3rem;
+    }
+
+    .conversion-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .input-group label {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #374151;
+    }
+
+    .input-group select {
+        padding: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1.1rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        background-color: #f8fafc;
+    }
+
+    .input-group select:focus {
+        border-color: #345ebd;
+        box-shadow: 0 0 0 3px rgba(52, 94, 189, 0.1);
+        background-color: white;
+    }
+
+    .conversion-row {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .conversion-side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .conversion-side input {
+        padding: 1.25rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1.5rem;
+        outline: none;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .conversion-side input:focus {
+        border-color: #345ebd;
+        box-shadow: 0 0 0 3px rgba(52, 94, 189, 0.1);
+    }
+
+    .conversion-side input[readonly] {
+        background: #f8fafc;
+        color: #345ebd;
+        border-color: #e2e8f0;
+    }
+
+    .conversion-side select {
+        padding: 0.8rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .conversion-side select:focus {
+        border-color: #345ebd;
+    }
+
+    .popular-conversions {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #eaeaea;
+    }
+
+    .popular-conversions h3 {
+        font-size: 1.1rem;
+        color: #374151;
+        margin: 0 0 1rem 0;
+        font-weight: 600;
+    }
+
+    .conversion-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .conversion-tags span {
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        color: #4b5563;
+        font-weight: 500;
+    }
+
+    .swap-btn {
+        background: #345ebd;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: -3.5rem;
+        flex-shrink: 0;
+    }
+
+    .swap-btn:hover {
+        background: #2b4a92;
+        transform: rotate(180deg);
+    }
+
+    @media screen and (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .tool-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .calculator-card {
+            padding: 1.5rem;
+        }
+
+        .conversion-row {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .swap-btn {
+            margin-top: 0;
+            transform: rotate(90deg);
+        }
+    }
+</style>

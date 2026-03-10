@@ -1,0 +1,331 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+---
+
+<Layout
+	title="Cold Storage Energy Calculator | Opmaint"
+	description="Calculate energy consumption and operating costs for cold storage facilities. Optimize energy usage and budget."
+>
+    <Navbar />
+    <main class="page-container">
+        <a href="/tools" class="back-link">
+            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all tools
+        </a>
+
+        <div class="tool-wrapper">
+            <div class="tool-header">
+                <div class="icon-wrapper">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Cold Storage Energy Calculator</h1>
+                    <p class="tool-subtitle">Estimate Energy Consumption & Costs</p>
+                </div>
+            </div>
+
+            <p class="tool-desc">
+                Calculate energy consumption and operating costs for cold storage facilities. Helps optimize energy usage and budget for refrigeration systems.
+            </p>
+
+            <div class="calculator-card">
+                <div class="calculator-form">
+                    <div class="input-group">
+                        <label for="storage-volume">Storage Volume (cubic feet or m³)</label>
+                        <input type="number" id="storage-volume" min="0" step="0.01" placeholder="e.g., 10000" />
+                    </div>
+                    <div class="input-group">
+                        <label for="temp-difference">Temperature Difference (°F or °C)</label>
+                        <input type="number" id="temp-difference" min="0" step="0.1" placeholder="e.g., 40" />
+                    </div>
+                    <div class="input-group">
+                        <label for="energy-rate">Energy Rate (kWh per 1000 cu ft per °F difference)</label>
+                        <input type="number" id="energy-rate" min="0" step="0.01" placeholder="e.g., 0.5" />
+                    </div>
+                    <div class="input-group">
+                        <label for="electricity-cost">Electricity Cost ($ per kWh)</label>
+                        <input type="number" id="electricity-cost" min="0" step="0.001" placeholder="e.g., 0.12" />
+                    </div>
+                    <div class="input-group">
+                        <label for="operating-hours">Operating Hours per Day</label>
+                        <input type="number" id="operating-hours" min="0" max="24" step="0.5" placeholder="e.g., 24" />
+                    </div>
+                    <button id="calc-energy" class="calc-btn">Calculate Energy Cost</button>
+
+                    <div class="result-box" id="energy-result-box" style="display: none;">
+                        <div>
+                            <span class="result-label">Daily Energy Consumption</span>
+                            <span class="result-value" id="daily-energy">0 kWh</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Daily Cost</span>
+                            <span class="result-value" id="daily-cost">$0</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Monthly Cost</span>
+                            <span class="result-value" id="monthly-cost">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <h3>How is Energy Calculated?</h3>
+                <div class="formula-box">
+                    <div><span>Daily Energy (kWh)</span> = (<span>Volume</span> / 1000) × <span>Temp Difference</span> × <span>Energy Rate</span> × <span>Hours</span></div>
+                    <div style="margin-top: 1rem;"><span>Daily Cost</span> = <span>Daily Energy</span> × <span>Electricity Cost</span></div>
+                    <div style="margin-top: 1rem;"><span>Monthly Cost</span> = <span>Daily Cost</span> × 30</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    document.getElementById("calc-energy")?.addEventListener("click", () => {
+        const volume = parseFloat((document.getElementById("storage-volume") as HTMLInputElement).value);
+        const tempDiff = parseFloat((document.getElementById("temp-difference") as HTMLInputElement).value);
+        const energyRate = parseFloat((document.getElementById("energy-rate") as HTMLInputElement).value);
+        const cost = parseFloat((document.getElementById("electricity-cost") as HTMLInputElement).value);
+        const hours = parseFloat((document.getElementById("operating-hours") as HTMLInputElement).value);
+
+        if (volume >= 0 && tempDiff >= 0 && energyRate >= 0 && cost >= 0 && hours >= 0 && hours <= 24) {
+            const dailyEnergy = ((volume / 1000) * tempDiff * energyRate * hours).toFixed(2);
+            const dailyCost = (parseFloat(dailyEnergy) * cost).toFixed(2);
+            const monthlyCost = (parseFloat(dailyCost) * 30).toFixed(2);
+            const resultBox = document.getElementById("energy-result-box");
+            const dailyEnergyEl = document.getElementById("daily-energy");
+            const dailyCostEl = document.getElementById("daily-cost");
+            const monthlyCostEl = document.getElementById("monthly-cost");
+            if (resultBox && dailyEnergyEl && dailyCostEl && monthlyCostEl) {
+                dailyEnergyEl.textContent = `${dailyEnergy} kWh`;
+                dailyCostEl.textContent = `$${parseFloat(dailyCost).toLocaleString()}`;
+                monthlyCostEl.textContent = `$${parseFloat(monthlyCost).toLocaleString()}`;
+                resultBox.style.display = "flex";
+            }
+        } else {
+            alert("Please enter valid numbers. Hours must be 0-24.");
+        }
+    });
+</script>
+
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: #111827;
+    }
+
+    .tool-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 0;
+    }
+
+    .tool-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: #ebedfa;
+        color: #345ebd;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #111827;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .tool-subtitle {
+        color: #345ebd;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0.25rem 0 0 0;
+    }
+
+    .tool-desc {
+        color: #4b5563;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+    }
+
+    .calculator-card {
+        background: white;
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 3rem;
+    }
+
+    .calculator-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .input-group label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #374151;
+    }
+
+    .input-group input {
+        padding: 0.8rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1.1rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-group input:focus {
+        border-color: #345ebd;
+        box-shadow: 0 0 0 3px rgba(52, 94, 189, 0.1);
+    }
+
+    .calc-btn {
+        background: #345ebd;
+        color: white;
+        border: none;
+        padding: 1.2rem;
+        border-radius: 8px;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 0.5rem;
+    }
+
+    .calc-btn:hover {
+        background: #2b4a92;
+    }
+
+    .result-box {
+        margin-top: 1rem;
+        background: #ebedfa;
+        border: 1px solid #cdd5f2;
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .result-box > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .result-label {
+        font-weight: 700;
+        color: #345ebd;
+        font-size: 1.2rem;
+    }
+
+    .result-value {
+        font-weight: 800;
+        color: #345ebd;
+        font-size: 1.8rem;
+    }
+
+    .formula-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid #eaeaea;
+    }
+
+    .formula-section h3 {
+        font-size: 1.25rem;
+        color: #111827;
+        margin: 0 0 1.5rem 0;
+        font-weight: 700;
+    }
+
+    .formula-box {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        font-size: 1.15rem;
+        color: #1f2937;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        line-height: 1.8;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .formula-box span {
+        font-weight: 600;
+        color: #345ebd;
+        padding: 0 0.25rem;
+    }
+
+    .formula-box div {
+        margin-bottom: 0.5rem;
+    }
+
+    .formula-box div:last-child {
+        margin-bottom: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .tool-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .calculator-card {
+            padding: 1.5rem;
+        }
+    }
+</style>

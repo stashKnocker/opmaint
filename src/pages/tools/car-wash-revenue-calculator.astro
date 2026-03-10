@@ -1,0 +1,326 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+---
+
+<Layout
+	title="Car Wash Revenue Calculator | Opmaint"
+	description="Calculate potential car wash revenue from wash volume, pricing tiers, and operating hours."
+>
+    <Navbar />
+    <main class="page-container">
+        <a href="/tools" class="back-link">
+            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all tools
+        </a>
+
+        <div class="tool-wrapper">
+            <div class="tool-header">
+                <div class="icon-wrapper">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Car Wash Revenue Calculator</h1>
+                    <p class="tool-subtitle">Estimate Daily & Monthly Revenue</p>
+                </div>
+            </div>
+
+            <p class="tool-desc">
+                Calculate potential revenue for car wash operations based on wash volume, pricing tiers, and operating hours.
+            </p>
+
+            <div class="calculator-card">
+                <div class="calculator-form">
+                    <div class="input-group">
+                        <label for="cars-per-hour">Cars per Hour</label>
+                        <input type="number" id="cars-per-hour" min="0" step="0.1" placeholder="e.g., 15" />
+                    </div>
+                    <div class="input-group">
+                        <label for="avg-price">Average Price per Wash ($)</label>
+                        <input type="number" id="avg-price" min="0" step="0.01" placeholder="e.g., 12.50" />
+                    </div>
+                    <div class="input-group">
+                        <label for="operating-hours">Operating Hours per Day</label>
+                        <input type="number" id="operating-hours" min="0" max="24" step="0.5" placeholder="e.g., 12" />
+                    </div>
+                    <div class="input-group">
+                        <label for="operating-days">Operating Days per Month</label>
+                        <input type="number" id="operating-days" min="0" max="31" step="1" placeholder="e.g., 30" />
+                    </div>
+                    <button id="calc-revenue" class="calc-btn">Calculate Revenue</button>
+
+                    <div class="result-box" id="revenue-result-box" style="display: none;">
+                        <div>
+                            <span class="result-label">Daily Revenue</span>
+                            <span class="result-value" id="daily-revenue">$0</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Monthly Revenue</span>
+                            <span class="result-value" id="monthly-revenue">$0</span>
+                        </div>
+                        <div>
+                            <span class="result-label">Annual Revenue</span>
+                            <span class="result-value" id="annual-revenue">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <h3>How is Revenue Calculated?</h3>
+                <div class="formula-box">
+                    <div><span>Daily Revenue</span> = <span>Cars/Hour</span> × <span>Hours</span> × <span>Price</span></div>
+                    <div style="margin-top: 1rem;"><span>Monthly Revenue</span> = <span>Daily Revenue</span> × <span>Days</span></div>
+                    <div style="margin-top: 1rem;"><span>Annual Revenue</span> = <span>Monthly Revenue</span> × 12</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    document.getElementById("calc-revenue")?.addEventListener("click", () => {
+        const carsPerHour = parseFloat((document.getElementById("cars-per-hour") as HTMLInputElement).value);
+        const avgPrice = parseFloat((document.getElementById("avg-price") as HTMLInputElement).value);
+        const hours = parseFloat((document.getElementById("operating-hours") as HTMLInputElement).value);
+        const days = parseFloat((document.getElementById("operating-days") as HTMLInputElement).value);
+
+        if (carsPerHour >= 0 && avgPrice >= 0 && hours >= 0 && hours <= 24 && days >= 0 && days <= 31) {
+            const dailyRevenue = (carsPerHour * hours * avgPrice).toFixed(2);
+            const monthlyRevenue = (parseFloat(dailyRevenue) * days).toFixed(2);
+            const annualRevenue = (parseFloat(monthlyRevenue) * 12).toFixed(2);
+            const resultBox = document.getElementById("revenue-result-box");
+            const dailyEl = document.getElementById("daily-revenue");
+            const monthlyEl = document.getElementById("monthly-revenue");
+            const annualEl = document.getElementById("annual-revenue");
+            if (resultBox && dailyEl && monthlyEl && annualEl) {
+                dailyEl.textContent = `$${parseFloat(dailyRevenue).toLocaleString()}`;
+                monthlyEl.textContent = `$${parseFloat(monthlyRevenue).toLocaleString()}`;
+                annualEl.textContent = `$${parseFloat(annualRevenue).toLocaleString()}`;
+                resultBox.style.display = "flex";
+            }
+        } else {
+            alert("Please enter valid numbers. Hours must be 0-24, days must be 0-31.");
+        }
+    });
+</script>
+
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: #111827;
+    }
+
+    .tool-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 0;
+    }
+
+    .tool-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: #ebedfa;
+        color: #345ebd;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #111827;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .tool-subtitle {
+        color: #345ebd;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0.25rem 0 0 0;
+    }
+
+    .tool-desc {
+        color: #4b5563;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+    }
+
+    .calculator-card {
+        background: white;
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 3rem;
+    }
+
+    .calculator-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .input-group label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #374151;
+    }
+
+    .input-group input {
+        padding: 0.8rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1.1rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-group input:focus {
+        border-color: #345ebd;
+        box-shadow: 0 0 0 3px rgba(52, 94, 189, 0.1);
+    }
+
+    .calc-btn {
+        background: #345ebd;
+        color: white;
+        border: none;
+        padding: 1.2rem;
+        border-radius: 8px;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 0.5rem;
+    }
+
+    .calc-btn:hover {
+        background: #2b4a92;
+    }
+
+    .result-box {
+        margin-top: 1rem;
+        background: #ebedfa;
+        border: 1px solid #cdd5f2;
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .result-box > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .result-label {
+        font-weight: 700;
+        color: #345ebd;
+        font-size: 1.2rem;
+    }
+
+    .result-value {
+        font-weight: 800;
+        color: #345ebd;
+        font-size: 1.8rem;
+    }
+
+    .formula-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid #eaeaea;
+    }
+
+    .formula-section h3 {
+        font-size: 1.25rem;
+        color: #111827;
+        margin: 0 0 1.5rem 0;
+        font-weight: 700;
+    }
+
+    .formula-box {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        font-size: 1.15rem;
+        color: #1f2937;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        line-height: 1.8;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .formula-box span {
+        font-weight: 600;
+        color: #345ebd;
+        padding: 0 0.25rem;
+    }
+
+    .formula-box div {
+        margin-bottom: 0.5rem;
+    }
+
+    .formula-box div:last-child {
+        margin-bottom: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .tool-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .calculator-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
