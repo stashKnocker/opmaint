@@ -13,7 +13,8 @@ Inside of your Astro project, you'll see the following folders and files:
 ```text
 /
 ├── public/
-│   └── img-8.svg
+│   └── images/
+│       └── img-8.svg
 ├── src
 │   ├── assets
 │   │   └── img-1.svg

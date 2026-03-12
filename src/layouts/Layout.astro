@@ -27,7 +27,7 @@ const imageUrl = image
 	? image.startsWith("http")
 		? image
 		: new URL(image.startsWith("/") ? image : `/${image}`, site).toString()
-	: new URL("/img-4.png", site).toString();
+	: new URL("/images/img-4.png", site).toString();
 ---
 
 <!DOCTYPE html>
@@ -35,8 +35,8 @@ const imageUrl = image
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="/img-3.png" sizes="32x32" />
-		<link rel="apple-touch-icon" href="/img-4.png" sizes="180x180" />
+		<link rel="icon" type="image/png" href="/images/img-3.png" sizes="32x32" />
+		<link rel="apple-touch-icon" href="/images/img-4.png" sizes="180x180" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
