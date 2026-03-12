@@ -86,35 +86,45 @@ const appUrl = "https://app.opmaint.com";
             const category = document.querySelector('.category-badge')?.textContent?.trim() || '';
             const description = document.querySelector('.checklist-header p')?.textContent?.trim() || '';
 
-            const items: { number: number; question: string; options?: string[]; type?: string }[] = [];
+            const items: { number: number; question: string; options?: string[]; type?: string; extra?: string }[] = [];
             document.querySelectorAll('.item-card').forEach((card, index) => {
                 const question = card.querySelector('.item-header h3')?.textContent?.trim() || '';
                 const numberEl = card.querySelector('.item-number');
                 const number = numberEl ? parseInt(numberEl.textContent || '0', 10) : index + 1;
                 const options: string[] = [];
+                let type: string | undefined;
+                let extra: string | undefined;
                 const radioOpts = card.querySelectorAll('.options-group.radio .radio-text');
                 const checkboxOpts = card.querySelectorAll('.options-group.checkbox .checkbox-text');
                 const sliderLabels = card.querySelectorAll('.options-group.slider .slider-labels span');
+                const ratingEl = card.querySelector('.options-group.rating');
+                const textInput = card.querySelector('.text-input') as HTMLTextAreaElement | null;
                 if (radioOpts.length) {
+                    type = 'radio';
                     radioOpts.forEach((el) => {
                         const text = el.textContent?.trim();
                         if (text) options.push(text);
                     });
-                }
-                if (checkboxOpts.length) {
+                } else if (checkboxOpts.length) {
+                    type = 'checkbox';
                     checkboxOpts.forEach((el) => {
                         const text = el.textContent?.trim();
                         if (text) options.push(text);
                     });
-                }
-                if (sliderLabels.length) {
+                } else if (sliderLabels.length) {
+                    type = 'slider';
                     sliderLabels.forEach((el) => {
                         const text = el.textContent?.trim();
                         if (text) options.push(text);
                     });
+                } else if (ratingEl) {
+                    type = 'rating';
+                    extra = 'Rating: 1 to 5';
+                } else if (textInput) {
+                    type = 'text';
+                    extra = textInput.placeholder || 'Enter details...';
                 }
-                const type = radioOpts.length ? 'radio' : checkboxOpts.length ? 'checkbox' : sliderLabels.length ? 'slider' : undefined;
-                items.push({ number, question, options: options.length ? options : undefined, type });
+                items.push({ number, question, options: options.length ? options : undefined, type, extra });
             });
 
             const { jsPDF } = await import('jspdf');
@@ -167,7 +177,7 @@ const appUrl = "https://app.opmaint.com";
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(31, 41, 55);
 
-            items.forEach(({ number, question, options, type }) => {
+            items.forEach(({ number, question, options, type, extra }) => {
                 const questionText = `${number}. ${question}`;
                 const questionLines = doc.splitTextToSize(questionText, maxW - 12);
                 addPageIfNeeded(questionLines.length * lineH + 2);
@@ -189,6 +199,18 @@ const appUrl = "https://app.opmaint.com";
                     doc.setFontSize(12);
                     doc.setTextColor(31, 41, 55);
                     y += 2;
+                } else if (extra) {
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(10);
+                    doc.setTextColor(80, 90, 100);
+                    const hintText = type === 'text' ? '[ ' + extra + ' ]' : extra;
+                    const hintLines = doc.splitTextToSize(hintText, maxW - 20);
+                    addPageIfNeeded(hintLines.length * optLineH + 1);
+                    doc.text(hintLines, margin + 14, y);
+                    y += hintLines.length * optLineH + 4;
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(12);
+                    doc.setTextColor(31, 41, 55);
                 }
             });
 
