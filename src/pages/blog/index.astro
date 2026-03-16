@@ -1,0 +1,1043 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import BlogCard from "../../components/BlogCard.astro";
+
+interface BlogPost {
+	title: string;
+	description: string;
+	categories: string[];
+	slug: string;
+	topic?: string;
+	industry?: string;
+	tag?: string;
+	readingTime?: string;
+	imageUrl?: string;
+}
+
+const baseBlogUrl = "https://www.opmaint.com/blogs";
+const blogCollectionId =
+	import.meta.env.WEBFLOW_BLOG_COLLECTION_ID || "68618eb95b00c73a3559b0d3";
+// Swapped: treat 68618e48... as Topic collection, 68618e6d... as Industry collection
+const topicsCollectionId = "68618e48d81d6f11f41f8824";
+const industryCollectionId = "68618e6da4d161caf308c10f";
+const apiKey = import.meta.env.WEBFLOW_API_KEY;
+
+let posts: BlogPost[] = [];
+let categories: string[] = [];
+let debugMessage: string | null = null;
+
+async function fetchWebflowCollection(
+	collectionId: string,
+	opts: { required?: boolean } = {}
+) {
+	const res = await fetch(
+		`https://api.webflow.com/v2/collections/${collectionId}/items?limit=100`,
+		{
+			headers: {
+				Authorization: `Bearer ${apiKey}`,
+				accept: "application/json",
+			},
+		}
+	);
+
+	if (!res.ok) {
+		const message = `Webflow ${collectionId} responded with ${res.status} ${res.statusText}`;
+		if (opts.required) {
+			throw new Error(message);
+		}
+		console.warn(message);
+		return [] as any[];
+	}
+
+	const data = await res.json();
+	return (data.items || []) as any[];
+}
+
+function normalizeRefIds(raw: any): string[] {
+	if (!raw) return [];
+	const arr = Array.isArray(raw) ? raw : [raw];
+	return arr
+		.map((v) => {
+			if (typeof v === "string") return v;
+			if (v && typeof v === "object") {
+				return v.id || v._id || v["$id"] || null;
+			}
+			return null;
+		})
+		.filter(Boolean) as string[];
+}
+
+if (apiKey) {
+	try {
+		// Fetch filter collections first (optional), blog is required
+		const [industryItems, topicItems] = await Promise.all([
+			fetchWebflowCollection(industryCollectionId, { required: false }),
+			fetchWebflowCollection(topicsCollectionId, { required: false }),
+		]);
+
+		const blogItems = await fetchWebflowCollection(blogCollectionId, {
+			required: true,
+		});
+
+		const industryMap = new Map<string, string>();
+		for (const item of industryItems) {
+			const fd = item.fieldData || {};
+			const name = fd.name || item.name;
+			const id = item.id || item._id;
+			if (id && name) {
+				industryMap.set(id, name);
+			}
+		}
+
+		const topicMap = new Map<string, string>();
+		for (const item of topicItems) {
+			const fd = item.fieldData || {};
+			const name = fd.name || item.name;
+			const id = item.id || item._id;
+			if (id && name) {
+				topicMap.set(id, name);
+			}
+		}
+
+		posts = blogItems.map((item) => {
+			const fd = item.fieldData || {};
+			const title = fd.name || item.name || "Untitled";
+			const description = fd.summary || fd.description || "";
+
+			const industryIds = normalizeRefIds(
+				fd.industry ||
+					fd.industries ||
+					fd["industry-reference"] ||
+					fd["industry-references"] ||
+					fd.Industry
+			);
+			const topicIds = normalizeRefIds(
+				fd.topic ||
+					fd.topics ||
+					fd["topic-reference"] ||
+					fd["topic-references"] ||
+					fd.Topic
+			);
+
+			const industryNames = industryIds
+				.map((id: string) => industryMap.get(id))
+				.filter(Boolean) as string[];
+
+			const topicNames = topicIds
+				.map((id: string) => topicMap.get(id))
+				.filter(Boolean) as string[];
+
+			const combinedCategories = [...topicNames, ...industryNames];
+
+			const imageField =
+				fd.thumbnail ||
+				fd.Thumbnail ||
+				fd["thumbnail-image"] ||
+				fd.mainImage ||
+				fd["main-image"] ||
+				fd.coverImage ||
+				null;
+
+			const imageUrl =
+				imageField && typeof imageField === "object"
+					? imageField.url || imageField.file?.url
+					: typeof imageField === "string"
+					? imageField
+					: undefined;
+
+			const slugField =
+				fd.slug ||
+				fd.Slug ||
+				fd["slug-field"] ||
+				fd["blog-slug"] ||
+				item.slug;
+
+			return {
+				title,
+				description,
+				categories: combinedCategories,
+				topic: topicNames[0],
+				industry: industryNames[0],
+				slug: slugField || item.slug,
+				tag: fd.tagline || fd.label || undefined,
+				readingTime: fd.readingTime || fd["reading-time"] || undefined,
+				imageUrl,
+			} satisfies BlogPost;
+		});
+	} catch (err: any) {
+		debugMessage = err?.message || "Failed to load Webflow blog content.";
+	}
+} else {
+	debugMessage = "WEBFLOW_API_KEY is not set in the environment.";
+}
+
+if (posts.length > 0) {
+	const unique = new Set<string>();
+	for (const post of posts) {
+		for (const cat of post.categories) {
+			if (cat) unique.add(cat);
+		}
+	}
+	categories = ["All", ...Array.from(unique).sort((a, b) => a.localeCompare(b))];
+} else {
+	categories = ["All"];
+}
+
+const featuredPost = posts[0] ?? null;
+const recentPosts = posts.slice(1, 5);
+const secondaryGridPosts = posts.slice(1, 3);
+
+---
+
+<Layout
+	title="The Blog - Maintenance, Metrics & Playbooks | Opmaint"
+	description="Stories and insights to transform how you manage maintenance, assets, and frontline teams. Practical playbooks, metrics, and templates from Opmaint."
+	canonical="/blog"
+>
+	<Navbar />
+
+	<main class="blog-page">
+		{featuredPost && (
+			<>
+				<section class="hero-header">
+					<div class="hero-title-block">
+						<h1>The Blog</h1>
+						<p>
+							Stories and insights to transform the way you manage
+							facilities, assets, and teams.
+						</p>
+					</div>
+				</section>
+				<div class="hero-divider"></div>
+
+				<section class="hero-feature">
+					<a
+						href={`${baseBlogUrl}/${featuredPost.slug}`}
+						class="hero-feature-main"
+					>
+						<div class="hero-image-shell">
+							<div class="hero-image-accent"></div>
+							{featuredPost.imageUrl && (
+								<img
+									src={featuredPost.imageUrl}
+									alt={featuredPost.title}
+									loading="lazy"
+								/>
+							)}
+						</div>
+						<div class="hero-feature-text">
+							{(featuredPost.topic || featuredPost.industry) && (
+								<span class="hero-feature-category">
+									{featuredPost.topic || featuredPost.industry}
+								</span>
+							)}
+							<h2>{featuredPost.title}</h2>
+						</div>
+					</a>
+
+					<aside class="hero-sidebar">
+						<h3>Recent Articles</h3>
+						<ul>
+							{
+								recentPosts.map((post) => (
+									<li>
+										<a
+											href={`${baseBlogUrl}/${post.slug}`}
+											class="hero-sidebar-item"
+										>
+											{post.imageUrl && (
+												<div class="hero-sidebar-thumb">
+													<img
+														src={post.imageUrl}
+														alt={post.title}
+														loading="lazy"
+													/>
+												</div>
+											)}
+											<div class="hero-sidebar-text">
+												<p>{post.title}</p>
+											</div>
+										</a>
+									</li>
+								))
+							}
+						</ul>
+					</aside>
+				</section>
+
+				{secondaryGridPosts.length > 0 && (
+					<section class="hero-secondary-grid">
+						{
+							secondaryGridPosts.map((post) => (
+								<a
+									href={`${baseBlogUrl}/${post.slug}`}
+									class="hero-secondary-card"
+								>
+									<div class="hero-secondary-media">
+										{post.imageUrl && (
+											<img
+												src={post.imageUrl}
+												alt={post.title}
+												loading="lazy"
+											/>
+										)}
+									</div>
+									<div class="hero-secondary-text">
+										{(post.topic || post.industry) && (
+											<span class="hero-secondary-category">
+												{post.topic || post.industry}
+											</span>
+										)}
+										<h3>{post.title}</h3>
+									</div>
+								</a>
+							))
+						}
+					</section>
+				)}
+			</>
+		)}
+
+		<section class="blog-header">
+			<h2>Browse all</h2>
+
+			<button id="blog-filter-toggle" class="filter-toggle">
+				<span>Filter</span>
+				<svg
+					class="filter-toggle-icon"
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<polyline points="6 9 12 15 18 9" />
+				</svg>
+			</button>
+
+			<div class="filters-row" id="filters-panel">
+				<div class="search-wrapper">
+					<div class="search-input">
+						<input
+							type="search"
+							id="blog-search"
+							placeholder="Search"
+							autocomplete="off"
+						/>
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<circle cx="11" cy="11" r="7"></circle>
+							<line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+						</svg>
+					</div>
+				</div>
+				<div class="chips-row" id="category-filters">
+					{
+						categories.map((category, index) => (
+							<button
+								class={`category-chip ${index === 0 ? "active" : ""}`}
+								data-category={category}
+							>
+								{category}
+							</button>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section class="blog-grid-section">
+			{posts.length === 0 ? (
+				<div class="empty-state">
+					<h2>No blog posts yet</h2>
+					<p>
+						We couldn&apos;t load posts from your Webflow collection.
+						Check that <code>WEBFLOW_API_KEY</code> is set and that the
+						collections contain published blog items.
+					</p>
+					{debugMessage && <p class="empty-debug">{debugMessage}</p>}
+				</div>
+			) : (
+				<>
+					<div class="blog-grid" id="blog-grid">
+						{
+							posts.map((post, index) => (
+								<div
+									class="blog-grid-item"
+									data-index={index}
+									data-category={post.categories.join(",")}
+									data-title={post.title.toLowerCase()}
+									data-description={post.description.toLowerCase()}
+								>
+									<BlogCard
+										title={post.title}
+										description={post.description}
+										category={post.topic || post.industry || ""}
+										href={`${baseBlogUrl}/${post.slug}`}
+										readingTime={post.readingTime}
+										imageUrl={post.imageUrl}
+									/>
+								</div>
+							))
+						}
+					</div>
+					{posts.length > 0 && (
+						<div class="view-more-wrapper">
+							<button id="blog-view-more" class="view-more-btn">
+								View more
+							</button>
+						</div>
+					)}
+				</>
+			)}
+		</section>
+	</main>
+</Layout>
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const chips = Array.from(
+			document.querySelectorAll<HTMLButtonElement>(".category-chip")
+		);
+		const cards = Array.from<HTMLElement>(
+			document.querySelectorAll(".blog-grid-item")
+		);
+		const searchInput = document.getElementById(
+			"blog-search"
+		) as HTMLInputElement | null;
+		const filterToggle = document.getElementById(
+			"blog-filter-toggle"
+		) as HTMLButtonElement | null;
+		const filtersPanel = document.getElementById(
+			"filters-panel"
+		) as HTMLDivElement | null;
+		const viewMoreBtn = document.getElementById(
+			"blog-view-more"
+		) as HTMLButtonElement | null;
+		const gridEl = document.getElementById(
+			"blog-grid"
+		) as HTMLDivElement | null;
+
+		let maxVisibleByRows = Infinity;
+		let expanded = false;
+
+		function computeMaxVisible() {
+			if (!gridEl) return;
+			const style = window.getComputedStyle(gridEl);
+			const template = style.getPropertyValue("grid-template-columns");
+			const cols = template
+				.split(" ")
+				.filter((p) => p && p !== "/").length;
+			const perRow = cols || 1;
+			const maxRows = 4;
+			maxVisibleByRows = perRow * maxRows;
+		}
+
+		function applyRowClamp() {
+			if (!viewMoreBtn) return;
+			if (expanded) {
+				cards.forEach((card) => {
+					card.style.display =
+						card.getAttribute("data-hidden-by-filter") === "true"
+							? "none"
+							: "";
+				});
+				viewMoreBtn.textContent = "View less";
+				return;
+			}
+
+			cards.forEach((card, index) => {
+				const hiddenByFilter =
+					card.getAttribute("data-hidden-by-filter") === "true";
+				if (hiddenByFilter) {
+					card.style.display = "none";
+					return;
+				}
+				card.style.display = index < maxVisibleByRows ? "" : "none";
+			});
+			viewMoreBtn.textContent = "View more";
+		}
+
+		function applyFilter(category: string, search: string) {
+			const normalized = category === "All" ? null : category.toLowerCase();
+			const query = search.trim().toLowerCase();
+
+			cards.forEach((card) => {
+				const cardCategory = (card.getAttribute("data-category") || "").toLowerCase();
+				const title = card.getAttribute("data-title") || "";
+				const desc = card.getAttribute("data-description") || "";
+
+				const matchesCategory =
+					!normalized || cardCategory.split(",").includes(normalized);
+				const matchesSearch =
+					!query ||
+					title.includes(query) ||
+					desc.includes(query) ||
+					(cardCategory || "").toLowerCase().includes(query);
+
+				const visible = matchesCategory && matchesSearch;
+				card.setAttribute(
+					"data-hidden-by-filter",
+					visible ? "false" : "true"
+				);
+			});
+
+			applyRowClamp();
+		}
+
+		chips.forEach((chip) => {
+			chip.addEventListener("click", () => {
+				chips.forEach((c) => c.classList.remove("active"));
+				chip.classList.add("active");
+				const cat = chip.getAttribute("data-category") || "All";
+				const search = searchInput?.value || "";
+				applyFilter(cat, search);
+			});
+		});
+
+		searchInput?.addEventListener("input", () => {
+			const activeChip =
+				chips.find((c) => c.classList.contains("active")) || chips[0];
+			const cat = activeChip?.getAttribute("data-category") || "All";
+			applyFilter(cat, searchInput.value);
+		});
+
+		filterToggle?.addEventListener("click", () => {
+			if (!filtersPanel) return;
+			const open = filtersPanel.classList.toggle("open");
+			filterToggle.classList.toggle("open", open);
+		});
+
+		viewMoreBtn?.addEventListener("click", () => {
+			expanded = !expanded;
+			applyRowClamp();
+		});
+
+		window.addEventListener("resize", () => {
+			if (!cards.length) return;
+			computeMaxVisible();
+			if (!expanded) applyRowClamp();
+		});
+
+		if (cards.length) {
+			computeMaxVisible();
+			applyFilter("All", searchInput?.value || "");
+		}
+	});
+</script>
+
+<style>
+	.blog-page {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 4rem 4rem;
+		box-sizing: border-box;
+		padding-top: 4.5rem;
+	}
+
+	.hero-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 0.5rem;
+	}
+
+	.hero-title-block h1 {
+		font-family: "Switzer", sans-serif;
+		font-size: 3.4rem;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		margin: 0;
+		color: #111827;
+	}
+
+	.hero-title-block p {
+		margin: 0.75rem 0 0;
+		font-size: 1rem;
+		color: #4b5563;
+		max-width: 26rem;
+	}
+
+	.hero-divider {
+		height: 1px;
+		background-color: #e5e7eb;
+		margin: 1.75rem 0 2rem;
+	}
+
+	.hero-feature {
+		display: grid;
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+		gap: 2.5rem;
+		align-items: stretch;
+		margin-bottom: 3.25rem;
+	}
+
+	.hero-feature-main {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.hero-image-shell {
+		position: relative;
+		border-radius: 1rem;
+		overflow: hidden;
+		min-height: 220px;
+		display: flex;
+	}
+
+	.hero-image-accent {
+		width: 22%;
+		background: #ffb347;
+	}
+
+	.hero-image-shell img {
+		width: 100%;
+		object-fit: cover;
+	}
+
+	.hero-feature-text {
+		margin-top: 1.25rem;
+	}
+
+	.hero-feature-category {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.2rem 0.7rem;
+		border-radius: 9999px;
+		background-color: #eef2ff;
+		color: #111827;
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-family: "DM Sans", sans-serif;
+		margin-bottom: 0.6rem;
+	}
+
+	.hero-feature-text h2 {
+		margin: 0;
+		font-family: "Switzer", sans-serif;
+		font-size: 1.7rem;
+		font-weight: 800;
+		color: #111827;
+	}
+
+	.hero-sidebar {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.hero-sidebar h3 {
+		margin: 0 0 1.25rem;
+		font-family: "Switzer", sans-serif;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #111827;
+	}
+
+	.hero-sidebar ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.hero-sidebar-item {
+		display: grid;
+		grid-template-columns: 80px minmax(0, 1fr);
+		gap: 1rem;
+		align-items: center;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.hero-sidebar-thumb {
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: #e5e7eb;
+		height: 56px;
+	}
+
+	.hero-sidebar-thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hero-sidebar-text p {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.5;
+		color: #111827;
+	}
+
+	.hero-secondary-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2rem;
+		margin: 0 0 3rem;
+	}
+
+	.hero-secondary-card {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+		border-radius: 1rem;
+		overflow: hidden;
+		border: 1px solid #e5e7eb;
+		background-color: #ffffff;
+	}
+
+	.hero-secondary-media {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+	}
+
+	.hero-secondary-media img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.hero-secondary-text {
+		padding: 1.25rem 1.5rem 1.5rem;
+	}
+
+	.hero-secondary-category {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.15rem 0.6rem;
+		border-radius: 9999px;
+		background-color: #eef2ff;
+		color: #111827;
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-family: "DM Sans", sans-serif;
+		margin-bottom: 0.6rem;
+	}
+
+	.hero-secondary-text h3 {
+		margin: 0;
+		font-family: "Switzer", sans-serif;
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: #111827;
+	}
+
+	.blog-header h2 {
+		font-family: "Switzer", sans-serif;
+		font-size: 2rem;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		margin: 0;
+		color: #111827;
+	}
+
+	.filters-row {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+		margin-top: 1.25rem;
+		margin-bottom: 2.25rem;
+	}
+
+	.filter-toggle {
+		display: none;
+		width: 100%;
+		margin-bottom: 1rem;
+		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
+		border: 1.5px solid #345ebd;
+		background-color: #ffffff;
+		color: #345ebd;
+		font-family: "Switzer", sans-serif;
+		font-weight: 600;
+		font-size: 0.95rem;
+		justify-content: center;
+		align-items: center;
+		gap: 0.4rem;
+		transition: background-color 0.15s ease, color 0.15s ease,
+			transform 0.1s ease, border-color 0.15s ease;
+	}
+
+	.filter-toggle.open {
+		background-color: #345ebd;
+		color: #ffffff;
+	}
+
+	.filter-toggle:hover {
+		border-color: #2b4b9b;
+		transform: translateY(-1px);
+	}
+
+	.filter-toggle-icon {
+		transition: transform 0.15s ease;
+	}
+
+	.chips-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.55rem 0.75rem;
+	}
+
+	.category-chip {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		padding: 0.45rem 0.95rem;
+		border-radius: 9999px;
+		border: 1px solid #111827;
+		background: #111827;
+		font-family: "DM Sans", sans-serif;
+		font-size: 0.8rem;
+		color: #ffffff;
+		cursor: pointer;
+		text-align: left;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-weight: 600;
+		transition: background-color 0.12s ease, color 0.12s ease,
+			border-color 0.12s ease;
+	}
+
+	.category-chip:hover {
+		background-color: #ffffff;
+		color: #111827;
+	}
+
+	.category-chip.active {
+		background-color: #ffffff;
+		color: #111827;
+	}
+
+	.blog-grid-section {
+		padding-top: 0.25rem;
+	}
+
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 2rem;
+	}
+
+	.search-wrapper {
+		min-width: 220px;
+	}
+
+	.search-input {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.9rem;
+		border-radius: 9999px;
+		border: 1px solid #111827;
+		background-color: #ffffff;
+		max-width: 260px;
+		margin-left: 0;
+	}
+
+	.search-input input {
+		border: none;
+		outline: none;
+		font-family: "DM Sans", sans-serif;
+		font-size: 0.9rem;
+		flex: 1;
+	}
+
+	.search-input svg {
+		color: #111827;
+	}
+
+	.view-more-wrapper {
+		display: flex;
+		justify-content: center;
+		margin-top: 2.5rem;
+	}
+
+	.view-more-btn {
+		border-radius: 9999px;
+		border: 1px solid #111827;
+		background-color: #111827;
+		color: #ffffff;
+		font-family: "Switzer", sans-serif;
+		font-size: 0.9rem;
+		font-weight: 600;
+		padding: 0.7rem 1.6rem;
+		cursor: pointer;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		transition: background-color 0.15s ease, color 0.15s ease,
+			transform 0.1s ease;
+	}
+
+	.view-more-btn:hover {
+		background-color: #ffffff;
+		color: #111827;
+		transform: translateY(-1px);
+	}
+
+	.empty-state {
+		padding: 4rem 1.5rem 5rem;
+		text-align: center;
+		color: #4b5563;
+	}
+
+	.empty-state h2 {
+		font-family: "Switzer", sans-serif;
+		font-size: 1.5rem;
+		color: #111827;
+		margin-bottom: 0.75rem;
+	}
+
+	.empty-state p {
+		max-width: 32rem;
+		margin: 0 auto;
+		font-size: 0.95rem;
+	}
+
+	@media screen and (max-width: 1024px) {
+		.blog-page {
+			padding: 0 2rem 3rem;
+		}
+
+		.filters-row {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.search-wrapper {
+			width: 100%;
+			max-width: 260px;
+		}
+
+		.blog-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.hero-feature {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.hero-secondary-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		.blog-page {
+			padding: 1.75rem 1.25rem 2rem;
+		}
+
+		.hero-title-block h1 {
+			font-size: 2.4rem;
+		}
+
+		.hero-title-block p {
+			font-size: 0.95rem;
+		}
+
+		.hero-feature-text h2 {
+			font-size: 1.4rem;
+		}
+
+		.hero-sidebar h3 {
+			font-size: 1.25rem;
+		}
+
+		.hero-sidebar-text p {
+			font-size: 0.95rem;
+		}
+
+		.hero-secondary-text h3 {
+			font-size: 1rem;
+		}
+
+		.blog-header h2 {
+			font-size: 1.6rem;
+			margin-bottom: 0.75rem;
+		}
+
+		.filter-toggle {
+			display: flex;
+		}
+
+		.filters-row {
+			width: 100%;
+			flex-direction: column;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			display: none;
+		}
+
+		#filters-panel.open {
+			display: flex;
+		}
+
+		.search-wrapper {
+			width: 100%;
+			max-width: none;
+		}
+
+		.search-input {
+			margin-left: 0;
+			width: 100%;
+		}
+
+		.blog-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.hero-feature {
+			margin-bottom: 2.25rem;
+		}
+
+		.hero-secondary-grid {
+			margin-bottom: 2.25rem;
+		}
+	}
+
+	@media screen and (min-width: 769px) {
+		.blog-header {
+			position: relative;
+		}
+
+		.search-wrapper {
+			position: absolute;
+			right: 0;
+			top: 0;
+			margin: 0;
+			max-width: 260px;
+		}
+
+		.filters-row {
+			margin-top: 1.75rem;
+		}
+	}
+
+	.filter-toggle.open .filter-toggle-icon {
+		transform: rotate(180deg);
+	}
+</style>
+
