@@ -2,39 +2,17 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import CtaSidebar from "../../components/CtaSidebar.astro";
-import rawData from "../../../data.json";
+import { checklistEntries } from "../../lib/checklists";
 
 export function getStaticPaths() {
-    const toSlug = (text: string) =>
-        text
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/(^-|-$)+/g, "");
-
-    const stripEmojis = (text: string) =>
-        text
-            .replace(
-                /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
-                ""
-            )
-            .trim();
-
-    const paths: any[] = [];
-    rawData.forEach((category: any) => {
-        category.checklists.forEach((checklist: any) => {
-            const slug = toSlug(checklist.title);
-            paths.push({
-                params: { slug },
-                props: {
-                    slug,
-                    checklist,
-                    categoryName: stripEmojis(category.category_name),
-                },
-            });
-        });
-    });
-
-    return paths;
+    return checklistEntries.map(({ slug, checklist, categoryName }) => ({
+        params: { slug },
+        props: {
+            slug,
+            checklist,
+            categoryName,
+        },
+    }));
 }
 
 const { slug, checklist, categoryName } = Astro.props;

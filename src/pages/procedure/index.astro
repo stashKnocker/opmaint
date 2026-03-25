@@ -2,22 +2,13 @@
 import Navbar from "../../components/Navbar.astro";
 import Layout from "../../layouts/Layout.astro";
 import ChecklistCard from "../../components/ChecklistCard.astro";
-import rawData from "../../../data.json";
+import {
+	allChecklistCategories,
+	getSlugForChecklist,
+	stripEmojis,
+} from "../../lib/checklists";
 
-// Helper function to create slugs
-const toSlug = (text: string) =>
-	text
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, "-")
-		.replace(/(^-|-$)+/g, "");
-
-const stripEmojis = (text: string) =>
-	text
-		.replace(
-			/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
-			""
-		)
-		.trim();
+const rawData = allChecklistCategories;
 
 const allCategories = [
 	...new Set(rawData.map((cat: any) => stripEmojis(cat.category_name))),
@@ -196,8 +187,8 @@ const allCategories = [
 																		description={
 																			checklist.description
 																		}
-																		slug={toSlug(
-																			checklist.title
+																		slug={getSlugForChecklist(
+																			checklist
 																		)}
 																	/>
 																</div>
@@ -264,7 +255,7 @@ const allCategories = [
 												description={
 													checklist.description
 												}
-												slug={toSlug(checklist.title)}
+												slug={getSlugForChecklist(checklist)}
 											/>
 										</div>
 									)

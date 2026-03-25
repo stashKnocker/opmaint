@@ -6,10 +6,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "carwash:checklists": "node scripts/build-carwash-checklists.mjs"
   },
   "dependencies": {
     "astro": "^5.17.1",
     "html2pdf.js": "^0.14.0"
+  },
+  "devDependencies": {
+    "csv-parse": "^6.2.1",
+    "pdf-parse": "^2.4.5"
   }
 }
