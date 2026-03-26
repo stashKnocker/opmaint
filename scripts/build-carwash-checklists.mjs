@@ -9,7 +9,8 @@
  *   node scripts/build-carwash-checklists.mjs --openai           # use OPENAI_API_KEY to structure items (costs API usage)
  *   SHEET_URL=... node scripts/build-carwash-checklists.mjs      # override CSV export URL
  *
- * Output: carwash-usa-checklists.json (same schema as data.json categories)
+ * Output: carwash-usa-checklists.json — one category "Car wash" with all equipment×brand
+ *        checklists; items are sanitized (no TOC/page-reference junk).
  */
 
 import fs from "node:fs";
@@ -213,7 +214,187 @@ async function fetchDocumentText(url) {
 }
 
 const CHECKLIST_VERB =
-  /^(verify|check|inspect|ensure|clean|lubricate|replace|record|test|confirm|perform|examine|assess|monitor|drain|tighten|adjust|calibrat)/i;
+  /^(verify|check|inspect|ensure|clean|lubricate|replace|record|test|confirm|perform|examine|assess|monitor|drain|tighten|adjust|calibrat|note|document)/i;
+
+function letterRatio(q) {
+  const letters = (q.match(/[a-zA-Z]/g) || []).length;
+  return letters / Math.max(q.length, 1);
+}
+
+/**
+ * Sheet section → readable phrase for prose (no leading "1.").
+ * @param {string} section
+ */
+function sectionToReadable(section) {
+  const raw = String(section || "")
+    .replace(/^\d+\.\s*/, "")
+    .trim()
+    .toLowerCase();
+  if (!raw) return "car wash operations";
+  return raw
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => {
+      if (w === "/" || w === "(" || w === ")") return w;
+      if (w.length <= 3 && /^(and|or|of|the|a|an|in|at|for|to|per|on)$/i.test(w)) return w;
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    })
+    .join(" ")
+    .replace(/\s*\/\s*/g, " / ");
+}
+
+/**
+ * Professional description without raw "Area:", URLs, or source links.
+ * @param {string} section
+ * @param {string} equipment
+ * @param {string} brand
+ * @param {boolean} fetchHadError
+ */
+function buildChecklistDescription(section, equipment, brand, fetchHadError) {
+  const area = sectionToReadable(section);
+  const a = [
+    `Routine inspection and preventive maintenance for ${equipment} (${brand}), focused on ${area} in professional US car wash operations.`,
+    `Use this list to verify safe operation, wear, leaks, and controls; document findings and follow OEM service guidance for repairs and parts.`,
+  ];
+  if (fetchHadError) {
+    a.push(
+      `When reference material was unavailable, defer to the manufacturer’s current manual and your site’s lockout and safety procedures.`,
+    );
+  }
+  return a.join(" ");
+}
+
+/** Reject TOC, page pointers, boilerplate — not actionable inspection items. */
+function isJunkQuestion(raw) {
+  const q = String(raw ?? "").trim();
+  if (q.length < 10 || q.length > 520) return true;
+  const lower = q.toLowerCase();
+
+  if (/^[\d\s.\t]+$/.test(q)) return true;
+  if (/^p\.?\s*\d+/i.test(q)) return true;
+
+  // Table-of-contents dot leaders
+  if (/\.{4,}/.test(q)) return true;
+
+  // Spec / parts rows (tabs like valve charts)
+  if (/\t[^\t\n]+\t/.test(q)) return true;
+
+  // Mostly numbers, symbols, units — not inspection questions
+  if (letterRatio(q) < 0.28 && q.length < 220) return true;
+
+  // Numbered list: keep "1. Check belts" (verb after number); drop "2. Dial Indicator"
+  if (/^\d{1,3}\s*[\.\)]\s+/.test(q)) {
+    const rest = q.replace(/^\d{1,3}\s*[\.\)]\s+/, "").trim();
+    if (!CHECKLIST_VERB.test(rest)) return true;
+  }
+
+  // Starts with digit, not a "N. verb" pattern (part numbers, dimensions, "1/2 inch…")
+  if (/^\d/.test(q) && !/^\d{1,3}\s*[\.\)]\s+/.test(q) && !CHECKLIST_VERB.test(q)) return true;
+
+  // Product model + spec paragraph (lift SKUs, etc.)
+  if (/^\d+[A-Z]{0,4}\.\s/i.test(q) && /\b(mm|in\.|height|designed|overall)\b/i.test(q)) return true;
+
+  // Temperature / range-only lines
+  if (/^\d+\s*to\s*[+\-]?\d+/i.test(q) || /\bo\s*c\b/i.test(lower)) return true;
+
+  // Fuse / breaker / amp specs as standalone lines
+  if (/\b-?\s*amp\s+fuse\b|\b\d+\s*amp\s+circuit\s+breaker\b/i.test(q) && !CHECKLIST_VERB.test(q)) return true;
+
+  // Tool or part catalog fragments
+  if (/\bmeasuring tape\b$/i.test(q) && !CHECKLIST_VERB.test(q)) return true;
+  if (/\b(valve|npt|psi\s+operational|orbital|backing plate|injectors|terminal blocks)\b/i.test(q) && letterRatio(q) < 0.4 && !CHECKLIST_VERB.test(q))
+    return true;
+
+  // Phone / product model listings
+  if (/\bseries\s+(indoor|outdoor)\s+phones\b/i.test(q)) return true;
+  if (/\betp-\d+/i.test(q) && !CHECKLIST_VERB.test(q)) return true;
+
+  // Wiring / panel spec sentences ("Each input board has 8…")
+  if (/^each\s+/i.test(q) && !CHECKLIST_VERB.test(q)) return true;
+  if (/\binput terminal blocks\b/i.test(q) && /each\s+(input|power)\s+board/i.test(q)) return true;
+
+  const junkPhrases = [
+    /^perform\s+daily\s+inspection\s*$/i,
+    /^daily\s+inspection\s*$/i,
+    /^weekly\s+inspection\s*$/i,
+    /^table of contents/i,
+    /^contents\s*$/i,
+    /^introduction\s*$/i,
+    /^overview\s*$/i,
+    /^summary\s*$/i,
+    /^preface\s*$/i,
+    /^appendix\s+[a-z]?\d*/i,
+    /^index\s*$/i,
+    /^references?\s*$/i,
+    /^notes\s*$/i,
+    /^warning\s*$/i,
+    /^caution\s*$/i,
+    /^safety\s*$/i,
+    /^figure\s+\d+/i,
+    /^table\s+\d+/i,
+    /copyright|©|all rights reserved/i,
+    /table of contents/i,
+    /\bchapter\s+\d+/i,
+    /\bpage\s+\d/i,
+    /\bsee\s+page\b/i,
+    /\bsee\s+section\b/i,
+    /\brefer\s+to\s+(the\s+)?(page|section)/i,
+    /\buser\s+page\s+\d+/i,
+    /→\s*page\s*\d/i,
+    /\bnext\s+page\b/i,
+    /\bprevious\s+page\b/i,
+    /proceed\s+to\s+the\s+next\s+page/i,
+    /page\s+reference/i,
+    /recommended\s+size\s+chart/i,
+    /assuming\s+line\s+length/i,
+    /follow\s+the\s+directions\s+in\s+section/i,
+    /general\s+operating\s+instructions.*page/i,
+    /camera\s+aiming\s+instructions\s+on\s+page/i,
+    /as\s+instructed\s+on\s+page/i,
+    /see\s+set\s+up\s+on\s+page/i,
+    /see\s+mixing\s+ratios\s+on\s+page/i,
+    /event\s+active:.*refer\s+to/i,
+    /indicates\s+if\s+an\s+event/i,
+    /https?:\/\//i,
+    /\bwww\.\w+\.\w+/i,
+    /\.(com|org|net)\/[^\s]+/i,
+  ];
+  for (const re of junkPhrases) {
+    if (re.test(q)) return true;
+  }
+
+  // Manual cross-refs without being a task
+  if (/\bpage\s*[0-9ivx\-–]+/i.test(q) && !CHECKLIST_VERB.test(q)) return true;
+
+  // All-caps section headers (short)
+  if (q.length < 55 && /^[A-Z0-9\s/\\\-–—&:]{15,}$/.test(q) && !/[a-z]/.test(q)) return true;
+
+  return false;
+}
+
+function questionDedupeKey(q) {
+  return q
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 140);
+}
+
+/** @param {any[]} items */
+function sanitizeItemObjects(items) {
+  const out = [];
+  const seen = new Set();
+  for (const it of items) {
+    const q = String(it?.question ?? "").trim();
+    if (isJunkQuestion(q)) continue;
+    const key = questionDedupeKey(q);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(it);
+  }
+  return out;
+}
 
 /** @param {string} text */
 function heuristicTextToItems(text) {
@@ -225,22 +406,26 @@ function heuristicTextToItems(text) {
   const candidates = [];
   for (const line of lines) {
     let s = line;
+    if (isJunkQuestion(s)) continue;
     const num = s.match(/^[\d]{1,3}[\.\)]\s+(.+)/);
     if (num) {
-      candidates.push(num[1].trim());
+      const t = num[1].trim();
+      if (!isJunkQuestion(t)) candidates.push(t);
       continue;
     }
     const bullet = s.match(/^[•\-\*▪►]\s*(.+)/);
     if (bullet) {
-      candidates.push(bullet[1].trim());
+      const t = bullet[1].trim();
+      if (!isJunkQuestion(t)) candidates.push(t);
       continue;
     }
     const letter = s.match(/^[a-z][\.\)]\s*(.+)/i);
     if (letter) {
-      candidates.push(letter[1].trim());
+      const t = letter[1].trim();
+      if (!isJunkQuestion(t)) candidates.push(t);
       continue;
     }
-    if (CHECKLIST_VERB.test(s) && !/table of contents|page \d/i.test(s)) {
+    if (CHECKLIST_VERB.test(s) && !isJunkQuestion(s)) {
       candidates.push(s);
     }
   }
@@ -248,11 +433,11 @@ function heuristicTextToItems(text) {
   const seen = new Set();
   const uniq = [];
   for (const c of candidates) {
-    const k = c.toLowerCase().slice(0, 120);
-    if (seen.has(k)) continue;
+    const k = questionDedupeKey(c);
+    if (!k || seen.has(k)) continue;
     seen.add(k);
     uniq.push(c);
-    if (uniq.length >= 28) break;
+    if (uniq.length >= 24) break;
   }
 
   return uniq.map((question) => ({
@@ -264,7 +449,7 @@ function heuristicTextToItems(text) {
   }));
 }
 
-function fallbackItems(equipment, brand, url) {
+function fallbackItems(equipment, brand) {
   return [
     {
       question: `Pre-operation / safety: confirm lockout-tagout and safe access before servicing ${equipment} (${brand}).`,
@@ -343,7 +528,7 @@ async function openAiToItems(text, equipment, brand) {
     const parsed = JSON.parse(raw);
     const items = parsed.items;
     if (!Array.isArray(items) || items.length === 0) return null;
-    return normalizeItems(items);
+    return sanitizeItemObjects(normalizeItems(items));
   } catch {
     return null;
   }
@@ -434,8 +619,8 @@ async function buildChecklists(entries, opts) {
   }
   if (toFetch.length) process.stdout.write("\n");
 
-  /** @type {Map<string, { category_name: string, checklists: object[] }>} */
-  const bySection = new Map();
+  /** @type {object[]} */
+  const allChecklists = [];
 
   for (const entry of entries) {
     if (opts.limit != null && !urlSet.has(entry.url)) continue;
@@ -450,34 +635,35 @@ async function buildChecklists(entries, opts) {
     if (!items || items.length === 0) {
       items = text.length > 40 ? heuristicTextToItems(text) : [];
     }
-    if (items.length === 0) {
-      items = fallbackItems(entry.equipment, entry.brand, entry.url);
+    items = sanitizeItemObjects(items);
+    if (items.length < 3) {
+      items = sanitizeItemObjects([...items, ...fallbackItems(entry.equipment, entry.brand)]);
+    }
+    if (items.length < 3) {
+      items = fallbackItems(entry.equipment, entry.brand);
     }
 
     const title = `${entry.equipment} — ${entry.brand}`;
-    const descParts = [
-      `Preventive maintenance and inspection checklist for ${entry.equipment} (${entry.brand}), USA car wash operations.`,
-      `Source document: ${entry.url}`,
-    ];
-    if (fetched?.error) descParts.push(`Fetch note: ${fetched.error}`);
+    const description = buildChecklistDescription(
+      entry.section,
+      entry.equipment,
+      entry.brand,
+      Boolean(fetched?.error),
+    );
 
-    const checklist = {
+    allChecklists.push({
       title,
-      description: descParts.join(" "),
+      description,
       items,
-    };
-
-    const catKey = entry.section || "Uncategorized";
-    if (!bySection.has(catKey)) {
-      bySection.set(catKey, {
-        category_name: `🚗 Car wash (USA) — ${catKey}`,
-        checklists: [],
-      });
-    }
-    bySection.get(catKey).checklists.push(checklist);
+    });
   }
 
-  return [...bySection.values()];
+  return [
+    {
+      category_name: "Car wash",
+      checklists: allChecklists,
+    },
+  ];
 }
 
 async function main() {
