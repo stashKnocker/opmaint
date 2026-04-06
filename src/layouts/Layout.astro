@@ -5,16 +5,22 @@ interface Props {
 	title?: string;
 	description?: string;
 	canonical?: string;
+	/** Comma-separated keywords (e.g. from SEO sheet). */
+	keywords?: string;
 	image?: string;
 	noindex?: boolean;
+	/** Additional JSON-LD object(s); merged as extra script tag(s). Strings are escaped for HTML. */
+	extraJsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
 	title = "Opmaint - Maintenance Procedures & Tools",
 	description = "Maintenance procedures, checklists, calculators, and tools for operations. OEE, MTTR, MTBF, downtime calculators. Free resources for maintenance professionals.",
 	canonical,
+	keywords,
 	image,
 	noindex = false,
+	extraJsonLd,
 } = Astro.props;
 
 const site = Astro.site?.toString() ?? "https://opmaint.com";
@@ -39,6 +45,7 @@ const imageUrl = image
 		<link rel="apple-touch-icon" href="/images/img-4.png" sizes="180x180" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
+		{keywords && <meta name="keywords" content={keywords} />}
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<link rel="canonical" href={canonicalUrl} />
 		<meta property="og:type" content="website" />
@@ -69,7 +76,14 @@ const imageUrl = image
 			"name": "Opmaint",
 			"url": site,
 			"description": "Maintenance procedures, checklists, and tools for operations.",
-		})} />
+		}).replace(/</g, "\\u003c")} />
+		{extraJsonLd &&
+			(Array.isArray(extraJsonLd) ? extraJsonLd : [extraJsonLd]).map((block) => (
+				<script
+					type="application/ld+json"
+					set:html={JSON.stringify(block).replace(/</g, "\\u003c")}
+				/>
+			))}
 	</head>
 	<body>
 		<slot />

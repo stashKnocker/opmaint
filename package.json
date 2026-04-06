@@ -7,7 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "carwash:checklists": "node scripts/build-carwash-checklists.mjs"
+    "carwash:checklists": "node scripts/build-carwash-checklists.mjs",
+    "seo:sync": "node scripts/sync-checklist-seo-from-sheet.mjs"
   },
   "dependencies": {
     "astro": "^5.17.1",
