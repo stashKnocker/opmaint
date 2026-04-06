@@ -81,52 +81,6 @@ const appUrl = "https://app.opmaint.com";
             URL.revokeObjectURL(url);
         }
 
-        function drawTextLogoFallback(): string {
-            const canvas = document.createElement('canvas');
-            canvas.width = 400;
-            canvas.height = 72;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return '';
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, 400, 72);
-            ctx.fillStyle = '#345ebd';
-            ctx.font = 'bold 42px Helvetica, Arial, sans-serif';
-            ctx.fillText('Opmaint', 0, 52);
-            return canvas.toDataURL('image/png');
-        }
-
-        async function getOpmaintLogoDataUrl(): Promise<string> {
-            const logoPath = '/images/opmaint-logo.svg';
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.onload = () => {
-                    try {
-                        const w = 420;
-                        const nw = img.naturalWidth || 280;
-                        const nh = img.naturalHeight || 44;
-                        const h = Math.max(48, Math.round((nh / nw) * w));
-                        const canvas = document.createElement('canvas');
-                        canvas.width = w;
-                        canvas.height = h;
-                        const ctx = canvas.getContext('2d');
-                        if (!ctx) {
-                            resolve(drawTextLogoFallback());
-                            return;
-                        }
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(0, 0, w, h);
-                        ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/png'));
-                    } catch {
-                        resolve(drawTextLogoFallback());
-                    }
-                };
-                img.onerror = () => resolve(drawTextLogoFallback());
-                img.src = logoPath;
-            });
-        }
-
         async function exportToPdf() {
             const title = document.querySelector('.checklist-header h1')?.textContent?.trim() || 'Checklist';
             const category = document.querySelector('.category-badge')?.textContent?.trim() || '';
@@ -192,17 +146,16 @@ const appUrl = "https://app.opmaint.com";
                 }
             };
 
-            const logoDataUrl = await getOpmaintLogoDataUrl();
-            if (logoDataUrl) {
-                const logoW = 48;
-                const logoH = 12;
-                try {
-                    doc.addImage(logoDataUrl, 'PNG', margin, y, logoW, logoH);
-                } catch {
-                    /* ignore */
-                }
-                y += logoH + 6;
-            }
+            // Native PDF wordmark (SVG/canvas→PNG often renders invisible in jsPDF)
+            doc.setFontSize(17);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(52, 94, 189);
+            doc.text('Opmaint', margin, y);
+            y += 4;
+            doc.setDrawColor(52, 94, 189);
+            doc.setLineWidth(0.35);
+            doc.line(margin, y, margin + 34, y);
+            y += 8;
 
             if (category) {
                 doc.setFontSize(10);
