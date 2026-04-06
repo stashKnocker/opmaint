@@ -81,6 +81,52 @@ const appUrl = "https://app.opmaint.com";
             URL.revokeObjectURL(url);
         }
 
+        function drawTextLogoFallback(): string {
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 72;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return '';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 400, 72);
+            ctx.fillStyle = '#345ebd';
+            ctx.font = 'bold 42px Helvetica, Arial, sans-serif';
+            ctx.fillText('Opmaint', 0, 52);
+            return canvas.toDataURL('image/png');
+        }
+
+        async function getOpmaintLogoDataUrl(): Promise<string> {
+            const logoPath = '/images/opmaint-logo.svg';
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    try {
+                        const w = 420;
+                        const nw = img.naturalWidth || 280;
+                        const nh = img.naturalHeight || 44;
+                        const h = Math.max(48, Math.round((nh / nw) * w));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        if (!ctx) {
+                            resolve(drawTextLogoFallback());
+                            return;
+                        }
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, w, h);
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/png'));
+                    } catch {
+                        resolve(drawTextLogoFallback());
+                    }
+                };
+                img.onerror = () => resolve(drawTextLogoFallback());
+                img.src = logoPath;
+            });
+        }
+
         async function exportToPdf() {
             const title = document.querySelector('.checklist-header h1')?.textContent?.trim() || 'Checklist';
             const category = document.querySelector('.category-badge')?.textContent?.trim() || '';
@@ -131,18 +177,32 @@ const appUrl = "https://app.opmaint.com";
             const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
             doc.setCharSpace(0);
             const pageW = doc.internal.pageSize.getWidth();
+            const pageH = doc.internal.pageSize.getHeight();
             const margin = 20;
+            const footerReserve = 14;
             const maxW = pageW - margin * 2;
             const lineH = 5;
             const optLineH = 4;
             let y = margin;
 
             const addPageIfNeeded = (needed: number) => {
-                if (y + needed > doc.internal.pageSize.getHeight() - margin) {
+                if (y + needed > pageH - margin - footerReserve) {
                     doc.addPage();
                     y = margin;
                 }
             };
+
+            const logoDataUrl = await getOpmaintLogoDataUrl();
+            if (logoDataUrl) {
+                const logoW = 48;
+                const logoH = 12;
+                try {
+                    doc.addImage(logoDataUrl, 'PNG', margin, y, logoW, logoH);
+                } catch {
+                    /* ignore */
+                }
+                y += logoH + 6;
+            }
 
             if (category) {
                 doc.setFontSize(10);
@@ -213,6 +273,15 @@ const appUrl = "https://app.opmaint.com";
                     doc.setTextColor(31, 41, 55);
                 }
             });
+
+            const totalPages = doc.getNumberOfPages();
+            for (let p = 1; p <= totalPages; p++) {
+                doc.setPage(p);
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(120, 120, 120);
+                doc.text('Opmaint · www.opmaint.com', pageW / 2, pageH - 8, { align: 'center' });
+            }
 
             const filename = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
             doc.save(filename);

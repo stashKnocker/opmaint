@@ -16,11 +16,32 @@ export function getStaticPaths() {
 }
 
 const { slug, checklist, categoryName } = Astro.props;
+
+const isCarWashChecklist = String(categoryName || "").toLowerCase() === "car wash";
+const normalizeWs = (text: string) => text.replace(/\s+/g, " ").trim();
+const cap = (text: string, max: number) =>
+    text.length <= max ? text : `${text.slice(0, max - 1).trim()}…`;
+
+const seoTitle = isCarWashChecklist
+    ? cap(
+          `${checklist.title} | Car Wash Maintenance Checklist | Opmaint`,
+          60
+      )
+    : `${checklist.title} - Opmaint`;
+
+const seoDescription = isCarWashChecklist
+    ? cap(
+          normalizeWs(
+              `Car wash equipment checklist for ${checklist.title}. Use this preventive maintenance and inspection template to improve uptime, safety, and service quality.`
+          ),
+          158
+      )
+    : checklist.description;
 ---
 
 <Layout
-	title={`${checklist.title} - Opmaint`}
-	description={checklist.description}
+	title={seoTitle}
+	description={seoDescription}
 >
     <Navbar />
     <main class="page-container">
