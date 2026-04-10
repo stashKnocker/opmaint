@@ -1,6 +1,8 @@
 ---
 const baseUrl = "https://www.opmaint.com";
 const appUrl = "https://app.opmaint.com";
+/** Set in Netlify / .env as PUBLIC_CAPTURE_API_URL — never commit secrets. */
+const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
 ---
 
 <div class="cta-sidebar-component">
@@ -31,15 +33,133 @@ const appUrl = "https://app.opmaint.com";
     </div>
 </div>
 
-<script>
+<!-- Email capture before PDF (work email required) -->
+<div id="pdf-email-modal" class="pdf-email-modal" aria-hidden="true" role="dialog" aria-labelledby="pdf-email-modal-title">
+    <div class="pdf-email-modal__backdrop" data-close-modal></div>
+    <div class="pdf-email-modal__panel">
+        <button type="button" class="pdf-email-modal__close" data-close-modal aria-label="Close">&times;</button>
+        <h2 id="pdf-email-modal-title" class="pdf-email-modal__title">Download as PDF</h2>
+        <p class="pdf-email-modal__intro">To download this checklist as a PDF, please enter your work email address.</p>
+        <label class="pdf-email-modal__label" for="pdf-email-input">Work email</label>
+        <input
+            id="pdf-email-input"
+            class="pdf-email-modal__input"
+            type="email"
+            name="work-email"
+            autocomplete="email"
+            placeholder="name@company.com"
+            inputmode="email"
+        />
+        <p id="pdf-email-error" class="pdf-email-modal__error" role="alert"></p>
+        <p class="pdf-email-modal__hint">We won't send you any spam, we promise!</p>
+        <button type="button" id="pdf-email-submit" class="pdf-email-modal__submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download checklist PDF
+        </button>
+    </div>
+</div>
+
+<script define:vars={{ captureApiUrl }}>
+    /** Domains treated as personal/free — work email should use a corporate domain. */
+    const FREE_EMAIL_DOMAINS = new Set([
+        "gmail.com",
+        "googlemail.com",
+        "yahoo.com",
+        "yahoo.co.uk",
+        "hotmail.com",
+        "outlook.com",
+        "live.com",
+        "msn.com",
+        "icloud.com",
+        "me.com",
+        "aol.com",
+        "protonmail.com",
+        "proton.me",
+        "mail.com",
+        "gmx.com",
+        "yandex.com",
+        "zoho.com",
+        "hey.com",
+        "fastmail.com",
+    ]);
+
+    function isValidEmailFormat(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    }
+
+    function isWorkEmail(email) {
+        const trimmed = email.trim().toLowerCase();
+        if (!isValidEmailFormat(trimmed)) return false;
+        const domain = trimmed.split("@")[1];
+        if (!domain) return false;
+        return !FREE_EMAIL_DOMAINS.has(domain);
+    }
+
+    function openPdfModal() {
+        const modal = document.getElementById("pdf-email-modal");
+        const input = document.getElementById("pdf-email-input");
+        const err = document.getElementById("pdf-email-error");
+        if (!modal) return;
+        modal.classList.add("pdf-email-modal--open");
+        modal.setAttribute("aria-hidden", "false");
+        if (err) err.textContent = "";
+        if (input) {
+            input.value = "";
+            setTimeout(() => input.focus(), 50);
+        }
+    }
+
+    function closePdfModal() {
+        const modal = document.getElementById("pdf-email-modal");
+        if (!modal) return;
+        modal.classList.remove("pdf-email-modal--open");
+        modal.setAttribute("aria-hidden", "true");
+    }
+
+    async function submitCaptureThenPdf(email) {
+        const endpoint = typeof captureApiUrl === "string" ? captureApiUrl.trim() : "";
+        if (!endpoint) {
+            throw new Error("Download is not configured. Please try again later.");
+        }
+        const localPart = email.split("@")[0]?.replace(/[^a-zA-Z0-9._-]/g, "_") || null;
+        const body = {
+            email: email.trim().toLowerCase(),
+            ipaddress: null,
+            username: localPart || null,
+        };
+        const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify(body),
+            mode: "cors",
+            credentials: "omit",
+        });
+        if (!res.ok) {
+            const t = await res.text().catch(() => "");
+            throw new Error(t || `Request failed (${res.status})`);
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const downloadPdfBtn = document.getElementById("download-pdf-btn");
         const downloadExcelBtn = document.getElementById("download-excel-btn");
+        const modal = document.getElementById("pdf-email-modal");
+        const submitBtn = document.getElementById("pdf-email-submit");
+        const emailInput = document.getElementById("pdf-email-input");
+        const errEl = document.getElementById("pdf-email-error");
+
+        modal?.querySelectorAll("[data-close-modal]").forEach((el) => {
+            el.addEventListener("click", () => closePdfModal());
+        });
 
         if (downloadPdfBtn) {
             downloadPdfBtn.addEventListener("click", async (e) => {
                 e.preventDefault();
-                await exportToPdf();
+                openPdfModal();
             });
         }
 
@@ -49,6 +169,48 @@ const appUrl = "https://app.opmaint.com";
                 exportToExcel();
             });
         }
+
+        submitBtn?.addEventListener("click", async () => {
+            const email = emailInput?.value?.trim() || "";
+            if (errEl) errEl.textContent = "";
+            if (!email) {
+                if (errEl) errEl.textContent = "Please enter your work email.";
+                return;
+            }
+            if (!isWorkEmail(email)) {
+                if (errEl)
+                    errEl.textContent =
+                        "Please use a work email (not a personal provider like Gmail or Yahoo).";
+                return;
+            }
+            submitBtn.setAttribute("disabled", "true");
+            try {
+                await submitCaptureThenPdf(email);
+                closePdfModal();
+                await exportToPdf();
+            } catch (e) {
+                if (errEl)
+                    errEl.textContent =
+                        e instanceof Error
+                            ? e.message
+                            : "Could not save your email. Please try again.";
+            } finally {
+                submitBtn.removeAttribute("disabled");
+            }
+        });
+
+        emailInput?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                submitBtn?.click();
+            }
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal?.classList.contains("pdf-email-modal--open")) {
+                closePdfModal();
+            }
+        });
 
         function exportToExcel() {
             const title = document.querySelector('.checklist-header h1')?.textContent || 'Checklist';
@@ -86,19 +248,19 @@ const appUrl = "https://app.opmaint.com";
             const category = document.querySelector('.category-badge')?.textContent?.trim() || '';
             const description = document.querySelector('.checklist-header p')?.textContent?.trim() || '';
 
-            const items: { number: number; question: string; options?: string[]; type?: string; extra?: string }[] = [];
+            const items = [];
             document.querySelectorAll('.item-card').forEach((card, index) => {
                 const question = card.querySelector('.item-header h3')?.textContent?.trim() || '';
                 const numberEl = card.querySelector('.item-number');
                 const number = numberEl ? parseInt(numberEl.textContent || '0', 10) : index + 1;
-                const options: string[] = [];
-                let type: string | undefined;
-                let extra: string | undefined;
+                const options = [];
+                let type;
+                let extra;
                 const radioOpts = card.querySelectorAll('.options-group.radio .radio-text');
                 const checkboxOpts = card.querySelectorAll('.options-group.checkbox .checkbox-text');
                 const sliderLabels = card.querySelectorAll('.options-group.slider .slider-labels span');
                 const ratingEl = card.querySelector('.options-group.rating');
-                const textInput = card.querySelector('.text-input') as HTMLTextAreaElement | null;
+                const textInput = card.querySelector('.text-input');
                 if (radioOpts.length) {
                     type = 'radio';
                     radioOpts.forEach((el) => {
@@ -139,7 +301,7 @@ const appUrl = "https://app.opmaint.com";
             const optLineH = 4;
             let y = margin;
 
-            const addPageIfNeeded = (needed: number) => {
+            const addPageIfNeeded = (needed) => {
                 if (y + needed > pageH - margin - footerReserve) {
                     doc.addPage();
                     y = margin;
@@ -243,6 +405,145 @@ const appUrl = "https://app.opmaint.com";
 </script>
 
 <style>
+    .pdf-email-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
+    .pdf-email-modal--open {
+        display: flex;
+    }
+
+    .pdf-email-modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(17, 24, 39, 0.45);
+        cursor: pointer;
+    }
+
+    .pdf-email-modal__panel {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.75rem 1.5rem 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .pdf-email-modal__close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 2rem;
+        height: 2rem;
+        border: none;
+        background: transparent;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: #6b7280;
+        cursor: pointer;
+        border-radius: 6px;
+    }
+
+    .pdf-email-modal__close:hover {
+        background: #f3f4f6;
+        color: #111827;
+    }
+
+    .pdf-email-modal__title {
+        font-family: "Switzer", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 0.75rem;
+        padding-right: 2rem;
+    }
+
+    .pdf-email-modal__intro {
+        font-size: 0.95rem;
+        color: #4b5563;
+        margin: 0 0 1rem;
+        line-height: 1.5;
+    }
+
+    .pdf-email-modal__label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.35rem;
+    }
+
+    .pdf-email-modal__input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.65rem 0;
+        border: none;
+        border-bottom: 2px solid #345ebd;
+        font-size: 1rem;
+        font-family: inherit;
+        background: transparent;
+        color: #111827;
+        margin-bottom: 0.35rem;
+    }
+
+    .pdf-email-modal__input:focus {
+        outline: none;
+        border-bottom-color: #2b4a92;
+    }
+
+    .pdf-email-modal__input::placeholder {
+        color: #9ca3af;
+    }
+
+    .pdf-email-modal__error {
+        min-height: 1.25rem;
+        font-size: 0.8rem;
+        color: #b91c1c;
+        margin: 0 0 0.5rem;
+    }
+
+    .pdf-email-modal__hint {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        margin: 0 0 1.25rem;
+    }
+
+    .pdf-email-modal__submit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border: none;
+        border-radius: 9999px;
+        background: #345ebd;
+        color: #fff;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .pdf-email-modal__submit:hover:not(:disabled) {
+        background: #2b4a92;
+    }
+
+    .pdf-email-modal__submit:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+
     .cta-sidebar-component {
         width: 320px;
         flex-shrink: 0;
