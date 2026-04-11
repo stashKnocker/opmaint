@@ -34,7 +34,14 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
 </div>
 
 <!-- Email capture (step 1) then download (step 2) — step 2 keeps a fresh user gesture so PDF/CSV downloads are not blocked -->
-<div id="pdf-email-modal" class="pdf-email-modal" aria-hidden="true" role="dialog" aria-labelledby="pdf-email-modal-title">
+<div
+    id="pdf-email-modal"
+    class="pdf-email-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-labelledby="pdf-email-modal-title"
+    data-capture-url={captureApiUrl}
+>
     <div class="pdf-email-modal__backdrop" data-close-modal></div>
     <div class="pdf-email-modal__panel">
         <button type="button" class="pdf-email-modal__close" data-close-modal aria-label="Close">&times;</button>
@@ -67,8 +74,14 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
     </div>
 </div>
 
-<script define:vars={{ captureApiUrl }}>
+<script>
     import { jsPDF } from "jspdf";
+
+    function getCaptureEndpoint() {
+        return (
+            document.getElementById("pdf-email-modal")?.getAttribute("data-capture-url")?.trim() ?? ""
+        );
+    }
 
     /** Domains treated as personal/free — work email should use a corporate domain. */
     const FREE_EMAIL_DOMAINS = new Set([
@@ -184,7 +197,7 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
     }
 
     async function submitCaptureThenPdf(email) {
-        const endpoint = typeof captureApiUrl === "string" ? captureApiUrl.trim() : "";
+        const endpoint = getCaptureEndpoint();
         if (!endpoint) {
             throw new Error("Download is not configured. Please try again later.");
         }
@@ -308,8 +321,8 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
             URL.revokeObjectURL(url);
         }
 
-        /** Synchronous PDF build + save — call from a click handler with preloaded jsPDF class */
-        function buildAndSavePdf(jsPDF) {
+        /** Synchronous PDF build + save — call from a click handler (imported jsPDF constructor) */
+        function buildAndSavePdf(JsPDF) {
             const title = document.querySelector('.checklist-header h1')?.textContent?.trim() || 'Checklist';
             const category = document.querySelector('.category-badge')?.textContent?.trim() || '';
             const description = document.querySelector('.checklist-header p')?.textContent?.trim() || '';
@@ -355,7 +368,7 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
                 items.push({ number, question, options: options.length ? options : undefined, type, extra });
             });
 
-            const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+            const doc = new JsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
             doc.setCharSpace(0);
             const pageW = doc.internal.pageSize.getWidth();
             const pageH = doc.internal.pageSize.getHeight();
