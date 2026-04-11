@@ -33,28 +33,37 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
     </div>
 </div>
 
-<!-- Email capture before PDF / Excel download (work email required) -->
+<!-- Email capture (step 1) then download (step 2) — step 2 keeps a fresh user gesture so PDF/CSV downloads are not blocked -->
 <div id="pdf-email-modal" class="pdf-email-modal" aria-hidden="true" role="dialog" aria-labelledby="pdf-email-modal-title">
     <div class="pdf-email-modal__backdrop" data-close-modal></div>
     <div class="pdf-email-modal__panel">
         <button type="button" class="pdf-email-modal__close" data-close-modal aria-label="Close">&times;</button>
-        <h2 id="pdf-email-modal-title" class="pdf-email-modal__title">Download as PDF</h2>
-        <p id="pdf-email-modal-intro" class="pdf-email-modal__intro">To download this checklist as a PDF, please enter your work email address.</p>
-        <label class="pdf-email-modal__label" for="pdf-email-input">Work email</label>
-        <input
-            id="pdf-email-input"
-            class="pdf-email-modal__input"
-            type="email"
-            name="work-email"
-            autocomplete="email"
-            placeholder="name@company.com"
-            inputmode="email"
-        />
-        <p id="pdf-email-error" class="pdf-email-modal__error" role="alert"></p>
-        <p class="pdf-email-modal__hint">We won't send you any spam, we promise!</p>
-        <button type="button" id="pdf-email-submit" class="pdf-email-modal__submit">
-            <span id="pdf-email-submit-inner" class="pdf-email-modal__submit-inner"></span>
-        </button>
+        <div id="pdf-modal-step-email" class="pdf-email-modal__step">
+            <h2 id="pdf-email-modal-title" class="pdf-email-modal__title">Download as PDF</h2>
+            <p id="pdf-email-modal-intro" class="pdf-email-modal__intro">To download this checklist as a PDF, please enter your work email address.</p>
+            <label class="pdf-email-modal__label" for="pdf-email-input">Work email</label>
+            <input
+                id="pdf-email-input"
+                class="pdf-email-modal__input"
+                type="email"
+                name="work-email"
+                autocomplete="email"
+                placeholder="name@company.com"
+                inputmode="email"
+            />
+            <p id="pdf-email-error" class="pdf-email-modal__error" role="alert"></p>
+            <p class="pdf-email-modal__hint">We won't send you any spam, we promise!</p>
+            <button type="button" id="pdf-email-submit" class="pdf-email-modal__submit pdf-email-modal__submit--secondary">
+                <span id="pdf-email-submit-inner" class="pdf-email-modal__submit-inner"></span>
+            </button>
+        </div>
+        <div id="pdf-modal-step-download" class="pdf-email-modal__step pdf-email-modal__step--hidden" aria-hidden="true">
+            <h2 class="pdf-email-modal__title" id="pdf-modal-download-heading">Ready to download</h2>
+            <p id="pdf-modal-download-intro" class="pdf-email-modal__intro"></p>
+            <button type="button" id="pdf-modal-final-download" class="pdf-email-modal__submit">
+                <span id="pdf-modal-final-download-inner" class="pdf-email-modal__submit-inner"></span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -94,10 +103,13 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
         return !FREE_EMAIL_DOMAINS.has(domain);
     }
 
-    const PDF_SUBMIT_HTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download checklist PDF`;
-    const EXCEL_SUBMIT_HTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line></svg> Download checklist Excel`;
+    const PDF_DOWNLOAD_BTN_HTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download checklist PDF`;
+    const EXCEL_DOWNLOAD_BTN_HTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line></svg> Download checklist Excel`;
+    const STEP1_CONTINUE_HTML = "Continue";
 
     let pendingExport = "pdf";
+    /** jsPDF constructor preloaded after email capture so PDF generation + save runs synchronously on the download click */
+    let pdfJsPDFClass = null;
 
     function setDownloadModalMode(format) {
         pendingExport = format;
@@ -114,11 +126,42 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
                     : "To download this checklist as Excel (CSV), please enter your work email address.";
         }
         if (innerEl) {
-            innerEl.innerHTML = format === "pdf" ? PDF_SUBMIT_HTML : EXCEL_SUBMIT_HTML;
+            innerEl.textContent = STEP1_CONTINUE_HTML;
         }
     }
 
+    function resetModalSteps() {
+        pdfJsPDFClass = null;
+        const emailStep = document.getElementById("pdf-modal-step-email");
+        const dlStep = document.getElementById("pdf-modal-step-download");
+        emailStep?.classList.remove("pdf-email-modal__step--hidden");
+        dlStep?.classList.add("pdf-email-modal__step--hidden");
+        if (dlStep) dlStep.setAttribute("aria-hidden", "true");
+    }
+
+    function showDownloadStep() {
+        const emailStep = document.getElementById("pdf-modal-step-email");
+        const dlStep = document.getElementById("pdf-modal-step-download");
+        const intro = document.getElementById("pdf-modal-download-intro");
+        const inner = document.getElementById("pdf-modal-final-download-inner");
+        if (intro) {
+            intro.textContent =
+                pendingExport === "pdf"
+                    ? "Your email was saved. Click below to download your checklist as a PDF."
+                    : "Your email was saved. Click below to download your checklist as Excel (CSV).";
+        }
+        if (inner) {
+            inner.innerHTML =
+                pendingExport === "pdf" ? PDF_DOWNLOAD_BTN_HTML : EXCEL_DOWNLOAD_BTN_HTML;
+        }
+        emailStep?.classList.add("pdf-email-modal__step--hidden");
+        dlStep?.classList.remove("pdf-email-modal__step--hidden");
+        if (dlStep) dlStep.setAttribute("aria-hidden", "false");
+        setTimeout(() => document.getElementById("pdf-modal-final-download")?.focus(), 50);
+    }
+
     function openDownloadEmailModal(format) {
+        resetModalSteps();
         setDownloadModalMode(format);
         const modal = document.getElementById("pdf-email-modal");
         const input = document.getElementById("pdf-email-input");
@@ -138,6 +181,7 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
         if (!modal) return;
         modal.classList.remove("pdf-email-modal--open");
         modal.setAttribute("aria-hidden", "true");
+        resetModalSteps();
     }
 
     async function submitCaptureThenPdf(email) {
@@ -171,6 +215,7 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
         const submitBtn = document.getElementById("pdf-email-submit");
         const emailInput = document.getElementById("pdf-email-input");
         const errEl = document.getElementById("pdf-email-error");
+        const finalDownloadBtn = document.getElementById("pdf-modal-final-download");
 
         modal?.querySelectorAll("[data-close-modal]").forEach((el) => {
             el.addEventListener("click", () => closePdfModal());
@@ -208,12 +253,13 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
             submitBtn.setAttribute("disabled", "true");
             try {
                 await submitCaptureThenPdf(email);
-                closePdfModal();
-                if (pendingExport === "excel") {
-                    exportToExcel();
+                if (pendingExport === "pdf") {
+                    const mod = await import("jspdf");
+                    pdfJsPDFClass = mod.jsPDF;
                 } else {
-                    await exportToPdf();
+                    pdfJsPDFClass = null;
                 }
+                showDownloadStep();
             } catch (e) {
                 if (errEl)
                     errEl.textContent =
@@ -269,7 +315,8 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
             URL.revokeObjectURL(url);
         }
 
-        async function exportToPdf() {
+        /** Synchronous PDF build + save — call from a click handler with preloaded jsPDF class */
+        function buildAndSavePdf(jsPDF) {
             const title = document.querySelector('.checklist-header h1')?.textContent?.trim() || 'Checklist';
             const category = document.querySelector('.category-badge')?.textContent?.trim() || '';
             const description = document.querySelector('.checklist-header p')?.textContent?.trim() || '';
@@ -315,7 +362,6 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
                 items.push({ number, question, options: options.length ? options : undefined, type, extra });
             });
 
-            const { jsPDF } = await import('jspdf');
             const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
             doc.setCharSpace(0);
             const pageW = doc.internal.pageSize.getWidth();
@@ -427,6 +473,20 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
             const filename = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
             doc.save(filename);
         }
+
+        finalDownloadBtn?.addEventListener("click", () => {
+            try {
+                if (pendingExport === "pdf") {
+                    if (!pdfJsPDFClass) return;
+                    buildAndSavePdf(pdfJsPDFClass);
+                } else {
+                    exportToExcel();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            closePdfModal();
+        });
     });
 </script>
 
@@ -462,6 +522,20 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
         padding: 1.75rem 1.5rem 1.5rem;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
         font-family: "DM Sans", sans-serif;
+    }
+
+    .pdf-email-modal__step--hidden {
+        display: none !important;
+    }
+
+    .pdf-email-modal__submit--secondary {
+        background: #fff;
+        color: #345ebd;
+        border: 2px solid #345ebd;
+    }
+
+    .pdf-email-modal__submit--secondary:hover:not(:disabled) {
+        background: rgba(52, 94, 189, 0.06);
     }
 
     .pdf-email-modal__close {
