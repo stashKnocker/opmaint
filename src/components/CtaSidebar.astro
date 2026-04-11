@@ -68,6 +68,8 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
 </div>
 
 <script define:vars={{ captureApiUrl }}>
+    import { jsPDF } from "jspdf";
+
     /** Domains treated as personal/free — work email should use a corporate domain. */
     const FREE_EMAIL_DOMAINS = new Set([
         "gmail.com",
@@ -108,8 +110,6 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
     const STEP1_CONTINUE_HTML = "Continue";
 
     let pendingExport = "pdf";
-    /** jsPDF constructor preloaded after email capture so PDF generation + save runs synchronously on the download click */
-    let pdfJsPDFClass = null;
 
     function setDownloadModalMode(format) {
         pendingExport = format;
@@ -131,7 +131,6 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
     }
 
     function resetModalSteps() {
-        pdfJsPDFClass = null;
         const emailStep = document.getElementById("pdf-modal-step-email");
         const dlStep = document.getElementById("pdf-modal-step-download");
         emailStep?.classList.remove("pdf-email-modal__step--hidden");
@@ -253,12 +252,6 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
             submitBtn.setAttribute("disabled", "true");
             try {
                 await submitCaptureThenPdf(email);
-                if (pendingExport === "pdf") {
-                    const mod = await import("jspdf");
-                    pdfJsPDFClass = mod.jsPDF;
-                } else {
-                    pdfJsPDFClass = null;
-                }
                 showDownloadStep();
             } catch (e) {
                 if (errEl)
@@ -477,8 +470,7 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
         finalDownloadBtn?.addEventListener("click", () => {
             try {
                 if (pendingExport === "pdf") {
-                    if (!pdfJsPDFClass) return;
-                    buildAndSavePdf(pdfJsPDFClass);
+                    buildAndSavePdf(jsPDF);
                 } else {
                     exportToExcel();
                 }
