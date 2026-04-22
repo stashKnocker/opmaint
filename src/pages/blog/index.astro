@@ -82,8 +82,8 @@ function normalizeRefIds(raw: any): string[] {
 
 function bestItemDateISO(item: any): string | undefined {
 	const candidate =
-		item?.createdOn ||
 		item?.lastPublished ||
+		item?.createdOn ||
 		item?.lastUpdated ||
 		item?.fieldData?.["publish-date"] ||
 		item?.fieldData?.publishDate ||
@@ -105,7 +105,7 @@ if (apiKey) {
 
 		const blogItems = await fetchWebflowCollection(blogCollectionId, {
 			required: true,
-			sortBy: "createdOn",
+			sortBy: "lastPublished",
 			sortOrder: "desc",
 		});
 

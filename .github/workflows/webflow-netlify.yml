@@ -1,0 +1,26 @@
+name: Webflow -> Netlify deploy
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [webflow_publish]
+
+concurrency:
+  group: netlify-deploy
+  cancel-in-progress: true
+
+jobs:
+  trigger_netlify:
+    name: Trigger Netlify build hook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify build
+        env:
+          NETLIFY_BUILD_HOOK_URL: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+        run: |
+          if [ -z "$NETLIFY_BUILD_HOOK_URL" ]; then
+            echo "Missing secret NETLIFY_BUILD_HOOK_URL"
+            exit 1
+          fi
+          curl -fsS -X POST "$NETLIFY_BUILD_HOOK_URL"
+
