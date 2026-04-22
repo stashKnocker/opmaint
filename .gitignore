@@ -19,9 +19,13 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+._*
 
 # jetbrains setting folder
 .idea/
+
+# Cursor editor files
+.cursor/
 
 # carwash checklist builder cache (fetched PDF/HTML text)
 scripts/.carwash-cache/

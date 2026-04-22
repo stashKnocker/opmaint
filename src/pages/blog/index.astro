@@ -29,10 +29,20 @@ let debugMessage: string | null = null;
 
 async function fetchWebflowCollection(
 	collectionId: string,
-	opts: { required?: boolean } = {}
+	opts: {
+		required?: boolean;
+		/** Webflow: createdOn | lastPublished | lastUpdated | name | slug */
+		sortBy?: string;
+		sortOrder?: "asc" | "desc";
+	} = {}
 ) {
+	const params = new URLSearchParams({ limit: "100" });
+	if (opts.sortBy) {
+		params.set("sortBy", opts.sortBy);
+		params.set("sortOrder", opts.sortOrder ?? "desc");
+	}
 	const res = await fetch(
-		`https://api.webflow.com/v2/collections/${collectionId}/items?limit=100`,
+		`https://api.webflow.com/v2/collections/${collectionId}/items?${params}`,
 		{
 			headers: {
 				Authorization: `Bearer ${apiKey}`,
@@ -78,6 +88,8 @@ if (apiKey) {
 
 		const blogItems = await fetchWebflowCollection(blogCollectionId, {
 			required: true,
+			sortBy: "lastPublished",
+			sortOrder: "desc",
 		});
 
 		const industryMap = new Map<string, string>();
