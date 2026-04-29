@@ -33,6 +33,7 @@ async function fetchWebflowCollection(
 	collectionId: string,
 	opts: {
 		required?: boolean;
+		live?: boolean;
 		/** Webflow: createdOn | lastPublished | lastUpdated | name | slug */
 		sortBy?: string;
 		sortOrder?: "asc" | "desc";
@@ -43,8 +44,9 @@ async function fetchWebflowCollection(
 		params.set("sortBy", opts.sortBy);
 		params.set("sortOrder", opts.sortOrder ?? "desc");
 	}
+	const path = opts.live ? "items/live" : "items";
 	const res = await fetch(
-		`https://api.webflow.com/v2/collections/${collectionId}/items?${params}`,
+		`https://api.webflow.com/v2/collections/${collectionId}/${path}?${params}`,
 		{
 			headers: {
 				Authorization: `Bearer ${apiKey}`,
@@ -105,6 +107,7 @@ if (apiKey) {
 
 		const blogItems = await fetchWebflowCollection(blogCollectionId, {
 			required: true,
+			live: true,
 			sortBy: "lastPublished",
 			sortOrder: "desc",
 		});
