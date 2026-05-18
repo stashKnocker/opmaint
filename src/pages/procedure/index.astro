@@ -1,5 +1,4 @@
 ---
-import Navbar from "../../components/Navbar.astro";
 import Layout from "../../layouts/Layout.astro";
 import ChecklistCard from "../../components/ChecklistCard.astro";
 import {
@@ -19,7 +18,6 @@ const allCategories = [
 	title="Procedure Hub - Maintenance & Safety Checklists | Opmaint"
 	description="Browse maintenance procedures, inspection checklists, and audit templates by industry. Free procedures for manufacturing, facilities, and operations."
 >
-	<Navbar />
 	<main class="page-container">
 		<header class="hero-section">
 			<h1>Procedure Hub</h1>
@@ -485,17 +483,12 @@ const allCategories = [
 </script>
 
 <style>
-	.page-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 4rem 4rem;
-	}
 
 	.hero-section {
 		text-align: center;
 		padding: 6rem 2rem 5rem;
 		margin-bottom: 2rem;
-		background-color: white;
+		background-color: var(--color-page-bg);
 	}
 
 	.hero-section h1 {
@@ -558,7 +551,7 @@ const allCategories = [
 	}
 
 	.input-wrapper:focus-within {
-		border-color: #3b82f6;
+		border-color: var(--color-deep-teal);
 	}
 
 	.input-wrapper select,
@@ -596,8 +589,8 @@ const allCategories = [
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #345ebd;
-		color: white;
+		background-color: var(--color-lime-green);
+		color: var(--color-on-lime);
 		font-weight: 600;
 		font-size: 1rem;
 		padding: 0.85rem 2rem;
@@ -610,7 +603,7 @@ const allCategories = [
 	}
 
 	#search-btn:hover {
-		background-color: #2b4b9b;
+		background-color: var(--color-lime-hover);
 	}
 
 	.no-results {
@@ -719,7 +712,7 @@ const allCategories = [
 
 	.accordion-icon {
 		font-size: 1.5rem;
-		color: #345ebd;
+		color: var(--color-sage-green);
 		line-height: 1;
 		font-weight: 300;
 	}

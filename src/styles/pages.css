@@ -1,0 +1,53 @@
+/* Shared page layout — used across all routes */
+.page-container,
+.blog-page {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem 4rem 4rem;
+	box-sizing: border-box;
+	background-color: var(--color-page-bg);
+}
+
+.page-container--narrow {
+	max-width: 800px;
+}
+
+.page-container--wide {
+	max-width: 1100px;
+}
+
+.back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--color-sage-green);
+	text-decoration: none;
+	font-weight: 500;
+	font-size: 0.95rem;
+	margin-bottom: 2rem;
+	transition: color 0.2s;
+}
+
+.back-link .arrow {
+	transition: transform 0.2s ease;
+}
+
+.back-link:hover {
+	color: var(--color-deep-teal);
+}
+
+.back-link:hover .arrow {
+	transform: translateX(-4px);
+}
+
+.tool-wrapper {
+	background: var(--color-page-bg);
+	border-radius: 16px;
+}
+
+@media screen and (max-width: 768px) {
+	.page-container,
+	.blog-page {
+		padding: 1.5rem 1.5rem 3rem;
+	}
+}

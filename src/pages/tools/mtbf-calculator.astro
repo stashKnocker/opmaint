@@ -1,14 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Navbar from "../../components/Navbar.astro";
 ---
 
 <Layout
 	title="MTBF Calculator - Mean Time Between Failures | Opmaint"
 	description="Calculate MTBF (Mean Time Between Failures) to predict elapsed time between equipment failures. Free reliability metric calculator."
 >
-    <Navbar />
-    <main class="page-container">
+    <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">
             <svg
                 class="arrow"
@@ -127,40 +125,11 @@ import Navbar from "../../components/Navbar.astro";
 </script>
 
 <style>
-    .page-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 4rem 2rem;
-    }
 
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #6b7280;
-        text-decoration: none;
-        font-weight: 500;
-        margin-bottom: 2rem;
-        transition: color 0.2s;
-    }
 
-    .back-link:hover {
-        color: #111827;
-    }
 
-    .back-link .arrow {
-        transition: transform 0.2s;
-    }
 
-    .back-link:hover .arrow {
-        transform: translateX(-4px);
-    }
 
-    .tool-wrapper {
-        background: white;
-        border-radius: 16px;
-        padding: 0;
-    }
 
     .tool-header {
         display: flex;
@@ -172,8 +141,8 @@ import Navbar from "../../components/Navbar.astro";
     .icon-wrapper {
         width: 64px;
         height: 64px;
-        background: #ebedfa;
-        color: #345ebd;
+        background: var(--color-parchment-green);
+        color: var(--color-sage-green);
         border-radius: 16px;
         display: flex;
         align-items: center;
@@ -190,7 +159,7 @@ import Navbar from "../../components/Navbar.astro";
     }
 
     .tool-subtitle {
-        color: #345ebd;
+        color: var(--color-sage-green);
         font-weight: 600;
         font-size: 1.1rem;
         margin: 0.25rem 0 0 0;
@@ -241,13 +210,13 @@ import Navbar from "../../components/Navbar.astro";
     }
 
     .input-group input:focus {
-        border-color: #345ebd;
-        box-shadow: 0 0 0 3px rgba(52, 94, 189, 0.1);
+        border-color: var(--color-deep-teal);
+        box-shadow: 0 0 0 3px var(--color-brand-focus);
     }
 
     .calc-btn {
-        background: #345ebd;
-        color: white;
+        background: var(--color-lime-green);
+        color: var(--color-on-lime);
         border: none;
         padding: 1.2rem;
         border-radius: 8px;
@@ -260,13 +229,13 @@ import Navbar from "../../components/Navbar.astro";
     }
 
     .calc-btn:hover {
-        background: #2b4a92;
+        background: var(--color-lime-hover);
     }
 
     .result-box {
         margin-top: 1rem;
-        background: #ebedfa;
-        border: 1px solid #cdd5f2;
+        background: var(--color-parchment-green);
+        border: 1px solid var(--color-brand-tint-border);
         border-radius: 8px;
         padding: 1.5rem;
         display: flex;
@@ -276,18 +245,18 @@ import Navbar from "../../components/Navbar.astro";
 
     .result-label {
         font-weight: 700;
-        color: #345ebd;
+        color: var(--color-sage-green);
         font-size: 1.2rem;
     }
 
     .result-value {
         font-weight: 800;
-        color: #345ebd;
+        color: var(--color-sage-green);
         font-size: 1.8rem;
     }
 
     .formula-section {
-        background: #f8fafc;
+        background: var(--color-page-bg);
         border-radius: 12px;
         padding: 2rem;
         border: 1px solid #eaeaea;
@@ -314,7 +283,7 @@ import Navbar from "../../components/Navbar.astro";
 
     .formula-box span {
         font-weight: 600;
-        color: #345ebd;
+        color: var(--color-sage-green);
         padding: 0 0.25rem;
     }
 

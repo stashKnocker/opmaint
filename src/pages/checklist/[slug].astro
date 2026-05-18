@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Navbar from "../../components/Navbar.astro";
 import CtaSidebar from "../../components/CtaSidebar.astro";
 import { checklistEntries } from "../../lib/checklists";
 import { getChecklistSeo, keywordsFromSeo } from "../../lib/checklist-seo";
@@ -118,8 +117,7 @@ const checklistStructuredData = {
 	keywords={seoKeywords}
 	extraJsonLd={checklistStructuredData}
 >
-    <Navbar />
-    <main class="page-container">
+    <main class="page-container page-container--wide">
         <a href="/procedure" class="back-link">
             <svg
                 class="arrow"
@@ -519,11 +517,6 @@ const checklistStructuredData = {
 </script>
 
 <style>
-    .page-container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
-    }
 
     .content-layout {
         display: flex;
@@ -536,29 +529,9 @@ const checklistStructuredData = {
         min-width: 0;
     }
 
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        color: #6b7280;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.95rem;
-        margin-bottom: 2rem;
-        transition: color 0.2s;
-    }
 
-    .back-link .arrow {
-        transition: transform 0.2s ease;
-    }
 
-    .back-link:hover {
-        color: #111827;
-    }
 
-    .back-link:hover .arrow {
-        transform: translateX(-4px);
-    }
 
     .checklist-header {
         margin-bottom: 4rem;
@@ -568,7 +541,7 @@ const checklistStructuredData = {
 
     .category-badge {
         display: inline-block;
-        background-color: #f3f4f6;
+        background-color: var(--color-parchment-green);
         color: #4b5563;
         font-size: 0.85rem;
         font-weight: 600;
@@ -618,8 +591,8 @@ const checklistStructuredData = {
         justify-content: center;
         width: 28px;
         height: 28px;
-        background-color: #ebedfa;
-        color: #345ebd;
+        background-color: var(--color-parchment-green);
+        color: var(--color-sage-green);
         font-weight: 700;
         border-radius: 50%;
         flex-shrink: 0;
@@ -676,7 +649,7 @@ const checklistStructuredData = {
     .radio-label:hover,
     .checkbox-label:hover {
         border-color: #d1d5db;
-        background-color: #fafafa;
+        background-color: var(--color-parchment-green);
     }
 
     .radio-text,
@@ -699,8 +672,8 @@ const checklistStructuredData = {
 
     .text-input:focus {
         outline: none;
-        border-color: #345ebd;
-        box-shadow: 0 0 0 2px rgba(52, 94, 189, 0.1);
+        border-color: var(--color-deep-teal);
+        box-shadow: 0 0 0 2px var(--color-brand-focus);
     }
 
     .slider {
@@ -724,7 +697,7 @@ const checklistStructuredData = {
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        background: #345ebd;
+        background: var(--color-lime-green);
         cursor: pointer;
     }
 
@@ -801,7 +774,7 @@ const checklistStructuredData = {
 
     .notes-textarea:focus {
         outline: none;
-        border-color: #345ebd;
+        border-color: var(--color-deep-teal);
     }
 
     .notes-remove {
@@ -830,7 +803,7 @@ const checklistStructuredData = {
         align-items: center;
         gap: 0.75rem;
         padding: 0.75rem;
-        background: #f9fafb;
+        background: var(--color-parchment-green);
         border-radius: 0.5rem;
         border: 1px solid #eaeaea;
         max-width: 280px;

@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Navbar from "../../components/Navbar.astro";
 import BlogCard from "../../components/BlogCard.astro";
 
 interface BlogPost {
@@ -234,7 +233,6 @@ const secondaryGridPosts = posts.slice(1, 3);
 	description="Stories and insights to transform how you manage maintenance, assets, and frontline teams. Practical playbooks, metrics, and templates from Opmaint."
 	canonical="/blog"
 >
-	<Navbar />
 
 	<main class="blog-page">
 		{featuredPost && (
@@ -578,14 +576,6 @@ const secondaryGridPosts = posts.slice(1, 3);
 </script>
 
 <style>
-	.blog-page {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 4rem 4rem;
-		box-sizing: border-box;
-		padding-top: 4.5rem;
-	}
-
 	.hero-header {
 		display: flex;
 		justify-content: space-between;
@@ -640,7 +630,7 @@ const secondaryGridPosts = posts.slice(1, 3);
 
 	.hero-image-accent {
 		width: 22%;
-		background: #ffb347;
+		background: var(--color-lime-green);
 	}
 
 	.hero-image-shell img {
@@ -657,8 +647,8 @@ const secondaryGridPosts = posts.slice(1, 3);
 		align-items: center;
 		padding: 0.2rem 0.7rem;
 		border-radius: 9999px;
-		background-color: #eef2ff;
-		color: #111827;
+		background-color: var(--color-parchment-green);
+		color: var(--color-deep-teal);
 		font-size: 0.7rem;
 		font-weight: 600;
 		letter-spacing: 0.08em;
@@ -766,8 +756,8 @@ const secondaryGridPosts = posts.slice(1, 3);
 		align-items: center;
 		padding: 0.15rem 0.6rem;
 		border-radius: 9999px;
-		background-color: #eef2ff;
-		color: #111827;
+		background-color: var(--color-parchment-green);
+		color: var(--color-deep-teal);
 		font-size: 0.7rem;
 		font-weight: 600;
 		letter-spacing: 0.08em;
@@ -808,9 +798,9 @@ const secondaryGridPosts = posts.slice(1, 3);
 		margin-bottom: 1rem;
 		padding: 0.75rem 1rem;
 		border-radius: 0.5rem;
-		border: 1.5px solid #345ebd;
+		border: 1.5px solid var(--color-lime-green);
 		background-color: #ffffff;
-		color: #345ebd;
+		color: var(--color-sage-green);
 		font-family: "Switzer", sans-serif;
 		font-weight: 600;
 		font-size: 0.95rem;
@@ -822,12 +812,12 @@ const secondaryGridPosts = posts.slice(1, 3);
 	}
 
 	.filter-toggle.open {
-		background-color: #345ebd;
-		color: #ffffff;
+		background-color: var(--color-lime-green);
+		color: var(--color-on-lime);
 	}
 
 	.filter-toggle:hover {
-		border-color: #2b4b9b;
+		border-color: var(--color-lime-hover);
 		transform: translateY(-1px);
 	}
 
@@ -847,11 +837,11 @@ const secondaryGridPosts = posts.slice(1, 3);
 		align-items: center;
 		padding: 0.45rem 0.95rem;
 		border-radius: 9999px;
-		border: 1px solid #111827;
-		background: #111827;
+		border: 1px solid var(--color-deep-teal);
+		background: var(--color-deep-teal);
 		font-family: "DM Sans", sans-serif;
 		font-size: 0.8rem;
-		color: #ffffff;
+		color: var(--color-on-dark);
 		cursor: pointer;
 		text-align: left;
 		text-transform: uppercase;
@@ -862,13 +852,14 @@ const secondaryGridPosts = posts.slice(1, 3);
 	}
 
 	.category-chip:hover {
-		background-color: #ffffff;
-		color: #111827;
+		background-color: var(--color-page-bg);
+		color: var(--color-deep-teal);
 	}
 
 	.category-chip.active {
-		background-color: #ffffff;
-		color: #111827;
+		background-color: var(--color-page-bg);
+		color: var(--color-deep-teal);
+		border-color: var(--color-deep-teal);
 	}
 
 	.blog-grid-section {

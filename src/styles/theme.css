@@ -1,0 +1,17 @@
+:root {
+	--color-page-bg: #ffffff;
+	--color-deep-teal: #04363d;
+	--color-sage-green: #32584e;
+	--color-lime-green: #b9f663;
+	--color-parchment-green: #e3efd1;
+	--color-lime-hover: #a8e055;
+	--color-lime-active: #96cc44;
+	--color-brand-tint-border: #c5d8b0;
+	--color-brand-focus: rgba(4, 54, 61, 0.12);
+	--color-brand-focus-subtle: rgba(4, 54, 61, 0.06);
+	--color-on-lime: #000000;
+	--color-on-dark: #ffffff;
+	--color-nav-login: #374b50;
+	--color-nav-login-hover: #42585d;
+}
+

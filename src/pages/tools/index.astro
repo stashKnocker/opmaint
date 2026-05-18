@@ -1,14 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Navbar from "../../components/Navbar.astro";
 ---
 
 <Layout
 	title="Maintenance Tools & Calculators | Opmaint"
 	description="Free maintenance calculators: OEE, MTTR, MTBF, downtime, unit converter. Industry tools for corrugated, laundry, car wash, cold storage. No signup required."
 >
-    <Navbar />
-    <main class="page-container">
+    <main class="page-container page-container--wide">
         <div class="header-section">
             <h1>Maintenance Tools & Calculators</h1>
             <p>
@@ -321,11 +319,6 @@ import Navbar from "../../components/Navbar.astro";
 </Layout>
 
 <style>
-    .page-container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 4rem 2rem;
-    }
 
     .header-section {
         margin-bottom: 4rem;
@@ -394,11 +387,11 @@ import Navbar from "../../components/Navbar.astro";
     .tool-card-link:hover .tool-card {
         transform: translateY(-4px);
         box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
-        border-color: #cdd5f2;
+        border-color: var(--color-brand-tint-border);
     }
 
     .tool-card.disabled {
-        background: #f8fafc;
+        background: var(--color-page-bg);
         border-style: dashed;
         cursor: not-allowed;
     }
@@ -413,8 +406,8 @@ import Navbar from "../../components/Navbar.astro";
     .icon-wrapper {
         width: 48px;
         height: 48px;
-        background: #ebedfa;
-        color: #345ebd;
+        background: var(--color-parchment-green);
+        color: var(--color-sage-green);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -440,7 +433,7 @@ import Navbar from "../../components/Navbar.astro";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        color: #345ebd;
+        color: var(--color-sage-green);
         font-weight: 600;
         font-size: 1.05rem;
     }
