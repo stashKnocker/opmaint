@@ -98,6 +98,34 @@ const OPERATION_LABELS: Record<string, string> = {
 	"work-order": "Work order",
 };
 
+/** Step 1 only — email + operation before the user finishes the demo form. */
+export function mapDemoPartialLeadFields(
+	input: {
+		email: string;
+		operationType: string;
+	},
+	pageUrl: string,
+	pageTitle = "Opmaint Demo",
+): WebflowFormFieldMap {
+	const operation =
+		OPERATION_LABELS[input.operationType] ?? input.operationType;
+	const demoPageUrl = pageUrl.replace(/\/book-demo\/?$/, "/demo");
+
+	return {
+		Fullname: "",
+		Email: input.email,
+		Company: "",
+		"Phone Number": `Operation: ${operation} | Incomplete demo form`,
+		"Where did you find us": "",
+		Checkbox: "true",
+		hutk: "",
+		ipAddress: "",
+		pageUri: demoPageUrl,
+		pageId: "/demo",
+		pageName: pageTitle,
+	};
+}
+
 export function mapDemoLeadFields(
 	input: {
 		email: string;
