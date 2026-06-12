@@ -1,6 +1,6 @@
 // Cloudflare Worker: reverse proxy
 // - Webflow (origin): default for opmaint.com
-// - Netlify (Astro): /blog (listing only), /procedure, /tools, /checklist, /llm.txt, /.well-known/llm.txt, /assets, /images, /_astro, favicon.ico
+// - Netlify (Astro): /blog (listing only), /procedure, /tools, /checklist, /demo, /api, /llm.txt, /.well-known/llm.txt, /assets, /images, /_astro, favicon.ico
 // - /blogs/* (individual posts) stay on Webflow
 
 export default {
@@ -15,6 +15,8 @@ export default {
       path.startsWith("/procedure") ||
       path.startsWith("/tools") ||
       path.startsWith("/checklist") ||
+      path.startsWith("/demo") ||
+      path.startsWith("/api/") ||
       path === "/llm.txt" ||
       path === "/.well-known/llm.txt" ||
       path.startsWith("/assets") ||

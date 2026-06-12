@@ -11,6 +11,7 @@
     "seo:sync": "node scripts/sync-checklist-seo-from-sheet.mjs"
   },
   "dependencies": {
+    "@astrojs/netlify": "^6.6.5",
     "astro": "^5.17.1",
     "html2pdf.js": "^0.14.0",
     "jspdf": "^4.2.1"

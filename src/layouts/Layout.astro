@@ -12,6 +12,8 @@ interface Props {
 	keywords?: string;
 	image?: string;
 	noindex?: boolean;
+	/** Hide navbar and footer (e.g. standalone landing pages). */
+	bare?: boolean;
 	/** Additional JSON-LD object(s); merged as extra script tag(s). Strings are escaped for HTML. */
 	extraJsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
@@ -23,6 +25,7 @@ const {
 	keywords,
 	image,
 	noindex = false,
+	bare = false,
 	extraJsonLd,
 } = Astro.props;
 
@@ -88,10 +91,10 @@ const imageUrl = image
 				/>
 			))}
 	</head>
-	<body>
-		<Navbar />
+	<body class:list={{ "layout--bare": bare }}>
+		{!bare && <Navbar />}
 		<slot />
-		<Footer />
+		{!bare && <Footer />}
 		<style>
 			html,
 			body {

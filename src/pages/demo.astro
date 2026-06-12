@@ -1,0 +1,1294 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { isWebflowFormConfigured } from "../lib/webflow-form-submit";
+
+export const prerender = false;
+
+const configured = isWebflowFormConfigured();
+
+/** Same count all month; changes when the calendar month changes. */
+function getMonthlyDemoTeamLabel(): string {
+	const now = new Date();
+	const monthKey = now.getFullYear() * 12 + now.getMonth();
+	let hash = monthKey;
+	hash = Math.imul(hash ^ (hash >>> 16), 0x7feb352d);
+	hash = Math.imul(hash ^ (hash >>> 15), 0x846ca68b);
+	hash ^= hash >>> 16;
+	const min = 50;
+	const max = 87;
+	const count = min + (Math.abs(hash) % (max - min + 1));
+	const rounded = Math.max(50, Math.floor(count / 5) * 5);
+	return `${rounded}+`;
+}
+
+const monthlyDemoTeams = getMonthlyDemoTeamLabel();
+
+const hearAboutOptions = [
+	"Google Search",
+	"LinkedIn",
+	"Email",
+	"AI",
+	"Referral",
+	"Trade show / Event",
+	"Podcast or content",
+	"Other",
+];
+
+const teamSizeOptions = ["1–5", "6–10", "11–25", "26–50", "51–100", "100+"];
+
+const operations = [
+	{
+		id: "maintenance",
+		title: "Maintenance",
+		desc: "Preventive and corrective maintenance",
+	},
+	{
+		id: "asset",
+		title: "Asset & parts",
+		desc: "Equipment and parts inventory",
+	},
+	{
+		id: "work-order",
+		title: "Work order",
+		desc: "Requests, scheduling, and coordination",
+	},
+];
+---
+
+<Layout
+	title="Book a Demo | Opmaint"
+	description="Schedule a 20-minute demo with Opmaint. See how our CMMS fits your maintenance operations."
+	noindex={true}
+	bare={true}
+>
+	<div class="demo-page">
+		<header class="demo-header">
+			<a href="https://www.opmaint.com" class="demo-header__brand">
+				<img
+					src="/images/opmaint-logo-white.svg"
+					alt="Opmaint"
+					width="147"
+					height="37"
+					class="demo-header__logo"
+				/>
+			</a>
+		</header>
+
+		<main class="demo-main">
+			<div class="demo-grid-bg" aria-hidden="true">
+				<div class="demo-grid-bg__lines"></div>
+			</div>
+			<div id="demo-card" class="demo-card">
+				<div class="demo-card__head">
+					<h1 id="demo-card-title" class="demo-card__title">Get a 20-min demo with our team</h1>
+					<div class="demo-card__avatar" aria-hidden="true">
+						<img
+							src="/images/1761637360292.jpeg"
+							alt=""
+							width="80"
+							height="80"
+							class="demo-card__avatar-img"
+						/>
+						<span class="demo-card__avatar-badge">
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+								<rect x="3" y="4" width="18" height="17" rx="2" fill="var(--color-deep-teal)"></rect>
+								<path d="M8 2v4M16 2v4M3 10h18" stroke="#fff" stroke-width="1.5"></path>
+							</svg>
+						</span>
+					</div>
+				</div>
+
+				{!configured && (
+					<p class="demo-status demo-status--error" role="alert">
+						Form is not configured on the server.
+					</p>
+				)}
+
+				<form id="demo-form" class="demo-form" novalidate>
+					<!-- Step 1: email + operation -->
+					<div id="demo-step-1" class="demo-step">
+						<input
+							id="demo-email"
+							name="email"
+							type="email"
+							class="demo-input"
+							placeholder="Work Email"
+							autocomplete="email"
+							aria-label="Work email"
+						/>
+						<p id="demo-email-error" class="demo-field-error" role="alert"></p>
+
+						<p class="demo-label demo-label--spaced">
+							What type of operation do you manage?
+							<span class="demo-required">*</span>
+						</p>
+						<div class="demo-options" role="radiogroup" aria-label="Operation type">
+							{operations.map((op) => (
+								<label class="demo-option">
+									<input
+										type="radio"
+										name="operationType"
+										value={op.id}
+										class="demo-option__input"
+									/>
+									<span class="demo-option__card">
+										<span class="demo-option__icon" aria-hidden="true">
+											{op.id === "maintenance" && (
+												<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+													<path
+														d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"></path>
+												</svg>
+											)}
+											{op.id === "asset" && (
+												<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+													<path
+														d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"></path>
+												</svg>
+											)}
+											{op.id === "work-order" && (
+												<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+													<path
+														d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<rect
+														x="8"
+														y="2"
+														width="8"
+														height="4"
+														rx="1"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"></rect>
+													<path
+														d="M9 12h6M9 16h6"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"></path>
+												</svg>
+											)}
+										</span>
+										<span class="demo-option__text">
+											<span class="demo-option__title">{op.title}</span>
+											<span class="demo-option__desc">{op.desc}</span>
+										</span>
+									</span>
+								</label>
+							))}
+						</div>
+						<p id="demo-operation-error" class="demo-field-error" role="alert"></p>
+
+						<button type="button" id="demo-continue" class="demo-btn" disabled={!configured}>
+							Pick a time
+							<svg
+								class="demo-btn__chevron"
+								width="14"
+								height="14"
+								viewBox="0 0 14 14"
+								fill="none"
+								aria-hidden="true"
+							>
+								<path
+									d="M5 3L9 7L5 11"
+									stroke="currentColor"
+									stroke-width="1.75"
+									stroke-linecap="round"
+									stroke-linejoin="round"></path>
+							</svg>
+						</button>
+					</div>
+
+					<!-- Step 2: contact details -->
+					<div id="demo-step-2" class="demo-step demo-step--hidden" aria-hidden="true">
+						<div class="demo-field-row">
+							<div class="demo-field">
+								<label class="demo-label" for="demo-first-name">First Name</label>
+								<input
+									id="demo-first-name"
+									name="firstName"
+									type="text"
+									class="demo-input"
+									placeholder="First Name"
+									autocomplete="given-name"
+								/>
+								<p id="demo-first-name-error" class="demo-field-error" role="alert"></p>
+							</div>
+							<div class="demo-field">
+								<label class="demo-label" for="demo-last-name">Last Name</label>
+								<input
+									id="demo-last-name"
+									name="lastName"
+									type="text"
+									class="demo-input"
+									placeholder="Last Name"
+									autocomplete="family-name"
+								/>
+								<p id="demo-last-name-error" class="demo-field-error" role="alert"></p>
+							</div>
+						</div>
+
+						<div class="demo-field">
+							<label class="demo-label" for="demo-company">Company Name</label>
+							<input
+								id="demo-company"
+								name="company"
+								type="text"
+								class="demo-input"
+								placeholder="Company Name"
+								autocomplete="organization"
+							/>
+							<p id="demo-company-error" class="demo-field-error" role="alert"></p>
+						</div>
+
+						<div class="demo-field">
+							<label class="demo-label" for="demo-team-size">Maintenance Team Size</label>
+							<select id="demo-team-size" name="teamSize" class="demo-input demo-select">
+								<option value="" selected disabled>Select team size</option>
+								{teamSizeOptions.map((size) => (
+									<option value={size}>{size}</option>
+								))}
+							</select>
+							<p id="demo-team-size-error" class="demo-field-error" role="alert"></p>
+						</div>
+
+						<div class="demo-field">
+							<label class="demo-label" for="demo-source">How did you hear about us?</label>
+							<select id="demo-source" name="source" class="demo-input demo-select">
+								<option value="" selected disabled>Select an option</option>
+								{hearAboutOptions.map((option) => (
+									<option value={option}>{option}</option>
+								))}
+							</select>
+							<p id="demo-source-error" class="demo-field-error" role="alert"></p>
+						</div>
+
+						<div class="demo-actions">
+							<button type="button" id="demo-back" class="demo-btn demo-btn--ghost">
+								← Back
+							</button>
+							<button type="submit" class="demo-btn" disabled={!configured}>
+								All set, let's pick a time
+								<svg
+									class="demo-btn__chevron"
+									width="14"
+									height="14"
+									viewBox="0 0 14 14"
+									fill="none"
+									aria-hidden="true"
+								>
+									<path
+										d="M5 3L9 7L5 11"
+										stroke="currentColor"
+										stroke-width="1.75"
+										stroke-linecap="round"
+										stroke-linejoin="round"></path>
+								</svg>
+							</button>
+						</div>
+					</div>
+
+					<p id="demo-status" class="demo-status" role="status" aria-live="polite"></p>
+				</form>
+
+				<!-- Step 3: Cal.com scheduling (outside form) -->
+				<div id="demo-step-3" class="demo-step demo-step--hidden" aria-hidden="true">
+					<div id="demo-cal-embed" class="demo-cal-embed"></div>
+				</div>
+
+				<p class="demo-footnote">{monthlyDemoTeams} maintenance teams booked a demo last month</p>
+			</div>
+		</main>
+	</div>
+</Layout>
+
+<style>
+	:global(html),
+	:global(body.layout--bare) {
+		height: 100%;
+		overflow: hidden;
+	}
+
+	@media (max-width: 640px) {
+		:global(html),
+		:global(body.layout--bare) {
+			height: auto;
+			min-height: 100dvh;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+	}
+
+	:global(body.layout--bare) {
+		background: #04363d;
+	}
+
+	.demo-page {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		height: 100dvh;
+		max-height: 100dvh;
+		background: #04363d;
+		color: var(--color-on-dark);
+		overflow: hidden;
+	}
+
+	.demo-header {
+		position: relative;
+		z-index: 1;
+		flex-shrink: 0;
+		padding: 2rem 2.5rem 1rem 3rem;
+	}
+
+	.demo-header__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		text-decoration: none;
+	}
+
+	.demo-header__logo {
+		display: block;
+		height: 32px;
+		width: auto;
+	}
+
+	.demo-main {
+		position: relative;
+		z-index: 1;
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		padding: 0 1.25rem 1.25rem;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	/* Centered grid panel behind the card — internal lines only, no closing border */
+	.demo-grid-bg {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		z-index: 0;
+		width: min(800px, 94vw);
+		height: min(600px, 68vh);
+		transform: translate(-50%, -50%);
+		pointer-events: none;
+		overflow: hidden;
+	}
+
+	.demo-grid-bg__lines {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: calc(100% - 1px);
+		height: calc(100% + 100px);
+		background-image:
+			repeating-linear-gradient(
+				90deg,
+				transparent 0,
+				transparent 99px,
+				rgba(255, 255, 255, 0.09) 99px,
+				rgba(255, 255, 255, 0.09) 100px
+			),
+			repeating-linear-gradient(
+				0deg,
+				transparent 0,
+				transparent 99px,
+				rgba(255, 255, 255, 0.09) 99px,
+				rgba(255, 255, 255, 0.09) 100px
+			);
+		-webkit-mask-image: linear-gradient(
+			to right,
+			transparent 0,
+			#000 72px,
+			#000 calc(100% - 72px),
+			transparent 100%
+		);
+		mask-image: linear-gradient(
+			to right,
+			transparent 0,
+			#000 72px,
+			#000 calc(100% - 72px),
+			transparent 100%
+		);
+	}
+
+	.demo-card {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		max-width: 520px;
+		max-height: 100%;
+		background: #fff;
+		color: var(--color-deep-teal);
+		border-radius: 20px;
+		padding: 1.5rem 1.5rem 1rem;
+		box-shadow:
+			0 24px 48px rgba(0, 0, 0, 0.22),
+			0 0 0 1px rgba(255, 255, 255, 0.06);
+		overflow-y: auto;
+	}
+
+	.demo-card__head {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 16px;
+	}
+
+	.demo-card__title {
+		margin: 0;
+		font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+		font-weight: 700;
+		line-height: 1.3;
+		letter-spacing: -0.02em;
+		max-width: 18rem;
+	}
+
+	.demo-card__avatar {
+		position: relative;
+		flex-shrink: 0;
+	}
+
+	.demo-card__avatar-img {
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		object-fit: cover;
+		object-position: center top;
+		border: 2px solid var(--color-parchment-green);
+	}
+
+	.demo-card__avatar-badge {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		background: #fff;
+		border-radius: 50%;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+	}
+
+	.demo-step--hidden {
+		display: none;
+	}
+
+	.demo-label {
+		display: block;
+		font-size: 0.875rem;
+		font-weight: 500;
+		margin-bottom: 8px;
+		color: var(--color-sage-green);
+	}
+
+	.demo-label--spaced {
+		margin-top: 24px;
+		margin-bottom: 16px;
+	}
+
+	.demo-required {
+		color: #dc2626;
+	}
+
+	.demo-input {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.75rem 0.9rem;
+		font-size: 1rem;
+		font-family: inherit;
+		border: 1px solid #e5e7eb;
+		border-radius: 10px;
+		background: #f9fafb;
+		color: var(--color-deep-teal);
+		transition: border-color 0.15s, box-shadow 0.15s;
+	}
+
+	.demo-input:focus {
+		outline: none;
+		border-color: var(--color-sage-green);
+		box-shadow: 0 0 0 3px var(--color-brand-focus);
+		background: #fff;
+	}
+
+	.demo-select {
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%2332584e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 0.9rem center;
+		padding-right: 2.25rem;
+		cursor: pointer;
+	}
+
+	.demo-field {
+		margin-bottom: 16px;
+	}
+
+	.demo-field:last-child {
+		margin-bottom: 0;
+	}
+
+	.demo-field-row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+		margin-bottom: 16px;
+	}
+
+	.demo-field-row .demo-field {
+		margin-bottom: 0;
+	}
+
+	.demo-options {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.45rem;
+		margin-bottom: 0;
+	}
+
+	.demo-option {
+		cursor: pointer;
+		min-width: 0;
+	}
+
+	.demo-option__input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.demo-option__card {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 0.45rem;
+		height: 100%;
+		min-height: 4.75rem;
+		padding: 0.65rem 0.5rem;
+		border: 1.5px solid transparent;
+		border-radius: 14px;
+		background: #f3f4f6;
+		transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.demo-option__icon {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 0.1rem;
+		color: var(--color-sage-green);
+	}
+
+	.demo-option__text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+		min-width: 0;
+	}
+
+	.demo-option__title {
+		font-weight: 500;
+		font-size: clamp(0.8rem, 2.8vw, 0.85rem);
+		line-height: 1.3;
+		color: var(--color-deep-teal);
+	}
+
+	.demo-option__desc {
+		font-size: clamp(0.65rem, 2.4vw, 0.68rem);
+		font-weight: 400;
+		line-height: 1.4;
+		color: #6b7280;
+	}
+
+	.demo-option__input:checked + .demo-option__card {
+		border-color: var(--color-sage-green);
+		background: #fff;
+		box-shadow: 0 0 0 1px var(--color-sage-green);
+	}
+
+	.demo-option__input:checked + .demo-option__card .demo-option__desc {
+		color: #6b7280;
+	}
+
+	.demo-option__input:focus-visible + .demo-option__card {
+		outline: 2px solid var(--color-sage-green);
+		outline-offset: 2px;
+	}
+
+	.demo-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.35rem;
+		width: 100%;
+		margin-top: 24px;
+		padding: 0.85rem 1.25rem;
+		font-size: 1rem;
+		font-weight: 600;
+		font-family: inherit;
+		color: var(--color-on-lime);
+		background: var(--color-lime-green);
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
+		transition: background 0.15s, transform 0.1s;
+	}
+
+	.demo-btn:hover:not(:disabled) {
+		background: var(--color-lime-hover);
+	}
+
+	.demo-btn:active:not(:disabled) {
+		background: var(--color-lime-active);
+		transform: translateY(1px);
+	}
+
+	.demo-btn:disabled {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+
+	.demo-btn--ghost {
+		width: auto;
+		flex: 0 0 auto;
+		margin-top: 0;
+		padding: 0.95rem 1rem;
+		background: transparent;
+		color: var(--color-sage-green);
+		border: 1.5px solid #e5e7eb;
+	}
+
+	.demo-btn--ghost:hover:not(:disabled) {
+		background: #f9fafb;
+		color: var(--color-deep-teal);
+	}
+
+	.demo-actions {
+		display: flex;
+		gap: 0.75rem;
+		margin-top: 24px;
+	}
+
+	.demo-actions .demo-btn:last-child {
+		flex: 1;
+		margin-top: 0;
+	}
+
+	.demo-field-error {
+		min-height: 0;
+		margin: 0.2rem 0 0;
+		font-size: 0.85rem;
+		color: #dc2626;
+	}
+
+	.demo-field-error:empty {
+		display: none;
+		margin: 0;
+	}
+
+	.demo-status {
+		min-height: 0;
+		margin: 8px 0 0;
+		font-size: 0.875rem;
+		text-align: center;
+		color: var(--color-sage-green);
+	}
+
+	.demo-status:empty {
+		display: none;
+	}
+
+	.demo-status--error {
+		color: #dc2626;
+	}
+
+	.demo-footnote {
+		margin: 0;
+		padding-top: 16px;
+		text-align: center;
+		font-size: clamp(0.72rem, 2.8vw, 0.8rem);
+		line-height: 1.45;
+		color: #000;
+	}
+
+	.demo-card--cal {
+		max-width: min(720px, 100%);
+		padding: 1rem 1rem 0.75rem;
+	}
+
+	.demo-cal-embed {
+		width: 100%;
+		min-height: 480px;
+		height: min(68vh, 620px);
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.demo-success {
+		text-align: center;
+		padding: 1rem 0 0.5rem;
+	}
+
+	.demo-success__icon {
+		display: inline-flex;
+		margin-bottom: 0.75rem;
+	}
+
+	.demo-success__title {
+		margin: 0 0 0.5rem;
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
+
+	.demo-success__text {
+		margin: 0;
+		font-size: 0.95rem;
+		color: var(--color-sage-green);
+		line-height: 1.5;
+	}
+
+	/* Tablet */
+	@media (max-width: 768px) {
+		.demo-header {
+			padding: 1.5rem 1.25rem 0.75rem;
+		}
+
+		.demo-header__logo {
+			height: 28px;
+		}
+
+		.demo-main {
+			padding: 0 1rem 1.25rem;
+		}
+
+		.demo-card {
+			padding: 1.35rem 1.25rem 1rem;
+			border-radius: 18px;
+		}
+
+		.demo-card__head {
+			gap: 0.75rem;
+			margin-bottom: 16px;
+		}
+
+		.demo-card__title {
+			max-width: none;
+			flex: 1;
+		}
+
+		.demo-card__avatar-img {
+			width: 72px;
+			height: 72px;
+		}
+
+		.demo-grid-bg {
+			width: min(100%, calc(100vw - 2rem));
+			height: min(560px, 65vh);
+		}
+	}
+
+	/* Mobile — stack options, allow page scroll */
+	@media (max-width: 560px) {
+		.demo-page {
+			height: auto;
+			min-height: 100dvh;
+			max-height: none;
+			overflow: visible;
+		}
+
+		.demo-main {
+			align-items: flex-start;
+			padding: 0 0.75rem 1rem;
+		}
+
+		.demo-card {
+			max-height: none;
+			padding: 1.25rem 1rem 1rem;
+			border-radius: 16px;
+		}
+
+		.demo-card--cal {
+			max-width: 100%;
+			padding: 0.75rem 0.5rem 0.5rem;
+		}
+
+		.demo-cal-embed {
+			min-height: 420px;
+			height: min(62vh, 560px);
+		}
+
+		.demo-options {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+		}
+
+		.demo-option__card {
+			min-height: auto;
+			padding: 0.85rem 0.75rem;
+		}
+
+		.demo-option__title {
+			font-size: 0.9rem;
+		}
+
+		.demo-option__desc {
+			font-size: 0.78rem;
+		}
+
+		.demo-label--spaced {
+			margin-top: 20px;
+			margin-bottom: 12px;
+		}
+
+		.demo-btn {
+			margin-top: 20px;
+			padding: 0.9rem 1.15rem;
+		}
+
+		.demo-footnote {
+			padding-top: 16px;
+			padding-left: 0.25rem;
+			padding-right: 0.25rem;
+		}
+
+		.demo-grid-bg {
+			width: calc(100vw - 1.5rem);
+			height: min(480px, 58vh);
+		}
+
+		.demo-grid-bg__lines {
+			height: calc(100% + 80px);
+			-webkit-mask-image: linear-gradient(
+				to right,
+				transparent 0,
+				#000 48px,
+				#000 calc(100% - 48px),
+				transparent 100%
+			);
+			mask-image: linear-gradient(
+				to right,
+				transparent 0,
+				#000 48px,
+				#000 calc(100% - 48px),
+				transparent 100%
+			);
+			background-image:
+				repeating-linear-gradient(
+					90deg,
+					transparent 0,
+					transparent 79px,
+					rgba(255, 255, 255, 0.09) 79px,
+					rgba(255, 255, 255, 0.09) 80px
+				),
+				repeating-linear-gradient(
+					0deg,
+					transparent 0,
+					transparent 79px,
+					rgba(255, 255, 255, 0.09) 79px,
+					rgba(255, 255, 255, 0.09) 80px
+				);
+		}
+	}
+
+	/* Narrow phones */
+	@media (max-width: 380px) {
+		.demo-header {
+			padding: 1.25rem 1rem 0.5rem;
+		}
+
+		.demo-main {
+			padding: 0 0.5rem 0.75rem;
+		}
+
+		.demo-card {
+			padding: 1.1rem 0.85rem 0.85rem;
+		}
+
+		.demo-card__avatar-img {
+			width: 60px;
+			height: 60px;
+		}
+
+		.demo-card__avatar-badge {
+			width: 24px;
+			height: 24px;
+		}
+
+		.demo-input {
+			padding: 0.7rem 0.8rem;
+			font-size: 16px;
+		}
+
+		.demo-field-row {
+			grid-template-columns: 1fr;
+			gap: 0;
+			margin-bottom: 0;
+		}
+
+		.demo-field-row .demo-field {
+			margin-bottom: 16px;
+		}
+	}
+</style>
+
+<script>
+	const FREE_EMAIL_DOMAINS = new Set([
+		"gmail.com", "googlemail.com", "yahoo.com", "yahoo.co.uk", "hotmail.com",
+		"outlook.com", "live.com", "msn.com", "icloud.com", "me.com", "aol.com",
+		"protonmail.com", "proton.me", "mail.com", "gmx.com", "yandex.com",
+		"zoho.com", "hey.com", "fastmail.com",
+	]);
+
+	function isValidEmail(email: string) {
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+	}
+
+	function isWorkEmail(email: string) {
+		const trimmed = email.trim().toLowerCase();
+		if (!isValidEmail(trimmed)) return false;
+		const domain = trimmed.split("@")[1];
+		return domain ? !FREE_EMAIL_DOMAINS.has(domain) : false;
+	}
+
+	const CAL_NAMESPACE = "30min";
+	const CAL_LINK = "siddhant-saraf-fqemyb/30min";
+
+	function ensureCalStub() {
+		const win = window as Window & {
+			Cal?: {
+				(...args: unknown[]): void;
+				ns: Record<string, (...args: unknown[]) => void>;
+				loaded?: boolean;
+				q?: unknown[];
+			};
+		};
+
+		if (win.Cal) return win.Cal;
+
+		(function (C, A, L) {
+			const calWindow = C as typeof win;
+			const push = (api: { q?: unknown[] }, args: IArguments) => {
+				(api.q = api.q || []).push(args);
+			};
+			const d = calWindow.document;
+			calWindow.Cal = function () {
+				const cal = calWindow.Cal!;
+				const ar = arguments;
+				if (!cal.loaded) {
+					cal.ns = {};
+					cal.q = cal.q || [];
+					const script = d.createElement("script");
+					script.src = A;
+					script.async = true;
+					d.head.appendChild(script);
+					cal.loaded = true;
+				}
+				if (ar[0] === L) {
+					const api = function () {
+						push(api, arguments);
+					} as { q?: unknown[] } & ((...args: unknown[]) => void);
+					api.q = api.q || [];
+					const namespace = ar[1];
+					if (typeof namespace === "string") {
+						cal.ns[namespace] = api as (...args: unknown[]) => void;
+						push(api, ar);
+						push(cal, ar);
+					} else {
+						push(cal, ar);
+					}
+					return;
+				}
+				push(cal, ar);
+			};
+		})(window, "https://app.cal.com/embed/embed.js", "init");
+
+		return win.Cal!;
+	}
+
+	function waitForVisibleFrame() {
+		return new Promise<void>((resolve) => {
+			requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+		});
+	}
+
+	let calEmbedReady = false;
+
+	async function initCalEmbed(details: { name: string; email: string }) {
+		if (calEmbedReady) return;
+		calEmbedReady = true;
+
+		await waitForVisibleFrame();
+
+		const embedHost = document.getElementById("demo-cal-embed");
+		if (!embedHost) return;
+		embedHost.innerHTML = "";
+
+		const Cal = ensureCalStub();
+		Cal("init", CAL_NAMESPACE, { origin: "https://app.cal.com" });
+
+		Cal.ns[CAL_NAMESPACE]("inline", {
+			elementOrSelector: "#demo-cal-embed",
+			calLink: CAL_LINK,
+			config: {
+				layout: "month_view",
+				useSlotsViewOnSmallScreen: "true",
+				theme: "light",
+				name: details.name,
+				email: details.email,
+			},
+		});
+
+		Cal.ns[CAL_NAMESPACE]("ui", {
+			theme: "light",
+			cssVarsPerTheme: { light: { "cal-brand": "#000000" } },
+			hideEventTypeDetails: true,
+			layout: "month_view",
+		});
+	}
+
+	const STEP_TITLES: Record<1 | 2 | 3, string> = {
+		1: "Get a 20-min demo with our team",
+		2: "Help us tailor your CMMS demo",
+		3: "Pick a time",
+	};
+
+	function showStep(step: 1 | 2 | 3) {
+		const s1 = document.getElementById("demo-step-1");
+		const s2 = document.getElementById("demo-step-2");
+		const s3 = document.getElementById("demo-step-3");
+		const title = document.getElementById("demo-card-title");
+		const card = document.getElementById("demo-card");
+		const form = document.getElementById("demo-form");
+		const avatar = document.querySelector(".demo-card__avatar") as HTMLElement | null;
+		const footnote = document.querySelector(".demo-footnote") as HTMLElement | null;
+
+		if (step === 3) {
+			s1?.classList.toggle("demo-step--hidden", true);
+			s2?.classList.toggle("demo-step--hidden", true);
+			if (s1) s1.setAttribute("aria-hidden", "true");
+			if (s2) s2.setAttribute("aria-hidden", "true");
+		} else {
+			s1?.classList.toggle("demo-step--hidden", step !== 1);
+			s2?.classList.toggle("demo-step--hidden", step !== 2);
+			if (s1) s1.setAttribute("aria-hidden", step === 1 ? "false" : "true");
+			if (s2) s2.setAttribute("aria-hidden", step === 2 ? "false" : "true");
+		}
+
+		s3?.classList.toggle("demo-step--hidden", step !== 3);
+		if (s3) s3.setAttribute("aria-hidden", step === 3 ? "false" : "true");
+		if (title) title.textContent = STEP_TITLES[step];
+		card?.classList.toggle("demo-card--cal", step === 3);
+		form?.classList.toggle("demo-step--hidden", step === 3);
+		if (avatar) avatar.style.display = step === 3 ? "none" : "";
+		if (footnote) footnote.style.display = step === 3 ? "none" : "";
+
+		if (step === 2) clearStep2Errors();
+	}
+
+	function setFieldError(id: string, message: string) {
+		const el = document.getElementById(id);
+		if (el) el.textContent = message;
+	}
+
+	function clearStep2Errors() {
+		setFieldError("demo-first-name-error", "");
+		setFieldError("demo-last-name-error", "");
+		setFieldError("demo-company-error", "");
+		setFieldError("demo-team-size-error", "");
+		setFieldError("demo-source-error", "");
+	}
+
+	document.addEventListener("DOMContentLoaded", () => {
+		const form = document.getElementById("demo-form") as HTMLFormElement | null;
+		const emailInput = document.getElementById("demo-email") as HTMLInputElement | null;
+		const continueBtn = document.getElementById("demo-continue");
+		const backBtn = document.getElementById("demo-back");
+		const emailErr = document.getElementById("demo-email-error");
+		const opErr = document.getElementById("demo-operation-error");
+		const statusEl = document.getElementById("demo-status");
+
+		const firstNameInput = document.getElementById("demo-first-name") as HTMLInputElement | null;
+		const lastNameInput = document.getElementById("demo-last-name") as HTMLInputElement | null;
+		const companyInput = document.getElementById("demo-company") as HTMLInputElement | null;
+		const teamSizeInput = document.getElementById("demo-team-size") as HTMLSelectElement | null;
+		const sourceInput = document.getElementById("demo-source") as HTMLSelectElement | null;
+
+		form?.querySelectorAll(".demo-option").forEach((label) => {
+			const input = label.querySelector<HTMLInputElement>(".demo-option__input");
+			if (!input) return;
+
+			label.addEventListener("mousedown", () => {
+				input.dataset.wasChecked = input.checked ? "true" : "false";
+			});
+
+			label.addEventListener("click", (e) => {
+				if (input.dataset.wasChecked === "true") {
+					e.preventDefault();
+					input.checked = false;
+				}
+				delete input.dataset.wasChecked;
+			});
+		});
+
+		continueBtn?.addEventListener("click", () => {
+			if (!emailInput) return;
+			if (emailErr) emailErr.textContent = "";
+			if (opErr) opErr.textContent = "";
+
+			const email = emailInput.value.trim();
+			if (!email) {
+				if (emailErr) emailErr.textContent = "Please enter your work email.";
+				return;
+			}
+			if (!isWorkEmail(email)) {
+				if (emailErr) emailErr.textContent = "Please use a work email (not Gmail, Yahoo, etc.).";
+				return;
+			}
+
+			const selected = form?.querySelector<HTMLInputElement>(
+				'input[name="operationType"]:checked',
+			);
+			if (!selected) {
+				if (opErr) opErr.textContent = "Please select an operation type.";
+				return;
+			}
+
+			showStep(2);
+			firstNameInput?.focus();
+		});
+
+		emailInput?.addEventListener("keydown", (e) => {
+			if (e.key === "Enter") {
+				e.preventDefault();
+				continueBtn?.click();
+			}
+		});
+
+		backBtn?.addEventListener("click", () => {
+			clearStep2Errors();
+			if (statusEl) {
+				statusEl.textContent = "";
+				statusEl.className = "demo-status";
+			}
+			showStep(1);
+		});
+
+		form?.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			if (!emailInput || !form) return;
+
+			const step2 = document.getElementById("demo-step-2");
+			const onStep2 = step2 && !step2.classList.contains("demo-step--hidden");
+
+			if (!onStep2) {
+				continueBtn?.click();
+				return;
+			}
+
+			clearStep2Errors();
+			if (statusEl) {
+				statusEl.textContent = "";
+				statusEl.className = "demo-status";
+			}
+
+			const selected = form.querySelector<HTMLInputElement>(
+				'input[name="operationType"]:checked',
+			);
+			if (!selected) {
+				showStep(1);
+				if (opErr) opErr.textContent = "Please select an operation type.";
+				return;
+			}
+
+			const firstName = firstNameInput?.value.trim() ?? "";
+			const lastName = lastNameInput?.value.trim() ?? "";
+			const company = companyInput?.value.trim() ?? "";
+			const teamSize = teamSizeInput?.value.trim() ?? "";
+			const source = sourceInput?.value.trim() ?? "";
+
+			let hasError = false;
+			if (!firstName) {
+				setFieldError("demo-first-name-error", "First name is required.");
+				hasError = true;
+			}
+			if (!lastName) {
+				setFieldError("demo-last-name-error", "Last name is required.");
+				hasError = true;
+			}
+			if (!company) {
+				setFieldError("demo-company-error", "Company name is required.");
+				hasError = true;
+			}
+			if (!teamSize) {
+				setFieldError("demo-team-size-error", "Please select a team size.");
+				hasError = true;
+			}
+			if (!source) {
+				setFieldError("demo-source-error", "Please let us know how you heard about us.");
+				hasError = true;
+			}
+			if (hasError) return;
+
+			const submitBtn = form.querySelector(
+				'button[type="submit"]',
+			) as HTMLButtonElement | null;
+			submitBtn?.setAttribute("disabled", "true");
+
+			try {
+				const res = await fetch("/api/webflow-form-submit", {
+					method: "POST",
+					headers: { "Content-Type": "application/json", Accept: "application/json" },
+					body: JSON.stringify({
+						email: emailInput.value.trim().toLowerCase(),
+						operationType: selected.value,
+						firstName,
+						lastName,
+						company,
+						teamSize,
+						source,
+					}),
+				});
+				const json = await res.json().catch(() => ({}));
+				if (!res.ok) {
+					throw new Error(json.error || `Request failed (${res.status})`);
+				}
+				showStep(3);
+				void initCalEmbed({
+					name: `${firstName} ${lastName}`.trim(),
+					email: emailInput.value.trim().toLowerCase(),
+				});
+			} catch (err) {
+				if (statusEl) {
+					statusEl.textContent =
+						err instanceof Error ? err.message : "Submission failed. Please try again.";
+					statusEl.className = "demo-status demo-status--error";
+				}
+			} finally {
+				submitBtn?.removeAttribute("disabled");
+			}
+		});
+	});
+</script>
