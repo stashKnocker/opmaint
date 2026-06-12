@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { isWebflowFormConfigured } from "../lib/webflow-form-submit";
 
-export const prerender = false;
+export const prerender = true;
 
 const configured = isWebflowFormConfigured();
 
