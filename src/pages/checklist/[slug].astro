@@ -46,7 +46,7 @@ const seoDescription =
 
 const seoKeywords = seoOverride ? keywordsFromSeo(seoOverride) : undefined;
 
-const site = Astro.site?.toString() ?? "https://www.opmaint.com";
+const site = Astro.site?.toString() ?? "https://opmaint.com";
 const pageUrl = new URL(Astro.url.pathname, site).href;
 const itemListId = `${pageUrl}#checklist-items`;
 

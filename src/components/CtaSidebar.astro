@@ -1,5 +1,5 @@
 ---
-const baseUrl = "https://www.opmaint.com";
+const baseUrl = "https://opmaint.com";
 const appUrl = "https://app.opmaint.com";
 /** Set in Netlify / .env as PUBLIC_CAPTURE_API_URL — never commit secrets. */
 const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
@@ -473,7 +473,7 @@ const captureApiUrl = import.meta.env.PUBLIC_CAPTURE_API_URL ?? "";
                 doc.setFontSize(8);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(120, 120, 120);
-                doc.text('Opmaint · www.opmaint.com', pageW / 2, pageH - 8, { align: 'center' });
+                doc.text('Opmaint · opmaint.com', pageW / 2, pageH - 8, { align: 'center' });
             }
 
             const filename = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;

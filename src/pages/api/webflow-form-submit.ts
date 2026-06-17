@@ -106,7 +106,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 	const pageUrl =
 		import.meta.env.WEBFLOW_FORM_PAGE_URL?.trim() ??
-		"https://www.opmaint.com/book-demo";
+		"https://opmaint.com/book-demo";
 
 	const fields = mapDemoLeadFields(
 		{
