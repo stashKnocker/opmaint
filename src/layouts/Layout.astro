@@ -1,4 +1,5 @@
 ---
+import Analytics from "../components/Analytics.astro";
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import "../styles/theme.css";
@@ -90,8 +91,17 @@ const imageUrl = image
 					set:html={JSON.stringify(block).replace(/</g, "\\u003c")}
 				/>
 			))}
+		<Analytics />
 	</head>
 	<body class:list={{ "layout--bare": bare }}>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript
+			><iframe
+				src="https://www.googletagmanager.com/ns.html?id=GTM-N3W75D35"
+				height="0"
+				width="0"
+				style="display:none;visibility:hidden"></iframe></noscript
+		>
 		{!bare && <Navbar />}
 		<slot />
 		{!bare && <Footer />}

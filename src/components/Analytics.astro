@@ -1,0 +1,127 @@
+---
+/** Third-party analytics and tracking scripts (site-wide). */
+---
+
+<!-- Microsoft Clarity -->
+<script is:inline>
+	(function (c, l, a, r, i, t, y) {
+		c[a] =
+			c[a] ||
+			function () {
+				(c[a].q = c[a].q || []).push(arguments);
+			};
+		t = l.createElement(r);
+		t.async = 1;
+		t.src = "https://www.clarity.ms/tag/" + i;
+		y = l.getElementsByTagName(r)[0];
+		y.parentNode.insertBefore(t, y);
+	})(window, document, "clarity", "script", "u0xnp7nuuc");
+</script>
+
+<!-- Google Tag Manager -->
+<script is:inline>
+	(function (w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+		var f = d.getElementsByTagName(s)[0],
+			j = d.createElement(s),
+			dl = l != "dataLayer" ? "&l=" + l : "";
+		j.async = true;
+		j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+		f.parentNode.insertBefore(j, f);
+	})(window, document, "script", "dataLayer", "GTM-N3W75D35");
+</script>
+
+<!-- Factors.ai -->
+<script is:inline>
+	window.faitracker =
+		window.faitracker ||
+		(function () {
+			this.q = [];
+			var t = new CustomEvent("FAITRACKER_QUEUED_EVENT");
+			return (
+				(this.init = function (t, e, a) {
+					(this.TOKEN = t),
+						(this.INIT_PARAMS = e),
+						(this.INIT_CALLBACK = a),
+						window.dispatchEvent(new CustomEvent("FAITRACKER_INIT_EVENT"));
+				}),
+				(this.call = function () {
+					var e = { k: "", a: [] };
+					if (arguments && arguments.length >= 1) {
+						for (var a = 1; a < arguments.length; a++) e.a.push(arguments[a]);
+						e.k = arguments[0];
+					}
+					this.q.push(e), window.dispatchEvent(t);
+				}),
+				(this.message = function () {
+					window.addEventListener("message", function (t) {
+						"faitracker" === t.data.origin &&
+							this.call("message", t.data.type, t.data.message);
+					});
+				}),
+				this.message(),
+				this.init("8k0o96oqxub54m49mf8gbex0ghkymx34", {
+					host: "https://api.factors.ai",
+				}),
+				this
+			);
+		})(),
+		(function () {
+			var t = document.createElement("script");
+			(t.type = "text/javascript"),
+				(t.src = "https://app.factors.ai/assets/factors.js"),
+				(t.async = !0),
+				(d = document.getElementsByTagName("script")[0]).parentNode.insertBefore(
+					t,
+					d,
+				);
+		})();
+</script>
+
+<!-- WriteSonic SEO Fixer -->
+<script
+	is:inline
+	src="https://seo-fixer.writesonic.com/site-audit/fixer-script/index.js"
+	id="wsAiSeoMb"
+	type="application/javascript"
+></script>
+<script is:inline id="wsAiSeoInitScript">
+	wsSEOfixer.configure({
+		hostURL: "https://seo-fixer.writesonic.com",
+		siteID: "69397105ee7d4a82cc029b90",
+	});
+</script>
+
+<!-- Apollo.io -->
+<script is:inline>
+	function initApollo() {
+		var n = Math.random().toString(36).substring(7),
+			o = document.createElement("script");
+		(o.src =
+			"https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=" +
+			n),
+			(o.async = !0),
+			(o.defer = !0),
+			(o.onload = function () {
+				window.trackingFunctions.onLoad({ appId: "68f3403c7a4d140021730b0e" });
+			}),
+			document.head.appendChild(o);
+	}
+	initApollo();
+</script>
+
+<!-- reb2b -->
+<script is:inline>
+	!(function (key) {
+		if (window.reb2b) return;
+		window.reb2b = { loaded: true };
+		var s = document.createElement("script");
+		s.async = true;
+		s.src = "https://ddwl4m2hdecbv.cloudfront.net/b/" + key + "/" + key + ".js.gz";
+		document.getElementsByTagName("script")[0].parentNode.insertBefore(
+			s,
+			document.getElementsByTagName("script")[0],
+		);
+	})("EN4M0HLY0POM");
+</script>
