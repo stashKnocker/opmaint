@@ -1,8 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CtaSidebar from "../../components/CtaSidebar.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
 import { checklistEntries } from "../../lib/checklists";
 import { getChecklistSeo, keywordsFromSeo } from "../../lib/checklist-seo";
+import { getChecklistEnrichment } from "../../lib/checklist-content";
 import { capSeoDescription, capSeoTitle } from "../../lib/seo";
 
 export function getStaticPaths() {
@@ -40,6 +43,12 @@ const rawDescription =
 const seoDescription = capSeoDescription(normalizeWs(rawDescription));
 
 const seoKeywords = seoOverride ? keywordsFromSeo(seoOverride) : undefined;
+
+const enrichmentSections = getChecklistEnrichment(
+	categoryName,
+	checklist.title,
+	checklist.items.length
+);
 
 const site = Astro.site?.toString() ?? "https://opmaint.com";
 const pageUrl = seoOverride?.canonical
@@ -116,23 +125,13 @@ const checklistStructuredData = {
 	extraJsonLd={checklistStructuredData}
 >
     <main class="page-container page-container--wide">
-        <a href="/procedure" class="back-link">
-            <svg
-                class="arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all checklists
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Procedure Hub", href: "/procedure" },
+                { label: checklist.title },
+            ]}
+        />
 
         <div class="content-layout">
             <div class="main-column">
@@ -330,6 +329,8 @@ const checklistStructuredData = {
                         ))
                     }
                 </div>
+
+                <SeoContentSection sections={enrichmentSections} />
             </div>
 
             <CtaSidebar />

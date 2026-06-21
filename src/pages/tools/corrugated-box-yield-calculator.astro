@@ -1,11 +1,16 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
 import { buildToolPageJsonLd } from "../../lib/seo";
 
 const site = Astro.site?.toString() ?? "https://opmaint.com";
 const seoTitle = "Corrugated Box Yield Calculator | Opmaint";
 const seoDescription =
 	"Calculate corrugated box yield percentage to optimize material usage and reduce waste in box production.";
+
+const toolContent = getToolEnrichment("corrugated-box-yield-calculator");
 
 const toolStructuredData = buildToolPageJsonLd({
 	site,
@@ -23,13 +28,13 @@ const toolStructuredData = buildToolPageJsonLd({
 	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "Box Yield Calculator" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -86,6 +91,8 @@ const toolStructuredData = buildToolPageJsonLd({
                     <div style="margin-top: 1rem;"><span>Material Efficiency</span> = <span>Good Boxes</span> / <span>Material Used</span></div>
                 </div>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>

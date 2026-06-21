@@ -1,11 +1,16 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
 import { buildToolPageJsonLd } from "../../lib/seo";
 
 const site = Astro.site?.toString() ?? "https://opmaint.com";
 const seoTitle = "MTBF Calculator - Mean Time Between Failures | Opmaint";
 const seoDescription =
 	"Calculate MTBF (Mean Time Between Failures) to predict elapsed time between equipment failures. Free reliability metric calculator.";
+
+const toolContent = getToolEnrichment("mtbf-calculator");
 
 const toolStructuredData = buildToolPageJsonLd({
 	site,
@@ -23,23 +28,13 @@ const toolStructuredData = buildToolPageJsonLd({
 	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg
-                class="arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "MTBF Calculator" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -111,6 +106,8 @@ const toolStructuredData = buildToolPageJsonLd({
                     <span>Total Number of Failures</span>
                 </div>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>

@@ -1,0 +1,30 @@
+---
+import type { ContentSection } from "../lib/checklist-content";
+
+interface Props {
+	sections: ContentSection[];
+	class?: string;
+}
+
+const { sections, class: className = "" } = Astro.props;
+---
+
+{
+	sections.length > 0 && (
+		<section class:list={["seo-content", className]} aria-label="Additional information">
+			{sections.map((section) => (
+				<div class="seo-content__block">
+					<h2>{section.heading}</h2>
+					{section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+					{section.list && section.list.length > 0 && (
+						<ul>
+							{section.list.map((item) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					)}
+				</div>
+			))}
+		</section>
+	)
+}

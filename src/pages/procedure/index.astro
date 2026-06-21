@@ -1,5 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
 import ChecklistCard from "../../components/ChecklistCard.astro";
 import {
 	allChecklistCategories,
@@ -7,6 +9,7 @@ import {
 	stripEmojis,
 } from "../../lib/checklists";
 import { buildWebPageJsonLd } from "../../lib/seo";
+import { procedureHubContent } from "../../lib/checklist-content";
 
 const rawData = allChecklistCategories;
 
@@ -39,6 +42,12 @@ const procedureStructuredData = buildWebPageJsonLd({
 	extraJsonLd={procedureStructuredData}
 >
 	<main class="page-container">
+		<Breadcrumbs
+			items={[
+				{ label: "Home", href: site },
+				{ label: "Procedure Hub" },
+			]}
+		/>
 		<header class="hero-section">
 			<h1>Procedure Hub</h1>
 			<p>
@@ -284,6 +293,8 @@ const procedureStructuredData = buildWebPageJsonLd({
 				}
 			</div>
 		</div>
+
+		<SeoContentSection sections={procedureHubContent} />
 	</main>
 </Layout>
 

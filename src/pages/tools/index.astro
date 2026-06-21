@@ -1,6 +1,9 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
 import { buildWebPageJsonLd } from "../../lib/seo";
+import { toolsIndexContent } from "../../lib/tool-content";
 
 const site = Astro.site?.toString() ?? "https://opmaint.com";
 const pageUrl = new URL("/tools", site).href;
@@ -27,6 +30,12 @@ const toolsStructuredData = buildWebPageJsonLd({
 	extraJsonLd={toolsStructuredData}
 >
     <main class="page-container page-container--wide">
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools" },
+            ]}
+        />
         <div class="header-section">
             <h1>Maintenance Tools & Calculators</h1>
             <p>
@@ -335,6 +344,8 @@ const toolsStructuredData = buildWebPageJsonLd({
             </a>
             </div>
         </div>
+
+        <SeoContentSection sections={toolsIndexContent} />
     </main>
 </Layout>
 
