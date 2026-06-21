@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Laundry Throughput Calculator | Opmaint";
+const seoDescription =
+	"Calculate daily laundry throughput capacity to optimize machine utilization and plan production schedules.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "laundry-throughput-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Laundry Throughput Calculator",
+});
 ---
 
 <Layout
-	title="Laundry Throughput Calculator | Opmaint"
-	description="Calculate daily laundry throughput capacity to optimize machine utilization and plan production schedules."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/laundry-throughput-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">

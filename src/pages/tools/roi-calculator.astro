@@ -1,8 +1,27 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "ROI Calculator for Maintenance & CMMS | Opmaint";
+const seoDescription =
+	"Estimate CMMS return on investment from labor savings, downtime reduction, and inventory efficiency. Free ROI calculator for maintenance teams.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "roi-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "ROI Calculator",
+});
 ---
 
-<Layout title="ROI Calculator - Opmaint" canonical="/tools/roi-calculator">
+<Layout
+	title={seoTitle}
+	description={seoDescription}
+	canonical="/tools/roi-calculator"
+	extraJsonLd={toolStructuredData}
+>
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">
             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

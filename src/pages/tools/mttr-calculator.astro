@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "MTTR Calculator - Mean Time To Repair | Opmaint";
+const seoDescription =
+	"Calculate MTTR (Mean Time To Repair) to track average repair time for failed equipment. Free maintenance metric calculator.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "mttr-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "MTTR Calculator",
+});
 ---
 
 <Layout
-	title="MTTR Calculator - Mean Time To Repair | Opmaint"
-	description="Calculate MTTR (Mean Time To Repair) to track average repair time for failed equipment. Free maintenance metric calculator."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/mttr-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">

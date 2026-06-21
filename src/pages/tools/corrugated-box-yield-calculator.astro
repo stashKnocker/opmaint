@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Corrugated Box Yield Calculator | Opmaint";
+const seoDescription =
+	"Calculate corrugated box yield percentage to optimize material usage and reduce waste in box production.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "corrugated-box-yield-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Box Yield Calculator",
+});
 ---
 
 <Layout
-	title="Corrugated Box Yield Calculator | Opmaint"
-	description="Calculate corrugated box yield percentage to optimize material usage and reduce waste in box production."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/corrugated-box-yield-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">

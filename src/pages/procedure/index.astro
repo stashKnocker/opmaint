@@ -6,18 +6,37 @@ import {
 	getSlugForChecklist,
 	stripEmojis,
 } from "../../lib/checklists";
+import { buildWebPageJsonLd } from "../../lib/seo";
 
 const rawData = allChecklistCategories;
 
 const allCategories = [
 	...new Set(rawData.map((cat: any) => stripEmojis(cat.category_name))),
 ];
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const pageUrl = new URL("/procedure", site).href;
+const seoTitle = "Procedure Hub - Maintenance & Safety Checklists | Opmaint";
+const seoDescription =
+	"Browse maintenance procedures, inspection checklists, and audit templates by industry. Free procedures for manufacturing, facilities, and operations.";
+
+const procedureStructuredData = buildWebPageJsonLd({
+	site,
+	url: pageUrl,
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbs: [
+		{ name: "Home", item: site },
+		{ name: "Procedure Hub", item: pageUrl },
+	],
+});
 ---
 
 <Layout
-	title="Procedure Hub - Maintenance & Safety Checklists | Opmaint"
-	description="Browse maintenance procedures, inspection checklists, and audit templates by industry. Free procedures for manufacturing, facilities, and operations."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/procedure"
+	extraJsonLd={procedureStructuredData}
 >
 	<main class="page-container">
 		<header class="hero-section">

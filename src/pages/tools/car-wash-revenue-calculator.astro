@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Car Wash Revenue Calculator | Opmaint";
+const seoDescription =
+	"Calculate potential car wash revenue from wash volume, pricing tiers, and operating hours.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "car-wash-revenue-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Car Wash Revenue Calculator",
+});
 ---
 
 <Layout
-	title="Car Wash Revenue Calculator | Opmaint"
-	description="Calculate potential car wash revenue from wash volume, pricing tiers, and operating hours."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/car-wash-revenue-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">

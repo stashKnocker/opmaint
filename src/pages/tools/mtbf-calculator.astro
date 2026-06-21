@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "MTBF Calculator - Mean Time Between Failures | Opmaint";
+const seoDescription =
+	"Calculate MTBF (Mean Time Between Failures) to predict elapsed time between equipment failures. Free reliability metric calculator.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "mtbf-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "MTBF Calculator",
+});
 ---
 
 <Layout
-	title="MTBF Calculator - Mean Time Between Failures | Opmaint"
-	description="Calculate MTBF (Mean Time Between Failures) to predict elapsed time between equipment failures. Free reliability metric calculator."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/mtbf-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">

@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import CtaSidebar from "../../components/CtaSidebar.astro";
 import { checklistEntries } from "../../lib/checklists";
 import { getChecklistSeo, keywordsFromSeo } from "../../lib/checklist-seo";
+import { capSeoDescription, capSeoTitle } from "../../lib/seo";
 
 export function getStaticPaths() {
     return checklistEntries.map(({ slug, checklist, categoryName }) => ({
@@ -19,30 +20,24 @@ const { slug, checklist, categoryName } = Astro.props;
 
 const isCarWashChecklist = String(categoryName || "").toLowerCase() === "car wash";
 const normalizeWs = (text: string) => text.replace(/\s+/g, " ").trim();
-const cap = (text: string, max: number) =>
-    text.length <= max ? text : `${text.slice(0, max - 1).trim()}…`;
 
 const seoOverride = getChecklistSeo(slug);
 
-const seoTitle =
-    seoOverride?.metaTitle ??
-    (isCarWashChecklist
-        ? cap(
-              `${checklist.title} | Car Wash Maintenance Checklist | Opmaint`,
-              60
-          )
-        : `${checklist.title} - Opmaint`);
+const rawTitle =
+	seoOverride?.metaTitle ??
+	(isCarWashChecklist
+		? `${checklist.title} | Car Wash Maintenance Checklist | Opmaint`
+		: `${checklist.title} - Opmaint`);
+const seoTitle = capSeoTitle(rawTitle);
 
-const seoDescription =
-    seoOverride?.metaDescription ??
-    (isCarWashChecklist
-        ? cap(
-              normalizeWs(
-                  `Car wash equipment checklist for ${checklist.title}. Use this preventive maintenance and inspection template to improve uptime, safety, and service quality.`
-              ),
-              158
-          )
-        : checklist.description);
+const rawDescription =
+	seoOverride?.metaDescription ??
+	(isCarWashChecklist
+		? normalizeWs(
+				`Car wash equipment checklist for ${checklist.title}. Use this preventive maintenance and inspection template to improve uptime, safety, and service quality.`
+			)
+		: checklist.description);
+const seoDescription = capSeoDescription(normalizeWs(rawDescription));
 
 const seoKeywords = seoOverride ? keywordsFromSeo(seoOverride) : undefined;
 

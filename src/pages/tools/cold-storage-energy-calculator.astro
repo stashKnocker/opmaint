@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Cold Storage Energy Calculator | Opmaint";
+const seoDescription =
+	"Calculate energy consumption and operating costs for cold storage facilities. Optimize energy usage and budget.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "cold-storage-energy-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Cold Storage Calculator",
+});
 ---
 
 <Layout
-	title="Cold Storage Energy Calculator | Opmaint"
-	description="Calculate energy consumption and operating costs for cold storage facilities. Optimize energy usage and budget."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/cold-storage-energy-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">

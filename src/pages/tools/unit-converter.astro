@@ -1,11 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Unit Converter for Maintenance Teams | Opmaint";
+const seoDescription =
+	"Convert units for energy, pressure, power, temperature, and more. Free maintenance unit converter for factory floors and facilities.";
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "unit-converter",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Unit Converter",
+});
 ---
 
 <Layout
-	title="Maintenance Unit Converter - Energy, Pressure, Power | Opmaint"
-	description="Convert units for energy, pressure, power, temperature, and more. Free maintenance unit converter for factory floors and facilities."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/unit-converter"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
         <a href="/tools" class="back-link">
