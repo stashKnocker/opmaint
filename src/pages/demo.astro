@@ -964,6 +964,46 @@ const operations = [
 		return domain ? !FREE_EMAIL_DOMAINS.has(domain) : false;
 	}
 
+	let step1LeadCaptured = false;
+
+	function getStep1LeadPayload(form: HTMLFormElement | null) {
+		const emailInput = document.getElementById("demo-email") as HTMLInputElement | null;
+		if (!emailInput) return null;
+
+		const email = emailInput.value.trim().toLowerCase();
+		if (!isWorkEmail(email)) return null;
+
+		const selected = form?.querySelector<HTMLInputElement>(
+			'input[name="operationType"]:checked',
+		);
+		if (!selected) return null;
+
+		return { email, operationType: selected.value };
+	}
+
+	function captureStep1Lead(form: HTMLFormElement | null) {
+		if (step1LeadCaptured) return;
+		const payload = getStep1LeadPayload(form);
+		if (!payload) return;
+
+		step1LeadCaptured = true;
+		const body = JSON.stringify(payload);
+
+		if (navigator.sendBeacon) {
+			const blob = new Blob([body], { type: "application/json" });
+			if (navigator.sendBeacon("/api/demo-step1-capture", blob)) return;
+		}
+
+		void fetch("/api/demo-step1-capture", {
+			method: "POST",
+			headers: { "Content-Type": "application/json", Accept: "application/json" },
+			body,
+			keepalive: true,
+		}).catch(() => {
+			step1LeadCaptured = false;
+		});
+	}
+
 	const CAL_NAMESPACE = "30min";
 	const CAL_LINK = "siddhant-saraf-fqemyb/30min";
 
@@ -1167,6 +1207,7 @@ const operations = [
 				return;
 			}
 
+			captureStep1Lead(form);
 			showStep(2);
 			firstNameInput?.focus();
 		});
@@ -1185,6 +1226,12 @@ const operations = [
 				statusEl.className = "demo-status";
 			}
 			showStep(1);
+		});
+
+		window.addEventListener("pagehide", () => {
+			const step1 = document.getElementById("demo-step-1");
+			const onStep1 = step1 && !step1.classList.contains("demo-step--hidden");
+			if (onStep1) captureStep1Lead(form);
 		});
 
 		form?.addEventListener("submit", async (e) => {
