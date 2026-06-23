@@ -1,20 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Downtime Calculator - Production Downtime & Cost | Opmaint";
+const seoDescription =
+	"Calculate total downtime hours and financial impact on production. Free downtime calculator for maintenance planning.";
+
+const toolContent = getToolEnrichment("downtime-calculator");
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "downtime-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Downtime Calculator",
+});
 ---
 
 <Layout
-	title="Downtime Calculator - Production Downtime & Cost | Opmaint"
-	description="Calculate total downtime hours and financial impact on production. Free downtime calculator for maintenance planning."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/downtime-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "Downtime Calculator" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -71,6 +91,8 @@ import Layout from "../../layouts/Layout.astro";
                     <div style="margin-top: 1rem;"><span>Financial Impact</span> = <span>Lost Production</span> × <span>Unit Value</span></div>
                 </div>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>

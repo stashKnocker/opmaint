@@ -1,30 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Unit Converter for Maintenance Teams | Opmaint";
+const seoDescription =
+	"Convert units for energy, pressure, power, temperature, and more. Free maintenance unit converter for factory floors and facilities.";
+
+const toolContent = getToolEnrichment("unit-converter");
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "unit-converter",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Unit Converter",
+});
 ---
 
 <Layout
-	title="Maintenance Unit Converter - Energy, Pressure, Power | Opmaint"
-	description="Convert units for energy, pressure, power, temperature, and more. Free maintenance unit converter for factory floors and facilities."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/unit-converter"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg
-                class="arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "Unit Converter" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -99,6 +109,8 @@ import Layout from "../../layouts/Layout.astro";
                     </div>
                 </div>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>

@@ -1,20 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "OEE Calculator - Overall Equipment Effectiveness | Opmaint";
+const seoDescription =
+	"Calculate OEE (Overall Equipment Effectiveness) from availability, performance, and quality. Free OEE calculator for manufacturing productivity metrics.";
+
+const toolContent = getToolEnrichment("oee-calculator");
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "oee-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "OEE Calculator",
+});
 ---
 
 <Layout
-	title="OEE Calculator - Overall Equipment Effectiveness | Opmaint"
-	description="Calculate OEE (Overall Equipment Effectiveness) from availability, performance, and quality. Free OEE calculator for manufacturing productivity metrics."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/oee-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "OEE Calculator" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -68,6 +88,8 @@ import Layout from "../../layouts/Layout.astro";
                 </div>
                 <p class="formula-note">All values are expressed as percentages (0-100).</p>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>

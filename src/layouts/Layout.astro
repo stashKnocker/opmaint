@@ -31,11 +31,13 @@ const {
 } = Astro.props;
 
 const site = Astro.site?.toString() ?? "https://opmaint.com";
-const canonicalUrl = canonical
-	? canonical.startsWith("http")
-		? canonical
-		: new URL(canonical, site).toString()
-	: new URL(Astro.url.pathname, site).toString();
+const canonicalUrl = (
+	canonical
+		? canonical.startsWith("http")
+			? canonical
+			: new URL(canonical, site).toString()
+		: new URL(Astro.url.pathname, site).toString()
+).replace(/^http:\/\//, "https://");
 const imageUrl = image
 	? image.startsWith("http")
 		? image

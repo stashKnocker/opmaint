@@ -1,8 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CtaSidebar from "../../components/CtaSidebar.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
 import { checklistEntries } from "../../lib/checklists";
 import { getChecklistSeo, keywordsFromSeo } from "../../lib/checklist-seo";
+import { getChecklistEnrichment } from "../../lib/checklist-content";
+import { capSeoDescription, capSeoTitle } from "../../lib/seo";
 
 export function getStaticPaths() {
     return checklistEntries.map(({ slug, checklist, categoryName }) => ({
@@ -19,36 +23,37 @@ const { slug, checklist, categoryName } = Astro.props;
 
 const isCarWashChecklist = String(categoryName || "").toLowerCase() === "car wash";
 const normalizeWs = (text: string) => text.replace(/\s+/g, " ").trim();
-const cap = (text: string, max: number) =>
-    text.length <= max ? text : `${text.slice(0, max - 1).trim()}…`;
 
 const seoOverride = getChecklistSeo(slug);
 
-const seoTitle =
-    seoOverride?.metaTitle ??
-    (isCarWashChecklist
-        ? cap(
-              `${checklist.title} | Car Wash Maintenance Checklist | Opmaint`,
-              60
-          )
-        : `${checklist.title} - Opmaint`);
+const rawTitle =
+	seoOverride?.metaTitle ??
+	(isCarWashChecklist
+		? `${checklist.title} | Car Wash Maintenance Checklist | Opmaint`
+		: `${checklist.title} - Opmaint`);
+const seoTitle = capSeoTitle(rawTitle);
 
-const seoDescription =
-    seoOverride?.metaDescription ??
-    (isCarWashChecklist
-        ? cap(
-              normalizeWs(
-                  `Car wash equipment checklist for ${checklist.title}. Use this preventive maintenance and inspection template to improve uptime, safety, and service quality.`
-              ),
-              158
-          )
-        : checklist.description);
+const rawDescription =
+	seoOverride?.metaDescription ??
+	(isCarWashChecklist
+		? normalizeWs(
+				`Car wash equipment checklist for ${checklist.title}. Use this preventive maintenance and inspection template to improve uptime, safety, and service quality.`
+			)
+		: checklist.description);
+const seoDescription = capSeoDescription(normalizeWs(rawDescription));
 
 const seoKeywords = seoOverride ? keywordsFromSeo(seoOverride) : undefined;
 
+const enrichmentSections = getChecklistEnrichment(
+	categoryName,
+	checklist.title,
+	checklist.items.length
+);
+
 const site = Astro.site?.toString() ?? "https://opmaint.com";
-const pageUrl =
-	seoOverride?.canonical ?? new URL(Astro.url.pathname, site).href;
+const pageUrl = seoOverride?.canonical
+	? seoOverride.canonical.replace(/^http:\/\//, "https://")
+	: new URL(Astro.url.pathname, site).href;
 const itemListId = `${pageUrl}#checklist-items`;
 
 const checklistStructuredData = {
@@ -120,23 +125,13 @@ const checklistStructuredData = {
 	extraJsonLd={checklistStructuredData}
 >
     <main class="page-container page-container--wide">
-        <a href="/procedure" class="back-link">
-            <svg
-                class="arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all checklists
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Procedure Hub", href: "/procedure" },
+                { label: checklist.title },
+            ]}
+        />
 
         <div class="content-layout">
             <div class="main-column">
@@ -334,6 +329,8 @@ const checklistStructuredData = {
                         ))
                     }
                 </div>
+
+                <SeoContentSection sections={enrichmentSections} />
             </div>
 
             <CtaSidebar />

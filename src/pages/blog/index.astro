@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BlogCard from "../../components/BlogCard.astro";
+import { buildWebPageJsonLd } from "../../lib/seo";
 
 interface BlogPost {
 	title: string;
@@ -226,12 +227,31 @@ const featuredPost = posts[0] ?? null;
 const recentPosts = posts.slice(1, 5);
 const secondaryGridPosts = posts.slice(1, 3);
 
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const pageUrl = new URL("/blog", site).href;
+const seoTitle = "The Blog - Maintenance, Metrics & Playbooks | Opmaint";
+const seoDescription =
+	"Stories and insights to transform how you manage maintenance, assets, and frontline teams. Practical playbooks, metrics, and templates from Opmaint.";
+
+const blogStructuredData = buildWebPageJsonLd({
+	site,
+	url: pageUrl,
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbs: [
+		{ name: "Home", item: site },
+		{ name: "Blog", item: pageUrl },
+	],
+});
+
 ---
 
 <Layout
-	title="The Blog - Maintenance, Metrics & Playbooks | Opmaint"
-	description="Stories and insights to transform how you manage maintenance, assets, and frontline teams. Practical playbooks, metrics, and templates from Opmaint."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/blog"
+	image={featuredPost?.imageUrl}
+	extraJsonLd={blogStructuredData}
 >
 
 	<main class="blog-page">

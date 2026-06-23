@@ -1,20 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "Car Wash Revenue Calculator | Opmaint";
+const seoDescription =
+	"Calculate potential car wash revenue from wash volume, pricing tiers, and operating hours.";
+
+const toolContent = getToolEnrichment("car-wash-revenue-calculator");
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "car-wash-revenue-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "Car Wash Revenue Calculator",
+});
 ---
 
 <Layout
-	title="Car Wash Revenue Calculator | Opmaint"
-	description="Calculate potential car wash revenue from wash volume, pricing tiers, and operating hours."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/car-wash-revenue-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "Car Wash Revenue Calculator" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -79,6 +99,8 @@ import Layout from "../../layouts/Layout.astro";
                     <div style="margin-top: 1rem;"><span>Annual Revenue</span> = <span>Monthly Revenue</span> × 12</div>
                 </div>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>

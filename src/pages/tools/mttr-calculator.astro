@@ -1,30 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import SeoContentSection from "../../components/SeoContentSection.astro";
+import { getToolEnrichment } from "../../lib/tool-content";
+import { buildToolPageJsonLd } from "../../lib/seo";
+
+const site = Astro.site?.toString() ?? "https://opmaint.com";
+const seoTitle = "MTTR Calculator - Mean Time To Repair | Opmaint";
+const seoDescription =
+	"Calculate MTTR (Mean Time To Repair) to track average repair time for failed equipment. Free maintenance metric calculator.";
+
+const toolContent = getToolEnrichment("mttr-calculator");
+
+const toolStructuredData = buildToolPageJsonLd({
+	site,
+	slug: "mttr-calculator",
+	name: seoTitle,
+	description: seoDescription,
+	breadcrumbName: "MTTR Calculator",
+});
 ---
 
 <Layout
-	title="MTTR Calculator - Mean Time To Repair | Opmaint"
-	description="Calculate MTTR (Mean Time To Repair) to track average repair time for failed equipment. Free maintenance metric calculator."
+	title={seoTitle}
+	description={seoDescription}
 	canonical="/tools/mttr-calculator"
+	extraJsonLd={toolStructuredData}
 >
     <main class="page-container page-container--narrow">
-        <a href="/tools" class="back-link">
-            <svg
-                class="arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to all tools
-        </a>
+        <Breadcrumbs
+            items={[
+                { label: "Home", href: site },
+                { label: "Tools", href: "/tools" },
+                { label: "MTTR Calculator" },
+            ]}
+        />
 
         <div class="tool-wrapper">
             <div class="tool-header">
@@ -94,6 +104,8 @@ import Layout from "../../layouts/Layout.astro";
                     <span>Total Number of Repairs</span>
                 </div>
             </div>
+            <SeoContentSection sections={toolContent} />
+
         </div>
     </main>
 </Layout>
