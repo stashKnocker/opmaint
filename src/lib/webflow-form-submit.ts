@@ -136,6 +136,34 @@ export function mapDemoLeadFields(
 	};
 }
 
+/** Partial lead when the visitor completes demo step 1 but has not submitted step 2. */
+export function mapDemoStep1LeadFields(
+	input: {
+		email: string;
+		operationType: string;
+	},
+	pageUrl: string,
+	pageTitle = "Opmaint Demo (Step 1)",
+): WebflowFormFieldMap {
+	const operation =
+		OPERATION_LABELS[input.operationType] ?? input.operationType;
+	const demoPageUrl = pageUrl.replace(/\/book-demo\/?$/, "/demo");
+
+	return {
+		Fullname: "(Incomplete — step 1)",
+		Email: input.email,
+		Company: "",
+		"Phone Number": `Operation: ${operation} | Incomplete booking`,
+		"Where did you find us": "",
+		Checkbox: "true",
+		hutk: "",
+		ipAddress: "",
+		pageUri: demoPageUrl,
+		pageId: "/demo",
+		pageName: pageTitle,
+	};
+}
+
 export async function submitToWebflowForm(
 	fields: WebflowFormFieldMap,
 	configOverride?: WebflowFormConfig,

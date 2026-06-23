@@ -1120,6 +1120,7 @@ const operations = [
 		const emailErr = document.getElementById("demo-email-error");
 		const opErr = document.getElementById("demo-operation-error");
 		const statusEl = document.getElementById("demo-status");
+		let step1CapturedEmail: string | null = null;
 
 		const firstNameInput = document.getElementById("demo-first-name") as HTMLInputElement | null;
 		const lastNameInput = document.getElementById("demo-last-name") as HTMLInputElement | null;
@@ -1165,6 +1166,19 @@ const operations = [
 			if (!selected) {
 				if (opErr) opErr.textContent = "Please select an operation type.";
 				return;
+			}
+
+			const emailNorm = email.toLowerCase();
+			if (step1CapturedEmail !== emailNorm) {
+				step1CapturedEmail = emailNorm;
+				void fetch("/api/demo-step1", {
+					method: "POST",
+					headers: { "Content-Type": "application/json", Accept: "application/json" },
+					body: JSON.stringify({
+						email: emailNorm,
+						operationType: selected.value,
+					}),
+				}).catch(() => {});
 			}
 
 			showStep(2);
